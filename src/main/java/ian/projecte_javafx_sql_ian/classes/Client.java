@@ -16,8 +16,8 @@ public class Client extends Persona {
     private Categoria tipus_client;
     private String targeta_credit;
 
-    public Client(int id_persona, String nom, String cognom, String adreca, String dni, Date data, String telefon, String email, Date data_registre, Categoria tipus_client, String targeta_credit) {
-        super(id_persona, nom, cognom, adreca, dni, data, telefon, email);
+    public Client(int id_client, String nom, String cognom, String adreca, String dni, Date data, String telefon, String email, Date data_registre, Categoria tipus_client, String targeta_credit) {
+        super(id_client, nom, cognom, adreca, dni, data, telefon, email);
         this.data_registre = data_registre;
         this.tipus_client = tipus_client;
         this.targeta_credit = targeta_credit;

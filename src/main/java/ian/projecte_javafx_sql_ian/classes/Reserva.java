@@ -20,11 +20,10 @@ public class Reserva {
     private TipusReserva tipus_reserva;
     private IVA tipus_IVA;
     private double preu_total_reserva;
-    private String estat;
     private Client client;
     private Habitacio habitacio;
 
-    public Reserva(int id_reserva, Date data_reserva, Date data_inici, Date data_fi, TipusReserva tipus_reserva, IVA tipus_IVA, double preu_total_reserva, String estat, Client client, Habitacio habitacio) {
+    public Reserva(int id_reserva, Date data_reserva, Date data_inici, Date data_fi, TipusReserva tipus_reserva, IVA tipus_IVA, double preu_total_reserva, Client client, Habitacio habitacio) {
         this.id_reserva = id_reserva;
         this.data_reserva = data_reserva;
         this.data_inici = data_inici;
@@ -32,7 +31,6 @@ public class Reserva {
         this.tipus_reserva = tipus_reserva;
         this.tipus_IVA = tipus_IVA;
         this.preu_total_reserva = preu_total_reserva;
-        this.estat = estat;
         this.client = client;
         this.habitacio = habitacio;
     }

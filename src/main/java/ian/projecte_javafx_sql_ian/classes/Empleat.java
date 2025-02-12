@@ -17,8 +17,8 @@ public class Empleat extends Persona {
     private double salari_brut;
     private EstatEmpleat estat_laboral;
 
-    public Empleat(int id_persona, String nom, String cognom, String adreca, String dni, Date data, String telefon, String email, String lloc_feina, Date data_contractacio, double salari_brut, EstatEmpleat estat_laboral) {
-        super(id_persona, nom, cognom, adreca, dni, data, telefon, email);
+    public Empleat(int id_empleat, String nom, String cognom, String adreca, String dni, Date data, String telefon, String email, String lloc_feina, Date data_contractacio, double salari_brut, EstatEmpleat estat_laboral) {
+        super(id_empleat, nom, cognom, adreca, dni, data, telefon, email);
         this.lloc_feina = lloc_feina;
         this.data_contractacio = data_contractacio;
         this.salari_brut = salari_brut;

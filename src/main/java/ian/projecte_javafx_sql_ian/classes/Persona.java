@@ -10,7 +10,7 @@ import java.util.Date;
  *
  * @author alumne
  */
-public class Persona {
+public abstract class Persona {
     private int id_persona;
     private String nom;
     private String cognom;

@@ -28,6 +28,7 @@ public class Connexio {
    
     // "Connection" permet mantenir la connexió. Aquesta funció retorna una connexió "configurada".
     public Connection connecta() {
+        // Control d'errors.
         Connection connexio = null;
         try {
             // Carrega la classe del DRIVER (String) per a poder utilitzar el seu codi.
