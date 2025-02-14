@@ -9,6 +9,16 @@ package ian.projecte_javafx_sql_ian.enums;
  * @author alumne
  */
 public enum Categoria {
-    VIP,
-    NORMAL
+    VIP("VIP"),
+    NORMAL("Normal");
+
+    private final String value;
+
+    Categoria(String value) {
+        this.value = value;
+    }
+
+    public String getValue() {
+        return value;
+    }
 }

@@ -17,6 +17,7 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
+        // L'aplicació inicia executant un fitxer FXML.
         scene = new Scene(loadFXML("Menu"), 640, 480);
         stage.setScene(scene);
         stage.show();

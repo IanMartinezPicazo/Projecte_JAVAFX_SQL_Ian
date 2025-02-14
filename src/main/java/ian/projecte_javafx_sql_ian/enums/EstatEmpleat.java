@@ -9,7 +9,17 @@ package ian.projecte_javafx_sql_ian.enums;
  * @author alumne
  */
 public enum EstatEmpleat {
-    ACTIU,
-    BAIXA,
-    PERMIS
+    ACTIU("Actiu"),
+    BAIXA("Baixa"),
+    PERMIS("Permís");
+
+    private final String value;
+
+    EstatEmpleat(String value) {
+        this.value = value;
+    }
+
+    public String getValue() {
+        return value;
+    }
 }
