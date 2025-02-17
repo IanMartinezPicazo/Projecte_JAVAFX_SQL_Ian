@@ -16,7 +16,7 @@ public abstract class Persona {
     private String cognom;
     private String adreca;
     private String dni;
-    private Date date;
+    private Date data;
     private String telefon;
     private String email;
 
@@ -26,7 +26,7 @@ public abstract class Persona {
         this.cognom = cognom;
         this.adreca = adreca;
         this.dni = dni;
-        this.date = date;
+        this.data = date;
         this.telefon = telefon;
         this.email = email;
     }

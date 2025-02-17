@@ -22,4 +22,6 @@ public class Client extends Persona {
         this.tipus_client = tipus_client;
         this.targeta_credit = targeta_credit;
     }
+    
+    
 }

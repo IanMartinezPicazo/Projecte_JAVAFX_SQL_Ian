@@ -3,7 +3,6 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -28,8 +27,8 @@
             <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
             <RowConstraints maxHeight="93.0" minHeight="1.0" prefHeight="50.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="77.0" minHeight="22.0" prefHeight="50.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="76.0" minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="77.0" minHeight="22.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="76.0" minHeight="10.0" vgrow="SOMETIMES" />
          </rowConstraints>
          <children>
             <Label text="Nom" />
@@ -51,26 +50,17 @@
                </GridPane.margin></TextField>
             <Label fx:id="label_extra2" text="Extra2" GridPane.rowIndex="7" />
             <Label fx:id="label_extra3" text="Extra3" GridPane.rowIndex="8" />
-            <TextField fx:id="field_extra3" disable="true" GridPane.columnIndex="1" GridPane.rowIndex="8" GridPane.valignment="BOTTOM">
-               <GridPane.margin>
-                  <Insets bottom="5.0" />
-               </GridPane.margin></TextField>
-            <DatePicker fx:id="date_extra1" disable="true" maxWidth="1.7976931348623157E308" prefHeight="10.0" prefWidth="194.0" GridPane.columnIndex="1" GridPane.rowIndex="6" GridPane.valignment="BOTTOM">
-               <GridPane.margin>
-                  <Insets bottom="5.0" />
-               </GridPane.margin>
-            </DatePicker>
-            <ComboBox fx:id="combo_extra2" disable="true" maxWidth="1.7976931348623157E308" prefHeight="24.0" prefWidth="192.0" GridPane.columnIndex="1" GridPane.rowIndex="7" GridPane.valignment="BOTTOM">
+            <ComboBox fx:id="combo_extra2" disable="true" maxWidth="1.7976931348623157E308" prefHeight="24.0" prefWidth="192.0" GridPane.columnIndex="1" GridPane.rowIndex="6" GridPane.valignment="BOTTOM">
                <GridPane.margin>
                   <Insets bottom="5.0" />
                </GridPane.margin>
             </ComboBox>
-            <TextField fx:id="field_extra2" disable="true" GridPane.columnIndex="1" GridPane.rowIndex="7" GridPane.valignment="TOP">
+            <TextField fx:id="field_extra2" disable="true" GridPane.columnIndex="1" GridPane.rowIndex="7">
                <GridPane.margin>
                   <Insets top="5.0" />
                </GridPane.margin>
             </TextField>
-            <ComboBox fx:id="combo_extra3" disable="true" maxWidth="1.7976931348623157E308" prefHeight="24.0" prefWidth="192.0" GridPane.columnIndex="1" GridPane.rowIndex="8" GridPane.valignment="TOP">
+            <ComboBox fx:id="combo_extra3" disable="true" maxWidth="1.7976931348623157E308" prefHeight="24.0" prefWidth="192.0" GridPane.columnIndex="1" GridPane.rowIndex="8">
                <GridPane.margin>
                   <Insets top="5.0" />
                </GridPane.margin>

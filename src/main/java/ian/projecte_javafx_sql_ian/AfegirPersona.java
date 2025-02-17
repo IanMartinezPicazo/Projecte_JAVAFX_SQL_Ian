@@ -39,16 +39,12 @@ public class AfegirPersona {
         field_telefon,
         field_email,
         field_extra1,
-        field_extra2,
-        field_extra3;
+        field_extra2;
     @FXML
     ComboBox
         combo_tipus_persona, // Habilitat.
-        combo_extra2,
+        combo_extra1,
         combo_extra3;
-    @FXML
-    DatePicker
-        date_extra1;
     @FXML
     Button
         button_afegir_persona;
@@ -61,11 +57,13 @@ public class AfegirPersona {
                 "Client"
         ));
         combo_tipus_persona.setItems(modes);
+        
         ObservableList<Categoria> categories = FXCollections.observableArrayList(Arrays.asList(
                 Categoria.NORMAL,
                 Categoria.VIP
         ));
-        combo_extra2.setItems(categories);
+        combo_extra1.setItems(categories);
+        
         ObservableList<EstatEmpleat> estats = FXCollections.observableArrayList(Arrays.asList(
                 EstatEmpleat.ACTIU,
                 EstatEmpleat.BAIXA,
@@ -85,10 +83,8 @@ public class AfegirPersona {
         field_email.clear();
         field_extra1.clear();
         field_extra2.clear();
-        field_extra3.clear();
-        combo_extra2.getSelectionModel().clearSelection();
+        combo_extra1.getSelectionModel().clearSelection();
         combo_extra3.getSelectionModel().clearSelection();
-        date_extra1.setValue(null);
         
         // Habilita els camps de compartits per la classe Empleat i Client.
         field_nom.setDisable(false);
@@ -97,33 +93,26 @@ public class AfegirPersona {
         field_dni.setDisable(false);
         field_telefon.setDisable(false);
         field_email.setDisable(false);
+        field_extra2.setDisable(false);
         label_extra1.setText("Extra1");
         label_extra2.setText("Extra2");
         label_extra3.setText("Extra3");
         
         // Habilita i deshabilita els camps adequats depenent del tipus de persona seleccionada.
-        if (combo_tipus_persona.getValue().equals("Empleat")){
-            label_extra1.setText("Data de registre");
-            date_extra1.setDisable(false);
-            label_extra2.setText("Categoria");
-            combo_extra2.setDisable(false);
-            label_extra3.setText("Targeta");
-            field_extra3.setDisable(false);
+        if (combo_tipus_persona.getValue().equals("Client")){
+            label_extra1.setText("Categoria");
+            combo_extra1.setDisable(false);
+            label_extra2.setText("Targeta");
             
             field_extra1.setDisable(true);
-            field_extra2.setDisable(true);
             combo_extra3.setDisable(true);
         }else{
             label_extra1.setText("Feina");
-            field_extra1.setDisable(false);
             label_extra2.setText("Salari brut");
-            field_extra2.setDisable(false);
             label_extra3.setText("Estat d'empleat");
             combo_extra3.setDisable(false);
             
-            date_extra1.setDisable(true);
-            combo_extra2.setDisable(true);
-            field_extra3.setDisable(true);
+            combo_extra1.setDisable(true);
         }
     }
     
