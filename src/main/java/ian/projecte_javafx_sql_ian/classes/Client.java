@@ -5,7 +5,7 @@
 package ian.projecte_javafx_sql_ian.classes;
 
 import ian.projecte_javafx_sql_ian.enums.Categoria;
-import java.util.Date;
+import java.sql.Date;
 
 /**
  *
@@ -16,12 +16,22 @@ public class Client extends Persona {
     private Categoria tipus_client;
     private String targeta_credit;
 
-    public Client(int id_client, String nom, String cognom, String adreca, String dni, Date data, String telefon, String email, Date data_registre, Categoria tipus_client, String targeta_credit) {
-        super(id_client, nom, cognom, adreca, dni, data, telefon, email);
+    public Client(String nom, String cognom, String adreca, String dni, Date data_naixement, String telefon, String email, Date data_registre, Categoria tipus_client, String targeta_credit) {
+        super(nom, cognom, adreca, dni, data_naixement, telefon, email);
         this.data_registre = data_registre;
         this.tipus_client = tipus_client;
         this.targeta_credit = targeta_credit;
     }
     
-    
+    public Date getDataRegistre() {
+        return data_registre;
+    }
+
+    public String getTipusClient() {
+        return tipus_client.name(); // Converteix l'enum a String.
+    }
+
+    public String getTargetaCredit() {
+        return targeta_credit;
+    }
 }

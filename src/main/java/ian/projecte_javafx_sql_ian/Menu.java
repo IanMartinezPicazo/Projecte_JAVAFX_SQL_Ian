@@ -7,6 +7,6 @@ public class Menu {
 
     @FXML
     private void Lugar1() throws IOException {
-        App.setRoot("AfegirPersona");
+        App.setRoot("Alta_empleats_i_clients");
     }
 }

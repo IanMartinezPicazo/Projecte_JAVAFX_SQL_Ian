@@ -13,7 +13,6 @@ import java.util.Date;
  * @author alumne
  */
 public class Reserva {
-    private int id_reserva;
     private Date data_reserva;
     private Date data_inici;
     private Date data_fi;
@@ -23,8 +22,7 @@ public class Reserva {
     private Client client;
     private Habitacio habitacio;
 
-    public Reserva(int id_reserva, Date data_reserva, Date data_inici, Date data_fi, TipusReserva tipus_reserva, IVA tipus_IVA, double preu_total_reserva, Client client, Habitacio habitacio) {
-        this.id_reserva = id_reserva;
+    public Reserva(Date data_reserva, Date data_inici, Date data_fi, TipusReserva tipus_reserva, IVA tipus_IVA, double preu_total_reserva, Client client, Habitacio habitacio) {
         this.data_reserva = data_reserva;
         this.data_inici = data_inici;
         this.data_fi = data_fi;

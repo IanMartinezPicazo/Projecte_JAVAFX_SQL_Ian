@@ -12,7 +12,6 @@ import ian.projecte_javafx_sql_ian.enums.TipusHabitacio;
  * @author alumne
  */
 public class Habitacio {
-    private int id_habitacio;
     private int numero_habitacio;
     private TipusHabitacio tipus;
     private int capacitat;
@@ -21,8 +20,7 @@ public class Habitacio {
     private EstatHabitacio estat;
     private String descripcio;
 
-    public Habitacio(int id_habitacio, int numero_habitacio, TipusHabitacio tipus, int capacitat, double preu_nit_AD, double preu_nit_MP, EstatHabitacio estat, String descripcio) {
-        this.id_habitacio = id_habitacio;
+    public Habitacio(int numero_habitacio, TipusHabitacio tipus, int capacitat, double preu_nit_AD, double preu_nit_MP, EstatHabitacio estat, String descripcio) {
         this.numero_habitacio = numero_habitacio;
         this.tipus = tipus;
         this.capacitat = capacitat;

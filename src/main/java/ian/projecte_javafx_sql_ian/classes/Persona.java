@@ -4,30 +4,56 @@
  */
 package ian.projecte_javafx_sql_ian.classes;
 
-import java.util.Date;
+import java.sql.Date;
 
 /**
  *
  * @author alumne
  */
 public abstract class Persona {
-    private int id_persona;
     private String nom;
     private String cognom;
     private String adreca;
     private String dni;
-    private Date data;
+    private Date data_naixement;
     private String telefon;
     private String email;
 
-    public Persona(int id_persona, String nom, String cognom, String adreca, String dni, Date date, String telefon, String email) {
-        this.id_persona = id_persona;
+    public Persona(String nom, String cognom, String adreca, String dni, Date data_naixement, String telefon, String email) {
         this.nom = nom;
         this.cognom = cognom;
         this.adreca = adreca;
         this.dni = dni;
-        this.data = date;
+        this.data_naixement = data_naixement;
         this.telefon = telefon;
         this.email = email;
+    }
+    
+    public String getNom() {
+        return nom;
+    }
+
+    public String getCognom() {
+        return cognom;
+    }
+
+    public String getAdreca() {
+        return adreca;
+    }
+
+    public String getDni() {
+        return dni;
+    }
+
+    public Date getDataNaixement() {
+        return data_naixement;
+    }
+
+    public String getTelefon() {
+        return telefon;
+    }
+
+    public String getEmail() {
+        return email;
     }
 }
