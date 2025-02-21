@@ -7,11 +7,18 @@ package ian.projecte_javafx_sql_ian.EnllaçSQL;
 import ian.projecte_javafx_sql_ian.classes.Client;
 import ian.projecte_javafx_sql_ian.classes.Empleat;
 import ian.projecte_javafx_sql_ian.classes.Persona;
+import ian.projecte_javafx_sql_ian.classes.PersonaExistent;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 /**
  *
@@ -21,12 +28,12 @@ public class Model {
     // Inserta dades a la taula Persona.
     public int altaPersona(Persona persona) throws SQLException{
         // Desa una consulta SQL amb valors subtitius.
-        String sql_persona = "INSERT INTO PERSONA (nom, cognom, adreca, dni, data_naixement, telefon, email) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String consulta = "INSERT INTO persona (nom, cognom, adreca, dni, data_naixement, telefon, email) VALUES (?, ?, ?, ?, ?, ?, ?)";
         
         Connection connexio = new Connexio().connecta();
         
         // Permet substituir els valors subtitius.
-        PreparedStatement valors_persona = connexio.prepareStatement(sql_persona, Statement.RETURN_GENERATED_KEYS);
+        PreparedStatement valors_persona = connexio.prepareStatement(consulta, Statement.RETURN_GENERATED_KEYS);
 
         valors_persona.setString(1, persona.getNom());
         valors_persona.setString(2, persona.getCognom());
@@ -45,21 +52,78 @@ public class Model {
         if (clau_primaria.next()){
             return clau_primaria.getInt(1);
         }
-        return 1;
+        return -1;
+    }
+    
+    // Comprova si el nom, cognom, i DNI introduit als camps compartits per ambdues tipus de persona coincideixen amb qualsevol registre.
+    public PersonaExistent comprovarPersonaRegistrada(Persona persona, String tipus_persona) throws SQLException {
+        String consulta;
+
+        // Desa una consulta basat en el tipus de persona escullit.
+        if (tipus_persona.equals("Empleat")) {
+            consulta = "SELECT id_persona, nom, cognom, dni FROM persona INNER JOIN client ON id_persona = id_client WHERE dni = ?";
+        } else {
+            consulta = "SELECT id_persona nom, cognom, dni FROM persona INNER JOIN empleat ON id_persona = id_persona WHERE dni = ?";
+        }
+        
+        Connection connexio = new Connexio().connecta();
+        
+        // Permet substituir els valors subtitius.
+        PreparedStatement valors_persona = connexio.prepareStatement(consulta);
+        
+        valors_persona.setString(1, persona.getDni());
+        
+        ResultSet dades_persona_existent = valors_persona.executeQuery();
+        
+        // Retorna l'ID de la persona amb control d'errada.
+        if (dades_persona_existent.next()) {
+            boolean duplicat = false, dni_duplicat = false;
+            if (dades_persona_existent.getString(2).equals(persona.getNom()) && dades_persona_existent.getString(3).equals(persona.getCognom())){
+                duplicat = true;
+            }else{
+                return null;
+            }
+            if (!duplicat && dades_persona_existent.getString(4).equals(persona.getDni())){
+                dni_duplicat = true;
+            }
+            int id_persona = dades_persona_existent.getInt(1);
+            return new PersonaExistent(duplicat, dni_duplicat, id_persona);
+        } else {
+            return null;
+        }
     }
     
     // Inserta dades a la taula Empleat.
     public int altaEmpleat(Empleat empleat) throws SQLException {
         // Obté la ID generada.
-        int id_empleat = altaPersona(empleat);
+        int id_empleat = 0;
+        
+        // En cas que sigui duplicat, estableïx l'ID a la persona duplicada del tipus de persona oposit, en cas que no, crea una persona nova, i obté l'ID generada.
+        PersonaExistent persona_duplicada = comprovarPersonaRegistrada(empleat, "Empleat");
+        if (persona_duplicada != null){
+            if (persona_duplicada.isDuplicat()){
+                id_empleat = persona_duplicada.getId_persona();
+            }else{
+                if (persona_duplicada.isDni_duplicat()){
+                    return -1;
+                }else{
+                    id_empleat = altaPersona(empleat);
 
+                    if (id_empleat == -1){
+                        return id_empleat; // Control d'errada.
+                    }
+                }
+            }
+        }else{
+            return -1;
+        }
         // Desa una consulta SQL amb valors subtitius.
-        String sqlEmpleat = "INSERT INTO EMPLEAT (id_empleat, lloc_feina, data_contractacio, salari_brut, estat_laboral) VALUES (?, ?, ?, ?, ?)";
+        String consulta = "INSERT INTO empleat (id_empleat, lloc_feina, data_contractacio, salari_brut, estat_laboral) VALUES (?, ?, ?, ?, ?)";
 
         Connection connexio = new Connexio().connecta();
         
         // Permet substituir els valors subtitius.
-        PreparedStatement valors_empleat = connexio.prepareStatement(sqlEmpleat);
+        PreparedStatement valors_empleat = connexio.prepareStatement(consulta);
 
         valors_empleat.setInt(1, id_empleat);
         valors_empleat.setString(2, empleat.getLlocFeina());
@@ -73,17 +137,37 @@ public class Model {
     }
 
     // Inserta dades a la taula Client.
-    public void altaClient(Client client) throws SQLException {
+    public void altaClient(Client client) throws SQLException {        
         // Obté la ID generada.
-        int id_client = altaPersona(client);
+        int id_client = 0;
+        
+        // En cas que sigui duplicat, estableïx l'ID a la persona duplicada del tipus de persona oposit, en cas que no, crea una persona nova, i obté l'ID generada.
+        PersonaExistent persona_duplicada = comprovarPersonaRegistrada(client, "Client");
+        if (persona_duplicada != null){
+            if (persona_duplicada.isDuplicat()){
+                id_client = persona_duplicada.getId_persona();
+            }else{
+                if (persona_duplicada.isDni_duplicat()){
+                    return;
+                }else{
+                    id_client = altaPersona(client);
 
+                    if (id_client == -1){
+                        return; // Control d'errada.
+                    }
+                }
+            }
+        }else{
+            return;
+        }
+        
         // Desa una consulta SQL amb valors subtitius.
-        String sqlClient = "INSERT INTO CLIENT (id_client, data_registre, tipus_client, targeta_credit) VALUES (?, ?, ?, ?)";
+        String consulta = "INSERT INTO client (id_client, data_registre, tipus_client, targeta_credit) VALUES (?, ?, ?, ?)";
 
         Connection connexio = new Connexio().connecta();
 
         // Permet substituir els valors subtitius.
-        PreparedStatement valors_client = connexio.prepareStatement(sqlClient);
+        PreparedStatement valors_client = connexio.prepareStatement(consulta);
 
         // Substituïm els valors dels paràmetres en la consulta SQL.
         valors_client.setInt(1, id_client);
@@ -95,13 +179,17 @@ public class Model {
     }
     
     public void altaClient(Client client, int id_client) throws SQLException {
+        if (id_client == -1){
+            return;
+        }
+        
         // Desa una consulta SQL amb valors subtitius.
-        String sqlClient = "INSERT INTO CLIENT (id_client, data_registre, tipus_client, targeta_credit) VALUES (?, ?, ?, ?)";
+        String consulta = "INSERT INTO client (id_client, data_registre, tipus_client, targeta_credit) VALUES (?, ?, ?, ?)";
 
         Connection connexio = new Connexio().connecta();
 
         // Permet substituir els valors subtitius.
-        PreparedStatement valors_client = connexio.prepareStatement(sqlClient);
+        PreparedStatement valors_client = connexio.prepareStatement(consulta);
 
         // Substituïm els valors dels paràmetres en la consulta SQL.
         valors_client.setInt(1, id_client);
@@ -110,5 +198,74 @@ public class Model {
         valors_client.setString(4, client.getTargetaCredit());
 
         valors_client.executeUpdate();
+    }
+
+    public Map<String, Persona> obtenirPersonesOposites(String tipus_persona) throws SQLException {
+        Map<String, Persona> persones = new HashMap();
+        
+        if (!(tipus_persona.equals("Empleat i client"))){
+            String consulta;
+
+            // Desa una consulta basat en el tipus de persona escullit.
+            if (tipus_persona.equals("Empleat")) {
+                consulta = "SELECT nom, cognom, adreca, dni, data_naixement, telefon, email FROM persona INNER JOIN client ON id_persona = id_client";
+            } else {
+                consulta = "SELECT nom, cognom, adreca, dni, data_naixement, telefon, email FROM persona INNER JOIN empleat ON id_persona = id_empleat";
+            }
+
+            Connection connexio = new Connexio().connecta();
+            PreparedStatement valors_persona = connexio.prepareStatement(consulta);
+            ResultSet persones_existents = valors_persona.executeQuery();
+                
+                // Desa totes les persones del tipus de persona seleccionat en una llista.
+                while (persones_existents.next()) {
+                    String nom = persones_existents.getString("nom");
+                    String cognom = persones_existents.getString("cognom");
+                    String adreca = persones_existents.getString("adreca");
+                    String dni = persones_existents.getString("dni");
+                    Date dataNaixement = persones_existents.getDate("data_naixement");
+                    String telefon = persones_existents.getString("telefon");
+                    String email = persones_existents.getString("email");
+
+                    persones.put(nom + " " + cognom + " - " + dni, new Persona(nom, cognom, adreca, dni, dataNaixement, telefon, email));
+                }
+            }
+        // Retorna la llista.
+        return persones;
+    }
+
+    public String[] buscarPersonaSeleccionada(String persona) throws SQLException{
+        String dni = "";
+        for (int i = 0;i < persona.length();i++){
+           char buscador = persona.charAt(i);
+           if (buscador == '-'){
+               dni = persona.substring(i + 1).trim();
+               break;
+           }
+        }
+        
+        //  Desa una consulta SQL.
+        String consulta = "SELECT nom, cognom, adreca, dni, data_naixement, telefon, email FROM persona WHERE dni = ?";
+        
+        Connection connexio = new Connexio().connecta();
+        PreparedStatement valors_persona = connexio.prepareStatement(consulta);
+        
+        valors_persona.setString(1, dni);
+        
+        ResultSet dades_persona = valors_persona.executeQuery();
+        
+        // Recopila les dades de la consulta en una cadena.
+        String dades_encadenades = "";
+        while (dades_persona.next()){
+            dades_encadenades += dades_persona.getString("nom") + ";";
+            dades_encadenades += dades_persona.getString("cognom") + ";";
+            dades_encadenades += dades_persona.getString("adreca") + ";";
+            dades_encadenades += dades_persona.getString("dni") + ";";
+            dades_encadenades += dades_persona.getString("data_naixement") + ";";
+            dades_encadenades += dades_persona.getString("telefon") + ";";
+            dades_encadenades += dades_persona.getString("email") + ";";
+        }
+        String[] dades_organitzades = dades_encadenades.split(";");
+        return dades_organitzades;
     }
 }

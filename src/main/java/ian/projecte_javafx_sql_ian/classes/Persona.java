@@ -10,7 +10,7 @@ import java.sql.Date;
  *
  * @author alumne
  */
-public abstract class Persona {
+public class Persona {
     private String nom;
     private String cognom;
     private String adreca;

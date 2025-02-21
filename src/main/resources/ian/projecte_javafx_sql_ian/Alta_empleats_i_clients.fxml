@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="711.0" prefWidth="402.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ian.projecte_javafx_sql_ian.Alta_empleats_i_clients">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="711.0" prefWidth="402.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ian.projecte_javafx_sql_ian.Alta_empleats_i_clients">
    <children>
       <GridPane layoutX="101.0" layoutY="47.0">
          <columnConstraints>
@@ -112,8 +112,8 @@
             <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
          </rowConstraints>
          <children>
-            <Label text="Persona" GridPane.halignment="CENTER" />
-            <ComboBox fx:id="combo_tipus_persona1" onAction="#controllerActualitzarTipusPersona" prefHeight="24.0" prefWidth="91.0" GridPane.rowIndex="1" />
+            <Label fx:id="label_tipus_persona_registrada" text="Persona" GridPane.halignment="CENTER" />
+            <ComboBox fx:id="combo_persona_registrada" disable="true" onAction="#controllerPrepararDades" prefHeight="24.0" prefWidth="91.0" GridPane.rowIndex="1" />
          </children>
       </GridPane>
    </children>
