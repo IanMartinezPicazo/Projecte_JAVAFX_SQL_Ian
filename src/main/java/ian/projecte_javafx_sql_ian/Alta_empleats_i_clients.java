@@ -308,27 +308,29 @@ public class Alta_empleats_i_clients {
     
     @FXML
     private void controllerPrepararDades() throws SQLException{
-        // Per cridar al model.
-        Model model = new Model();
-        // Omple els camps de text amb les dades de la persona seleccionada.
-        TextField[] camps_compartits_text = {
-            field_nom,
-            field_cognom,
-            field_adreça,
-            field_dni,
-            field_telefon,
-            field_email,
-        };
-        
-        // Itera sobre les dades de la persona seleccionada per a omplir els camps compartits per ambdues tipus de persona.
-        String[] dades_persona = model.buscarPersonaSeleccionada(combo_persona_registrada.getValue().toString());
-        for (int i = 0, j = 0; i < dades_persona.length; i++) {
-            // Comprova si el següent camp per omplir és la data de naixement.
-            if (i == 4) {
-                date_naixement.setValue(LocalDate.parse(dades_persona[i])); 
-            } else {
-                camps_compartits_text[j].setText(dades_persona[i]);
-                j++;
+        if (combo_persona_registrada.getValue() != null){
+            // Per cridar al model.
+            Model model = new Model();
+            // Omple els camps de text amb les dades de la persona seleccionada.
+            TextField[] camps_compartits_text = {
+                field_nom,
+                field_cognom,
+                field_adreça,
+                field_dni,
+                field_telefon,
+                field_email,
+            };
+
+            // Itera sobre les dades de la persona seleccionada per a omplir els camps compartits per ambdues tipus de persona.
+            String[] dades_persona = model.buscarPersonaSeleccionada(combo_persona_registrada.getValue().toString());
+            for (int i = 0, j = 0; i < dades_persona.length; i++) {
+                // Comprova si el següent camp per omplir és la data de naixement.
+                if (i == 4) {
+                    date_naixement.setValue(LocalDate.parse(dades_persona[i])); 
+                } else {
+                    camps_compartits_text[j].setText(dades_persona[i]);
+                    j++;
+                }
             }
         }
     }

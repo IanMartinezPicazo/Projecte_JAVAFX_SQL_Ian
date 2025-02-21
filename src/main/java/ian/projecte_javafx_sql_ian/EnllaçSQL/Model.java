@@ -14,11 +14,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 
 /**
  *
@@ -58,12 +55,11 @@ public class Model {
     // Comprova si el nom, cognom, i DNI introduit als camps compartits per ambdues tipus de persona coincideixen amb qualsevol registre.
     public PersonaExistent comprovarPersonaRegistrada(Persona persona, String tipus_persona) throws SQLException {
         String consulta;
-
         // Desa una consulta basat en el tipus de persona escullit.
         if (tipus_persona.equals("Empleat")) {
             consulta = "SELECT id_persona, nom, cognom, dni FROM persona INNER JOIN client ON id_persona = id_client WHERE dni = ?";
         } else {
-            consulta = "SELECT id_persona nom, cognom, dni FROM persona INNER JOIN empleat ON id_persona = id_persona WHERE dni = ?";
+            consulta = "SELECT id_persona, nom, cognom, dni FROM persona INNER JOIN empleat ON id_persona = id_empleat WHERE dni = ?";
         }
         
         Connection connexio = new Connexio().connecta();
@@ -77,18 +73,20 @@ public class Model {
         
         // Retorna l'ID de la persona amb control d'errada.
         if (dades_persona_existent.next()) {
+            System.out.println("Found shit.");
             boolean duplicat = false, dni_duplicat = false;
             if (dades_persona_existent.getString(2).equals(persona.getNom()) && dades_persona_existent.getString(3).equals(persona.getCognom())){
+                System.out.println("Shit is fully copied");
                 duplicat = true;
-            }else{
-                return null;
             }
             if (!duplicat && dades_persona_existent.getString(4).equals(persona.getDni())){
+                System.out.println("Only the DNI is copied");
                 dni_duplicat = true;
             }
             int id_persona = dades_persona_existent.getInt(1);
             return new PersonaExistent(duplicat, dni_duplicat, id_persona);
         } else {
+            System.out.println("Didn't find shit");
             return null;
         }
     }
@@ -102,11 +100,14 @@ public class Model {
         PersonaExistent persona_duplicada = comprovarPersonaRegistrada(empleat, "Empleat");
         if (persona_duplicada != null){
             if (persona_duplicada.isDuplicat()){
+                System.out.println("Full dup");
                 id_empleat = persona_duplicada.getId_persona();
             }else{
                 if (persona_duplicada.isDni_duplicat()){
+                    System.out.println("DNI dup");
                     return -1;
                 }else{
+                    System.out.println("No dup");
                     id_empleat = altaPersona(empleat);
 
                     if (id_empleat == -1){
@@ -115,8 +116,14 @@ public class Model {
                 }
             }
         }else{
-            return -1;
+            System.out.println("Not even real");
+            id_empleat = altaPersona(empleat);
+
+            if (id_empleat == -1){
+                return id_empleat; // Control d'errada.
+            }
         }
+           
         // Desa una consulta SQL amb valors subtitius.
         String consulta = "INSERT INTO empleat (id_empleat, lloc_feina, data_contractacio, salari_brut, estat_laboral) VALUES (?, ?, ?, ?, ?)";
 
@@ -145,11 +152,14 @@ public class Model {
         PersonaExistent persona_duplicada = comprovarPersonaRegistrada(client, "Client");
         if (persona_duplicada != null){
             if (persona_duplicada.isDuplicat()){
+                System.out.println("Full dup");
                 id_client = persona_duplicada.getId_persona();
             }else{
                 if (persona_duplicada.isDni_duplicat()){
+                    System.out.println("DNI dup");
                     return;
                 }else{
+                    System.out.println("No dup");
                     id_client = altaPersona(client);
 
                     if (id_client == -1){
@@ -158,7 +168,12 @@ public class Model {
                 }
             }
         }else{
-            return;
+            System.out.println("Not even real");
+            id_client = altaPersona(client);
+
+            if (id_client == -1){
+                return; // Control d'errada.
+            }
         }
         
         // Desa una consulta SQL amb valors subtitius.
