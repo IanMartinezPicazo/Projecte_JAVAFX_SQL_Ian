@@ -4,7 +4,7 @@
  */
 package ian.projecte_javafx_sql_ian;
 
-import ian.projecte_javafx_sql_ian.EnllaçSQL.Model;
+import ian.projecte_javafx_sql_ian.EnllacSQL.Model;
 import ian.projecte_javafx_sql_ian.classes.Client;
 import ian.projecte_javafx_sql_ian.classes.Empleat;
 import ian.projecte_javafx_sql_ian.classes.Persona;

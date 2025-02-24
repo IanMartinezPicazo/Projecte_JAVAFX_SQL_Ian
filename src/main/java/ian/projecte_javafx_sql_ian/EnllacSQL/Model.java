@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package ian.projecte_javafx_sql_ian.EnllaçSQL;
+package ian.projecte_javafx_sql_ian.EnllacSQL;
 
 import ian.projecte_javafx_sql_ian.classes.Client;
 import ian.projecte_javafx_sql_ian.classes.Empleat;
@@ -16,6 +16,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 /**
  *
@@ -282,5 +284,52 @@ public class Model {
         }
         String[] dades_organitzades = dades_encadenades.split(";");
         return dades_organitzades;
+    }
+    
+    public ObservableList<String> llistarClients() throws SQLException{
+        ObservableList<String> clients = FXCollections.observableArrayList();
+        
+        String consulta = "SELECT nom, cognom, dni FROM persona INNER JOIN client ON persona.id_persona = client.id_client";
+        
+        Connection connexio = new Connexio().connecta();
+        PreparedStatement dades_clients = connexio.prepareStatement(consulta);
+        
+        ResultSet resultat = dades_clients.executeQuery();
+        
+        while (resultat.next()){
+            String nom_complet = resultat.getString("nom") + " " + resultat.getString("cognom") + " - " + resultat.getString("dni");
+            clients.add(nom_complet);
+        }
+        return clients;
+    }
+
+    public ObservableList<String> buscarReservesClientSeleccionat(String client) throws SQLException{
+        ObservableList<String> reserves = FXCollections.observableArrayList();
+        
+        String consulta = "SELECT data_inici, data_fi, numero_habitacio"
+                + "FROM reserva"
+                + "INNER JOIN habitacio"
+                + "ON reserva.id_habitacio = habitacio.id_habitacio"
+                + "INNER JOIN client"
+                + "ON reserva.id_client = client.id_client";
+        
+        Connection connexio = new Connexio().connecta();
+        PreparedStatement dades_reserves = connexio.prepareStatement(consulta);
+        
+        ResultSet resultat = dades_reserves.executeQuery();
+        
+        // Retorna la data d'avui en ms.
+        Date avui = new Date(System.currentTimeMillis());
+        while (resultat.next() && resultat.getDate("data_fi").before(avui)){
+            Date data_fi = resultat.getDate("data_fi");
+
+            if (data_fi.before(avui)) { 
+                String reserva = resultat.getString("data_inici") + 
+                                 " fins a " + resultat.getString("data_fi") + 
+                                 " a l'habitació " + resultat.getString("numero_habitacio");
+                reserves.add(reserva);
+            }
+        }
+        return reserves;
     }
 }
