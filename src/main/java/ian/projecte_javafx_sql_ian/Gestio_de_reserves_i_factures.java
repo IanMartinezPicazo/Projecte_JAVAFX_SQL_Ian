@@ -5,8 +5,19 @@
 package ian.projecte_javafx_sql_ian;
 
 import ian.projecte_javafx_sql_ian.EnllacSQL.Model;
+import ian.projecte_javafx_sql_ian.enums.IVA;
+import ian.projecte_javafx_sql_ian.enums.TipusReserva;
 import java.io.IOException;
+import java.sql.Date;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.ParseException;
+import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.Locale;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -43,7 +54,23 @@ public class Gestio_de_reserves_i_factures {
     public void initialize() throws SQLException{
         // Per cridar al model.
         Model model = new Model();
+        
+        // Inicialitza i aplica les dades dels desplegables.
         combo_clients.setItems(model.llistarClients());
+        
+        ObservableList<TipusReserva> tipus_reserva = FXCollections.observableArrayList(Arrays.asList(
+            TipusReserva.AD,
+            TipusReserva.MP
+        ));
+        combo_tipus_reserva.setItems(tipus_reserva);
+        
+        ObservableList<IVA> ivas = FXCollections.observableArrayList(Arrays.asList(
+            IVA._16_PERCENT,
+            IVA._19_PERCENT,
+            IVA._20_PERCENT,
+            IVA._21_PERCENT
+        ));
+        combo_iva_reserva.setItems(ivas);
     }
     
     @FXML
@@ -51,23 +78,101 @@ public class Gestio_de_reserves_i_factures {
         // Per cridar al model.
         Model model = new Model();
         
+        // Habilita els objectes corresponents.
+        button_afegir_reserva.setDisable(false);
+        
         date_reserva_inici.setValue(null);
         date_reserva_final.setValue(null);
         field_preu_reserva.clear();
-        combo_clients.getSelectionModel().clearSelection();
         combo_tipus_reserva.getSelectionModel().clearSelection();
         combo_iva_reserva.getSelectionModel().clearSelection();
         combo_habitacio.getSelectionModel().clearSelection();
-
+        
         date_reserva_inici.setDisable(false);
         date_reserva_final.setDisable(false);
         field_preu_reserva.setDisable(false);
-        combo_clients.setDisable(false);
         combo_tipus_reserva.setDisable(false);
         combo_iva_reserva.setDisable(false);
-        combo_habitacio.setDisable(false);
+        combo_habitacio.setDisable(true);
         
         list_reservas_pendents.setItems(model.buscarReservesClientSeleccionat(combo_clients.getValue().toString()));
+    }
+    
+    @FXML
+    private void controllerAfegirReserva(){
+        // Per cridar al model.
+        Model model = new Model();
+        
+        // Control de dades valides.        
+        boolean valid = true;
+        
+        // Retorna la data d'avui en ms.
+        Date creacio_reserva = new Date(System.currentTimeMillis());
+        
+        // Obté la data d'inici i final de la reserva, i la converteix a una data compatible amb SQL.
+        // Comprova si qualsevol dels camps de les dates son buida.
+        LocalDate data_reserva_inici = date_reserva_inici.getValue();
+        Date data_reserva_inici_sql = (data_reserva_inici != null) ? Date.valueOf(data_reserva_inici) : null;
+        LocalDate data_reserva_final = date_reserva_final.getValue();
+        Date data_reserva_final_sql = (data_reserva_final != null) ? Date.valueOf(data_reserva_final) : null;
+        valid = !(data_reserva_inici_sql == null || data_reserva_final_sql == null);
+        
+        // Comprova que s'hagui seleccionat una opció en tots els desplegables.
+        valid = !(combo_tipus_reserva.getValue() == null || combo_iva_reserva == null || combo_habitacio == null);
+        
+        // Obté el preu en text.
+        String preu_text = field_preu_reserva.getText().trim();
+
+        // Enforça l'ús de '.' per a decimals.
+        DecimalFormatSymbols simbols = new DecimalFormatSymbols(Locale.ENGLISH);
+        simbols.setDecimalSeparator('.');
+        DecimalFormat decimal_punt = new DecimalFormat();
+        decimal_punt.setDecimalFormatSymbols(simbols);
+
+        // Converteix el salari en text a double amb control d'errada.
+        double preu = 0;
+        try {
+            preu = decimal_punt.parse(preu_text).doubleValue();
+        } catch (ParseException e) {
+            valid = false;
+        }
+    }
+    
+    @FXML
+    private void controllerLlistarHabitacions() throws SQLException{
+        // Per cridar al model.
+        Model model = new Model();
+        
+        combo_habitacio.setDisable(true);
+        
+        // Control d'errada.
+        if (date_reserva_inici.getValue() != null && date_reserva_final.getValue() != null){
+            // Obté la data d'inici i final de la reserva, i la converteix a una data compatible amb SQL.
+            LocalDate data_reserva_inici = date_reserva_inici.getValue();
+            Date data_reserva_inici_sql = (data_reserva_inici != null) ? Date.valueOf(data_reserva_inici) : null;
+            LocalDate data_reserva_final = date_reserva_final.getValue();
+            Date data_reserva_final_sql = (data_reserva_final != null) ? Date.valueOf(data_reserva_final) : null;
+            
+            // En cas que les dates siguin coherents, crida al model per llistar les habitacions disponibles.
+            if (data_reserva_inici_sql.before(data_reserva_final_sql)){
+                combo_habitacio.setItems(model.buscarHabitacionsDisponibles(data_reserva_inici_sql, data_reserva_final_sql));
+                combo_habitacio.setDisable(false);
+            }else{
+                combo_habitacio.setItems(null);
+            }
+        }else{
+            combo_habitacio.setItems(null);
+        }
+    }
+    
+    @FXML
+    private void controllerReservaSeleccionada(){
+        
+    }
+    
+    @FXML
+    private void controllerGenerarFactura(){
+        
     }
     
     @FXML

@@ -82,12 +82,12 @@ public class Alta_empleats_i_clients {
         ));
         combo_categoria.setItems(categories);
         
-        ObservableList<EstatEmpleat> estats = FXCollections.observableArrayList(Arrays.asList(
+        ObservableList<EstatEmpleat> estats_empleat = FXCollections.observableArrayList(Arrays.asList(
                 EstatEmpleat.ACTIU,
                 EstatEmpleat.BAIXA,
                 EstatEmpleat.PERMIS
         ));
-        combo_estat.setItems(estats);
+        combo_estat.setItems(estats_empleat);
     }
     
     @FXML
@@ -130,41 +130,40 @@ public class Alta_empleats_i_clients {
         String tipus_persona = combo_tipus_persona.getValue().toString();
         
         // Habilita i deshabilita els camps adequats depenent del tipus de persona seleccionada.
-        if (tipus_persona.equals("Empleat")) {
-            label_tipus_persona_registrada.setText("Client");
-            
-            label_extra1.setText("Feina");
-            field_feina.setDisable(false);
-            label_extra2.setText("Salari brut");
-            field_salari.setDisable(false);
-            label_extra3.setText("Estat d'empleat");
-            combo_estat.setDisable(false);
-
-            combo_categoria.setDisable(true);
-            field_targeta.setDisable(true);
-        } else if (tipus_persona.equals("Client")) {
-            label_tipus_persona_registrada.setText("Empleat");
-            
-            label_extra1.setText("Categoria");
-            combo_categoria.setDisable(false);
-            label_extra2.setText("Targeta");
-            field_targeta.setDisable(false);
-
-            field_feina.setDisable(true);
-            field_salari.setDisable(true);
-            combo_estat.setDisable(true);
-        } else {
-            label_tipus_persona_registrada.setText("Persona");
-            combo_persona_registrada.setDisable(true);
-            
-            label_extra1.setText("Feina i categoria");
-            field_feina.setDisable(false);
-            combo_categoria.setDisable(false);
-            label_extra2.setText("Salari brut i targeta");
-            field_salari.setDisable(false);
-            field_targeta.setDisable(false);
-            label_extra3.setText("Estat d'empleat");
-            combo_estat.setDisable(false);
+        switch (tipus_persona) {
+            case "Empleat":
+                label_tipus_persona_registrada.setText("Client");
+                label_extra1.setText("Feina");
+                field_feina.setDisable(false);
+                label_extra2.setText("Salari brut");
+                field_salari.setDisable(false);
+                label_extra3.setText("Estat d'empleat");
+                combo_estat.setDisable(false);
+                combo_categoria.setDisable(true);
+                field_targeta.setDisable(true);
+                break;
+            case "Client":
+                label_tipus_persona_registrada.setText("Empleat");
+                label_extra1.setText("Categoria");
+                combo_categoria.setDisable(false);
+                label_extra2.setText("Targeta");
+                field_targeta.setDisable(false);
+                field_feina.setDisable(true);
+                field_salari.setDisable(true);
+                combo_estat.setDisable(true);
+                break;
+            default:
+                label_tipus_persona_registrada.setText("Persona");
+                combo_persona_registrada.setDisable(true);
+                label_extra1.setText("Feina i categoria");
+                field_feina.setDisable(false);
+                combo_categoria.setDisable(false);
+                label_extra2.setText("Salari brut i targeta");
+                field_salari.setDisable(false);
+                field_targeta.setDisable(false);
+                label_extra3.setText("Estat d'empleat");
+                combo_estat.setDisable(false);
+                break;
         }
         
         // Obté la llista de tipus de persona oposit al seleccionat.
@@ -208,8 +207,8 @@ public class Alta_empleats_i_clients {
         // Obté la data de naixement, i la converteix a una data compatible amb SQL.
         // Comprova si el camp de la data de naixement es buida.
         LocalDate data_naixement = date_naixement.getValue();
-        Date dataSQL_naixement = (data_naixement != null) ? Date.valueOf(data_naixement) : null;
-        valid = !(dataSQL_naixement == null);
+        Date data_naixement_sql = (data_naixement != null) ? Date.valueOf(data_naixement) : null;
+        valid = !(data_naixement_sql == null);
         
         // Control de selecció de persona.
         if (combo_tipus_persona.getValue().equals("Empleat") || combo_tipus_persona.getValue().equals("Empleat i client")) {
@@ -250,7 +249,7 @@ public class Alta_empleats_i_clients {
                     field_cognom.getText().trim(),
                     field_adreça.getText().trim(),
                     field_dni.getText().trim(),
-                    dataSQL_naixement,
+                    data_naixement_sql,
                     field_telefon.getText().trim(),
                     field_email.getText().trim(),
                     field_feina.getText().trim(),
@@ -266,7 +265,7 @@ public class Alta_empleats_i_clients {
                         field_cognom.getText().trim(),
                         field_adreça.getText().trim(),
                         field_dni.getText().trim(),
-                        dataSQL_naixement,
+                        data_naixement_sql,
                         field_telefon.getText().trim(),
                         field_email.getText().trim(),
                         avui,
@@ -291,7 +290,7 @@ public class Alta_empleats_i_clients {
                     field_cognom.getText().trim(),
                     field_adreça.getText().trim(),
                     field_dni.getText().trim(),
-                    dataSQL_naixement,
+                    data_naixement_sql,
                     field_telefon.getText().trim(),
                     field_email.getText().trim(),
                     avui,

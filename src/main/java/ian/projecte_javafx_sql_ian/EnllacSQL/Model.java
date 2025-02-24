@@ -307,11 +307,11 @@ public class Model {
         ObservableList<String> reserves = FXCollections.observableArrayList();
         
         String consulta = "SELECT data_inici, data_fi, numero_habitacio"
-                + "FROM reserva"
-                + "INNER JOIN habitacio"
-                + "ON reserva.id_habitacio = habitacio.id_habitacio"
-                + "INNER JOIN client"
-                + "ON reserva.id_client = client.id_client";
+                + " FROM reserva"
+                + " INNER JOIN habitacio"
+                + " ON reserva.id_habitacio = habitacio.id_habitacio"
+                + " INNER JOIN client"
+                + " ON reserva.id_client = client.id_client";
         
         Connection connexio = new Connexio().connecta();
         PreparedStatement dades_reserves = connexio.prepareStatement(consulta);
@@ -331,5 +331,32 @@ public class Model {
             }
         }
         return reserves;
+    }
+
+    public ObservableList<String> buscarHabitacionsDisponibles(Date data_inici_reserva, Date data_final_reserva) throws SQLException{
+       ObservableList<String> habitacions = FXCollections.observableArrayList();
+        
+        String consulta = "SELECT numero_habitacio"
+               + " FROM habitacio"
+               + " WHERE id_habitacio NOT IN ("
+               + "    SELECT id_habitacio FROM reserva"
+               + "    WHERE NOT (data_fi < ? OR data_inici > ?)"
+               + ") AND estat = ?";
+       
+        Connection connexio = new Connexio().connecta();
+        PreparedStatement dades_habitacions = connexio.prepareStatement(consulta);
+        
+        dades_habitacions.setDate(1, data_inici_reserva);
+        dades_habitacions.setDate(2, data_final_reserva);
+        dades_habitacions.setString(3, "DISPONIBLE");
+        
+        ResultSet resultat = dades_habitacions.executeQuery();
+        
+        while (resultat.next()){
+            int numero_habitacio = resultat.getInt("numero_habitacio");
+            String numero_habitacio_text = String.valueOf(numero_habitacio);
+            habitacions.add(numero_habitacio_text);
+        }
+        return habitacions == null ? null : habitacions;
     }
 }

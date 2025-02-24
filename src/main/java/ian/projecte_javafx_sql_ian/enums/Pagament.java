@@ -9,16 +9,6 @@ package ian.projecte_javafx_sql_ian.enums;
  * @author alumne
  */
 public enum Pagament {
-    EFECTIU("Efectiu"),
-    TARGETA("Targeta");
-
-    private final String value;
-
-    Pagament(String value) {
-        this.value = value;
-    }
-
-    public String getValue() {
-        return value;
-    }
+    EFECTIU,
+    TARGETA;
 }

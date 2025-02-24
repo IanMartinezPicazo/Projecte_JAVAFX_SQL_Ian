@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="761.0" prefWidth="501.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ian.projecte_javafx_sql_ian.Gestio_de_reserves_i_factures">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="845.0" prefWidth="501.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ian.projecte_javafx_sql_ian.Gestio_de_reserves_i_factures">
    <children>
       <SplitPane dividerPositions="0.5286415711947626" layoutX="100.0" layoutY="551.0" orientation="VERTICAL" prefHeight="857.0" prefWidth="501.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <items>
@@ -66,8 +66,8 @@
                         <Label text="IVA" GridPane.rowIndex="3" />
                         <Label text="Habitació" GridPane.rowIndex="5" />
                         <Label text="Preu" GridPane.rowIndex="4" />
-                        <DatePicker fx:id="date_reserva_inici" disable="true" editable="false" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" />
-                        <DatePicker fx:id="date_reserva_final" disable="true" editable="false" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <DatePicker fx:id="date_reserva_inici" disable="true" editable="false" maxWidth="1.7976931348623157E308" onAction="#controllerLlistarHabitacions" GridPane.columnIndex="1" />
+                        <DatePicker fx:id="date_reserva_final" disable="true" editable="false" maxWidth="1.7976931348623157E308" onAction="#controllerLlistarHabitacions" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                         <ComboBox fx:id="combo_tipus_reserva" disable="true" maxWidth="1.7976931348623157E308" prefHeight="26.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                         <ComboBox fx:id="combo_iva_reserva" disable="true" maxWidth="1.7976931348623157E308" prefHeight="26.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                         <TextField fx:id="field_preu_reserva" disable="true" GridPane.columnIndex="1" GridPane.rowIndex="4" />
@@ -80,7 +80,7 @@
                   <Label layoutX="339.0" layoutY="95.0" text="Reserves pendents" />
                </children>
             </AnchorPane>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="500.0">
                <children>
                   <GridPane layoutX="202.0" layoutY="61.0" prefHeight="26.0" prefWidth="77.0">
                      <columnConstraints>

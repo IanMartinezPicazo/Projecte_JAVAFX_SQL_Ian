@@ -9,4 +9,9 @@ public class Menu {
     private void Lugar1() throws IOException {
         App.setRoot("Alta_empleats_i_clients");
     }
+    
+    @FXML
+    private void Lugar2() throws IOException {
+        App.setRoot("Gestio_de_reserves_i_factures");
+    }
 }

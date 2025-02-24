@@ -9,18 +9,8 @@ package ian.projecte_javafx_sql_ian.enums;
  * @author alumne
  */
 public enum IVA {
-    _16_PERCENT(0.16),
-    _19_PERCENT(0.19),
-    _20_PERCENT(0.20),
-    _21_PERCENT(0.21);
-
-    private final double percent;
-
-    IVA(double percent) {
-        this.percent = percent;
-    }
-
-    public double getPercent() {
-        return percent;
-    }
+    _16_PERCENT,
+    _19_PERCENT,
+    _20_PERCENT,
+    _21_PERCENT;
 }

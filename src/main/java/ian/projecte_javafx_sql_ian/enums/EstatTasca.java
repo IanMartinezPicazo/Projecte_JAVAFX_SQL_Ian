@@ -9,16 +9,6 @@ package ian.projecte_javafx_sql_ian.enums;
  * @author alumne
  */
 public enum EstatTasca {
-    PENDENT("Pendent"),
-    COMPLETADA("Completada");
-
-    private final String value;
-
-    EstatTasca(String value) {
-        this.value = value;
-    }
-
-    public String getValue() {
-        return value;
-    }
+    PENDENT,
+    COMPLETADA;
 }

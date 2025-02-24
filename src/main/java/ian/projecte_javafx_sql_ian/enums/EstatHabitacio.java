@@ -9,17 +9,7 @@ package ian.projecte_javafx_sql_ian.enums;
  * @author alumne
  */
 public enum EstatHabitacio {
-    DISPONIBLE("Disponible"),
-    OCUPADA("Ocupada"),
-    NETEJA("Neteja");
-
-    private final String value;
-
-    EstatHabitacio(String value) {
-        this.value = value;
-    }
-
-    public String getValue() {
-        return value;
-    }
+    DISPONIBLE,
+    OCUPADA,
+    NETEJA;
 }
