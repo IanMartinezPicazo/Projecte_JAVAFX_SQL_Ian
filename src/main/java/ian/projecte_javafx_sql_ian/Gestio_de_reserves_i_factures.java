@@ -5,7 +5,9 @@
 package ian.projecte_javafx_sql_ian;
 
 import ian.projecte_javafx_sql_ian.EnllacSQL.Model;
+import ian.projecte_javafx_sql_ian.classes.Reserva;
 import ian.projecte_javafx_sql_ian.enums.IVA;
+import ian.projecte_javafx_sql_ian.enums.Pagament;
 import ian.projecte_javafx_sql_ian.enums.TipusReserva;
 import java.io.IOException;
 import java.sql.Date;
@@ -33,7 +35,8 @@ public class Gestio_de_reserves_i_factures {
     // Inicialitza tots els objectes amb IDs.
     @FXML
     TextField
-        field_preu_reserva;
+        field_preu_reserva,
+        field_base_imposable_factura;
     @FXML
     DatePicker
         date_reserva_inici,
@@ -43,7 +46,10 @@ public class Gestio_de_reserves_i_factures {
         combo_clients, // Habilitat.
         combo_tipus_reserva,
         combo_iva_reserva,
-        combo_habitacio;
+        combo_habitacio,
+        combo_reserves_no_facturades,
+        combo_pagament_factura,
+        combo_iva_factura;
     @FXML
     Button
         button_afegir_reserva;
@@ -71,6 +77,13 @@ public class Gestio_de_reserves_i_factures {
             IVA._21_PERCENT
         ));
         combo_iva_reserva.setItems(ivas);
+        combo_iva_factura.setItems(ivas);
+        
+        ObservableList<Pagament> pagaments = FXCollections.observableArrayList(Arrays.asList(
+            Pagament.EFECTIU,
+            Pagament.TARGETA
+        ));
+        combo_pagament_factura.setItems(pagaments);
     }
     
     @FXML
@@ -87,6 +100,10 @@ public class Gestio_de_reserves_i_factures {
         combo_tipus_reserva.getSelectionModel().clearSelection();
         combo_iva_reserva.getSelectionModel().clearSelection();
         combo_habitacio.getSelectionModel().clearSelection();
+        combo_reserves_no_facturades.getSelectionModel().clearSelection();
+        combo_pagament_factura.getSelectionModel().clearSelection();
+        field_base_imposable_factura.clear();
+        combo_iva_factura.getSelectionModel().clearSelection();
         
         date_reserva_inici.setDisable(false);
         date_reserva_final.setDisable(false);
@@ -94,12 +111,24 @@ public class Gestio_de_reserves_i_factures {
         combo_tipus_reserva.setDisable(false);
         combo_iva_reserva.setDisable(false);
         combo_habitacio.setDisable(true);
+        combo_reserves_no_facturades.setDisable(true);
+        combo_pagament_factura.setDisable(true);
+        field_base_imposable_factura.setDisable(true);
+        combo_iva_factura.setDisable(true);
         
-        list_reservas_pendents.setItems(model.buscarReservesClientSeleccionat(combo_clients.getValue().toString()));
+        // Llista les reserves del client.
+        list_reservas_pendents.setItems(model.buscarReservesClientSeleccionat(combo_clients.getValue().toString(), false));
+        combo_reserves_no_facturades.setItems(model.buscarReservesClientSeleccionat(combo_clients.getValue().toString(), true));
+        if (combo_reserves_no_facturades.getItems() == null){
+            combo_reserves_no_facturades.setDisable(false);
+            combo_pagament_factura.setDisable(false);
+            field_base_imposable_factura.setDisable(false);
+            combo_iva_factura.setDisable(false);
+        }
     }
     
     @FXML
-    private void controllerAfegirReserva(){
+    private void controllerAfegirReserva() throws SQLException{
         // Per cridar al model.
         Model model = new Model();
         
@@ -136,6 +165,21 @@ public class Gestio_de_reserves_i_factures {
         } catch (ParseException e) {
             valid = false;
         }
+        
+        if (valid){
+            Reserva nova_reserva = new Reserva(
+                creacio_reserva,
+                data_reserva_inici_sql,
+                data_reserva_final_sql,
+                (TipusReserva) combo_tipus_reserva.getValue(),
+                (IVA) combo_iva_reserva.getValue(),
+                preu,
+                model.buscarClientSeleccionat(combo_clients.getValue().toString()),
+                model.buscarHabitacioSeleccionada(combo_habitacio.getValue().toString())
+            );
+            model.crearReserva(nova_reserva);
+            controllerClientSeleccionat();
+        }
     }
     
     @FXML
@@ -154,7 +198,10 @@ public class Gestio_de_reserves_i_factures {
             Date data_reserva_final_sql = (data_reserva_final != null) ? Date.valueOf(data_reserva_final) : null;
             
             // En cas que les dates siguin coherents, crida al model per llistar les habitacions disponibles.
-            if (data_reserva_inici_sql.before(data_reserva_final_sql)){
+            Date creacio_reserva = new Date(System.currentTimeMillis());
+            if (data_reserva_inici_sql.before(data_reserva_final_sql) && 
+                (data_reserva_inici_sql.equals(creacio_reserva) || 
+                 data_reserva_inici_sql.after(creacio_reserva))){
                 combo_habitacio.setItems(model.buscarHabitacionsDisponibles(data_reserva_inici_sql, data_reserva_final_sql));
                 combo_habitacio.setDisable(false);
             }else{
@@ -167,7 +214,9 @@ public class Gestio_de_reserves_i_factures {
     
     @FXML
     private void controllerReservaSeleccionada(){
-        
+        combo_pagament_factura.getSelectionModel().clearSelection();
+        field_base_imposable_factura.clear();
+        combo_iva_factura.getSelectionModel().clearSelection();
     }
     
     @FXML

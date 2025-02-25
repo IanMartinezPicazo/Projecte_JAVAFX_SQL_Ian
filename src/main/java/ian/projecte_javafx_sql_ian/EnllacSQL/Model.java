@@ -8,6 +8,7 @@ import ian.projecte_javafx_sql_ian.classes.Client;
 import ian.projecte_javafx_sql_ian.classes.Empleat;
 import ian.projecte_javafx_sql_ian.classes.Persona;
 import ian.projecte_javafx_sql_ian.classes.PersonaExistent;
+import ian.projecte_javafx_sql_ian.classes.Reserva;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -251,12 +252,12 @@ public class Model {
         return persones;
     }
 
-    public String[] buscarPersonaSeleccionada(String persona) throws SQLException{
+    public String[] buscarPersonaSeleccionada(String identificacio) throws SQLException{
         String dni = "";
-        for (int i = 0;i < persona.length();i++){
-           char buscador = persona.charAt(i);
+        for (int i = 0;i < identificacio.length();i++){
+           char buscador = identificacio.charAt(i);
            if (buscador == '-'){
-               dni = persona.substring(i + 1).trim();
+               dni = identificacio.substring(i + 1).trim();
                break;
            }
         }
@@ -303,31 +304,57 @@ public class Model {
         return clients;
     }
 
-    public ObservableList<String> buscarReservesClientSeleccionat(String client) throws SQLException{
+    public ObservableList<String> buscarReservesClientSeleccionat(String identificacio, boolean buscaFacturas) throws SQLException{
         ObservableList<String> reserves = FXCollections.observableArrayList();
         
-        String consulta = "SELECT data_inici, data_fi, numero_habitacio"
+        String dni = "";
+        for (int i = 0;i < identificacio.length();i++){
+           char buscador = identificacio.charAt(i);
+           if (buscador == '-'){
+               dni = identificacio.substring(i + 1).trim();
+               break;
+           }
+        }
+        
+        String consulta =
+                "SELECT id_reserva, data_inici, data_fi, numero_habitacio"
                 + " FROM reserva"
                 + " INNER JOIN habitacio"
                 + " ON reserva.id_habitacio = habitacio.id_habitacio"
                 + " INNER JOIN client"
-                + " ON reserva.id_client = client.id_client";
+                + " ON reserva.id_client = client.id_client"
+                + " INNER JOIN persona"
+                + " ON persona.id_persona = client.id_client"
+                + " WHERE dni = ?";
         
         Connection connexio = new Connexio().connecta();
         PreparedStatement dades_reserves = connexio.prepareStatement(consulta);
+        
+        dades_reserves.setString(1, dni);
         
         ResultSet resultat = dades_reserves.executeQuery();
         
         // Retorna la data d'avui en ms.
         Date avui = new Date(System.currentTimeMillis());
-        while (resultat.next() && resultat.getDate("data_fi").before(avui)){
-            Date data_fi = resultat.getDate("data_fi");
+        if (!buscaFacturas){
+            while (resultat.next() && resultat.getDate("data_fi").before(avui)){
+                Date data_fi = resultat.getDate("data_fi");
 
-            if (data_fi.before(avui)) { 
-                String reserva = resultat.getString("data_inici") + 
-                                 " fins a " + resultat.getString("data_fi") + 
-                                 " a l'habitació " + resultat.getString("numero_habitacio");
-                reserves.add(reserva);
+                if (data_fi.before(avui)) { 
+                    String reserva = resultat.getString("data_inici") + 
+                                     " fins a " + resultat.getString("data_fi") + 
+                                     " a l'habitació " + resultat.getString("numero_habitacio");
+                    reserves.add(reserva);
+                }
+            }
+        }else{
+            while (resultat.next()){
+                if (resultat.getDate("data_fi").after(avui) && buscarFacturesReserva(resultat.getInt("id_reserva"))){
+                    String reserva = resultat.getString("data_inici") + 
+                                " fins a " + resultat.getString("data_fi") + 
+                                " a l'habitació " + resultat.getString("numero_habitacio");
+                    reserves.add(reserva);
+                }
             }
         }
         return reserves;
@@ -339,8 +366,10 @@ public class Model {
         String consulta = "SELECT numero_habitacio"
                + " FROM habitacio"
                + " WHERE id_habitacio NOT IN ("
-               + "    SELECT id_habitacio FROM reserva"
-               + "    WHERE NOT (data_fi < ? OR data_inici > ?)"
+               + "      SELECT habitacio.id_habitacio FROM reserva"
+               + "      INNER JOIN habitacio"
+               + "      ON reserva.id_habitacio = habitacio.id_habitacio"
+               + "      WHERE NOT (data_fi < ? OR data_inici > ?)"
                + ") AND estat = ?";
        
         Connection connexio = new Connexio().connecta();
@@ -358,5 +387,98 @@ public class Model {
             habitacions.add(numero_habitacio_text);
         }
         return habitacions == null ? null : habitacions;
+    }
+    
+    public int buscarClientSeleccionat(String identificacio) throws SQLException{
+        String dni = "";
+        for (int i = 0;i < identificacio.length();i++){
+           char buscador = identificacio.charAt(i);
+           if (buscador == '-'){
+               dni = identificacio.substring(i + 1).trim();
+               break;
+           }
+        }
+        
+        String consulta =
+                "SELECT id_client"
+                + " FROM persona"
+                + " INNER JOIN client"
+                + " ON persona.id_persona = client.id_client"
+                + " WHERE dni = ?";
+        
+        Connection connexio = new Connexio().connecta();
+        PreparedStatement dades_client = connexio.prepareStatement(consulta);
+        
+        dades_client.setString(1, dni);
+        
+        ResultSet resultat = dades_client.executeQuery();
+        
+        int id_client = 0;
+        while (resultat.next()){
+            id_client = resultat.getInt("id_client");
+        }
+        
+        return id_client;
+    }
+
+    public int buscarHabitacioSeleccionada(String habitacio) throws SQLException {
+        String consulta =
+                "SELECT id_habitacio"
+                + " FROM habitacio"
+                + " WHERE numero_habitacio = ?";
+        
+        Connection connexio = new Connexio().connecta();
+        PreparedStatement dades_habitacions = connexio.prepareStatement(consulta);
+        
+        int nombre = Integer.parseInt(habitacio);
+        
+        dades_habitacions.setInt(1, nombre);
+        
+        ResultSet resultat = dades_habitacions.executeQuery();
+        
+        int id_habitacio = 0;
+        while (resultat.next()){
+            id_habitacio = resultat.getInt("id_habitacio");
+        }
+        
+        return id_habitacio;
+    }
+
+    public void crearReserva(Reserva reserva) throws SQLException {
+        String consulta =
+                "INSERT INTO reserva (data_inici, data_fi, data_reserva, preu_total_reserva, tipus_iva, tipus_reserva, id_client, id_habitacio)"
+                + " VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        
+        Connection connexio = new Connexio().connecta();
+        PreparedStatement dades_reserva = connexio.prepareStatement(consulta);
+        
+        dades_reserva.setDate(1, reserva.getData_inici());
+        dades_reserva.setDate(2, reserva.getData_fi());
+        dades_reserva.setDate(3, reserva.getData_reserva());
+        dades_reserva.setDouble(4, reserva.getPreu_total_reserva());
+        dades_reserva.setString(5, reserva.getTipus_IVA());
+        dades_reserva.setString(6, reserva.getTipus_reserva());
+        dades_reserva.setInt(7, reserva.getId_client());
+        dades_reserva.setInt(8, reserva.getId_habitacio());
+        
+        dades_reserva.executeUpdate();
+    }
+    
+    public boolean buscarFacturesReserva(int id_reserva) throws SQLException{
+        String consulta = 
+                "SELECT *"
+                + " FROM factura"
+                + " INNER JOIN reserva"
+                + " ON factura.id_reserva = reserva.id_reserva"
+                + " WHERE id_reserva = ?";
+        
+        Connection connexio = new Connexio().connecta();
+        PreparedStatement dades_factura = connexio.prepareStatement(consulta);
+        
+        dades_factura.setInt(1, id_reserva);
+        
+        ResultSet resultat = dades_factura.executeQuery();
+        
+        return resultat.next();
     }
 }

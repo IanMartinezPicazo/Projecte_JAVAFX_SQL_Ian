@@ -6,7 +6,7 @@ package ian.projecte_javafx_sql_ian.classes;
 
 import ian.projecte_javafx_sql_ian.enums.IVA;
 import ian.projecte_javafx_sql_ian.enums.TipusReserva;
-import java.util.Date;
+import java.sql.Date;
 
 /**
  *
@@ -19,21 +19,52 @@ public class Reserva {
     private TipusReserva tipus_reserva;
     private IVA tipus_IVA;
     private double preu_total_reserva;
-    private Client client;
-    private Habitacio habitacio;
+    private int id_client;
+    private int id_habitacio;
 
-    public Reserva(Date data_reserva, Date data_inici, Date data_fi, TipusReserva tipus_reserva, IVA tipus_IVA, double preu_total_reserva, Client client, Habitacio habitacio) {
+    public Reserva(Date data_reserva, Date data_inici, Date data_fi, TipusReserva tipus_reserva, IVA tipus_IVA, double preu_total_reserva, int id_client, int id_habitacio) {
         this.data_reserva = data_reserva;
         this.data_inici = data_inici;
         this.data_fi = data_fi;
         this.tipus_reserva = tipus_reserva;
         this.tipus_IVA = tipus_IVA;
         this.preu_total_reserva = preu_total_reserva;
-        this.client = client;
-        this.habitacio = habitacio;
+        this.id_client = id_client;
+        this.id_habitacio = id_habitacio;
     }
 
-    public IVA getTipus_IVA() {
-        return tipus_IVA;
+    public Date getData_reserva() {
+        return data_reserva;
     }
+
+    public Date getData_inici() {
+        return data_inici;
+    }
+
+    public Date getData_fi() {
+        return data_fi;
+    }
+
+    public String getTipus_reserva() {
+        return tipus_reserva.name();
+    }
+
+    public String getTipus_IVA() {
+        return tipus_IVA.name();
+    }
+
+    public double getPreu_total_reserva() {
+        return preu_total_reserva;
+    }
+
+    public int getId_client() {
+        return id_client;
+    }
+
+    public int getId_habitacio() {
+        return id_habitacio;
+    }
+    
+    
+    
 }
