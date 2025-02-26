@@ -5,6 +5,7 @@
 package ian.projecte_javafx_sql_ian;
 
 import ian.projecte_javafx_sql_ian.EnllacSQL.Model;
+import ian.projecte_javafx_sql_ian.classes.Factura;
 import ian.projecte_javafx_sql_ian.classes.Reserva;
 import ian.projecte_javafx_sql_ian.enums.IVA;
 import ian.projecte_javafx_sql_ian.enums.Pagament;
@@ -52,7 +53,8 @@ public class Gestio_de_reserves_i_factures {
         combo_iva_factura;
     @FXML
     Button
-        button_afegir_reserva;
+        button_afegir_reserva,
+        button_generar_factura;
     @FXML
     ListView
         list_reservas_pendents;
@@ -115,16 +117,12 @@ public class Gestio_de_reserves_i_factures {
         combo_pagament_factura.setDisable(true);
         field_base_imposable_factura.setDisable(true);
         combo_iva_factura.setDisable(true);
+        button_generar_factura.setDisable(true);
         
         // Llista les reserves del client.
         list_reservas_pendents.setItems(model.buscarReservesClientSeleccionat(combo_clients.getValue().toString(), false));
         combo_reserves_no_facturades.setItems(model.buscarReservesClientSeleccionat(combo_clients.getValue().toString(), true));
-        if (combo_reserves_no_facturades.getItems() == null){
-            combo_reserves_no_facturades.setDisable(false);
-            combo_pagament_factura.setDisable(false);
-            field_base_imposable_factura.setDisable(false);
-            combo_iva_factura.setDisable(false);
-        }
+        combo_reserves_no_facturades.setDisable(combo_reserves_no_facturades.getItems() == null);
     }
     
     @FXML
@@ -217,11 +215,73 @@ public class Gestio_de_reserves_i_factures {
         combo_pagament_factura.getSelectionModel().clearSelection();
         field_base_imposable_factura.clear();
         combo_iva_factura.getSelectionModel().clearSelection();
+        combo_pagament_factura.setDisable(false);
+        field_base_imposable_factura.setDisable(false);
+        combo_iva_factura.setDisable(false);
+        button_generar_factura.setDisable(false);
     }
     
     @FXML
-    private void controllerGenerarFactura(){
+    private void controllerGenerarFactura() throws SQLException{
+        // Per cridar al model.
+        Model model = new Model();
         
+        // Control de dades valides.        
+        boolean valid = true;
+        
+        // Retorna la data d'avui en ms.
+        Date creacio_factura = new Date(System.currentTimeMillis());
+        
+        valid = !(combo_pagament_factura.getValue() == null || combo_iva_factura.getValue() == null);
+        System.out.println(valid);
+        
+        // Obté el preu en text.
+        String base_imposable_text = field_base_imposable_factura.getText().trim();
+
+        // Enforça l'ús de '.' per a decimals.
+        DecimalFormatSymbols simbols = new DecimalFormatSymbols(Locale.ENGLISH);
+        simbols.setDecimalSeparator('.');
+        DecimalFormat decimal_punt = new DecimalFormat();
+        decimal_punt.setDecimalFormatSymbols(simbols);
+
+        // Converteix el salari en text a double amb control d'errada.
+        double base_imposable = 0;
+        try {
+            base_imposable = decimal_punt.parse(base_imposable_text).doubleValue();
+        } catch (ParseException e) {
+            valid = false;
+        }
+        
+        String iva_text = combo_iva_factura.getValue().toString();
+        String iva_number_text = "";
+        int index = 1;
+        for (;index < iva_text.length();index++) {
+            char buscador = iva_text.charAt(index);
+            if (buscador == '_'){
+                iva_number_text = iva_text.substring(1, index);
+                break;
+            }
+        }
+        int iva_number = Integer.parseInt(iva_number_text);
+        
+        // Calcula el preu incluïnt l'IVA.
+        double total = base_imposable * (1 + (iva_number / 100.0));
+        
+        if (valid){
+            System.out.println("Si");
+            Factura nova_factura = new Factura(
+                creacio_factura,
+                (Pagament) combo_pagament_factura.getValue(),
+                base_imposable,
+                (IVA) combo_iva_factura.getValue(),
+                total,
+                model.buscarReservaSeleccionada(combo_reserves_no_facturades.getValue().toString())
+            );
+            model.crearFactura(nova_factura);
+            controllerClientSeleccionat();
+        }else{
+            System.out.println("No");
+        }
     }
     
     @FXML

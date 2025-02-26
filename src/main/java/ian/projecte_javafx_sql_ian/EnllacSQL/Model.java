@@ -6,6 +6,7 @@ package ian.projecte_javafx_sql_ian.EnllacSQL;
 
 import ian.projecte_javafx_sql_ian.classes.Client;
 import ian.projecte_javafx_sql_ian.classes.Empleat;
+import ian.projecte_javafx_sql_ian.classes.Factura;
 import ian.projecte_javafx_sql_ian.classes.Persona;
 import ian.projecte_javafx_sql_ian.classes.PersonaExistent;
 import ian.projecte_javafx_sql_ian.classes.Reserva;
@@ -337,10 +338,9 @@ public class Model {
         // Retorna la data d'avui en ms.
         Date avui = new Date(System.currentTimeMillis());
         if (!buscaFacturas){
-            while (resultat.next() && resultat.getDate("data_fi").before(avui)){
+            while (resultat.next()){
                 Date data_fi = resultat.getDate("data_fi");
-
-                if (data_fi.before(avui)) { 
+                if (data_fi.after(avui)) { 
                     String reserva = resultat.getString("data_inici") + 
                                      " fins a " + resultat.getString("data_fi") + 
                                      " a l'habitació " + resultat.getString("numero_habitacio");
@@ -349,7 +349,7 @@ public class Model {
             }
         }else{
             while (resultat.next()){
-                if (resultat.getDate("data_fi").after(avui) && buscarFacturesReserva(resultat.getInt("id_reserva"))){
+                if (resultat.getDate("data_fi").before(avui) && buscarFacturesReserva(resultat.getInt("id_reserva"))){
                     String reserva = resultat.getString("data_inici") + 
                                 " fins a " + resultat.getString("data_fi") + 
                                 " a l'habitació " + resultat.getString("numero_habitacio");
@@ -357,7 +357,7 @@ public class Model {
                 }
             }
         }
-        return reserves;
+        return reserves == null ? null : reserves;
     }
 
     public ObservableList<String> buscarHabitacionsDisponibles(Date data_inici_reserva, Date data_final_reserva) throws SQLException{
@@ -470,7 +470,7 @@ public class Model {
                 + " FROM factura"
                 + " INNER JOIN reserva"
                 + " ON factura.id_reserva = reserva.id_reserva"
-                + " WHERE id_reserva = ?";
+                + " WHERE reserva.id_reserva = ?";
         
         Connection connexio = new Connexio().connecta();
         PreparedStatement dades_factura = connexio.prepareStatement(consulta);
@@ -479,6 +479,59 @@ public class Model {
         
         ResultSet resultat = dades_factura.executeQuery();
         
-        return resultat.next();
+        return !resultat.next();
+    }
+    
+    public int buscarReservaSeleccionada(String reserva) throws SQLException {
+        // YYYY-MM-DD fins a YYYY-MM-DD a l'habitació int.
+        String[] parts = reserva.split(" fins a | a l'habitació ");
+
+        // Ailla les dues dates.
+        Date data_inici = Date.valueOf(parts[0]);
+        Date data_fi = Date.valueOf(parts[1]);
+
+        // Ailla el número d'habitació.
+        int id_habitacio = Integer.parseInt(parts[2]);
+        
+        String consulta = 
+                "SELECT id_reserva"
+                + " FROM reserva"
+                + " INNER JOIN habitacio"
+                + " ON reserva.id_habitacio = habitacio.id_habitacio"
+                + " WHERE data_inici = ? AND data_fi = ? AND numero_habitacio = ?";
+        
+        Connection connexio = new Connexio().connecta();
+        PreparedStatement dades_reserva = connexio.prepareStatement(consulta);
+        
+        dades_reserva.setDate(1, data_inici);
+        dades_reserva.setDate(2, data_fi);
+        dades_reserva.setInt(3, id_habitacio);
+        
+        ResultSet resultat = dades_reserva.executeQuery();
+        
+        int id_reserva = 0;
+        while (resultat.next()){
+            id_reserva = resultat.getInt("id_reserva");
+        }
+        
+        return id_reserva;
+    }
+
+    public void crearFactura(Factura factura) throws SQLException {
+        String consulta = 
+                "INSERT INTO factura (data_emissio, metode_pagament, base_imposable, tipus_iva, total, id_reserva)"
+                + " VALUES (?, ?, ?, ?, ?, ?)";
+        
+        Connection connexio = new Connexio().connecta();
+        PreparedStatement dades_factura = connexio.prepareStatement(consulta);
+        
+        dades_factura.setDate(1, factura.getData_emissio());
+        dades_factura.setString(2, factura.getMetode_pagament());
+        dades_factura.setDouble(3, factura.getBase_imposable());
+        dades_factura.setString(4, factura.getTipus_IVA());
+        dades_factura.setDouble(5, factura.getTotal());
+        dades_factura.setInt(6, factura.getId_reserva());
+        
+        dades_factura.executeUpdate();
     }
 }
