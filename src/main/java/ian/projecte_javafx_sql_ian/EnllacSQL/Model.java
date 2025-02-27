@@ -10,6 +10,7 @@ import ian.projecte_javafx_sql_ian.classes.Factura;
 import ian.projecte_javafx_sql_ian.classes.Persona;
 import ian.projecte_javafx_sql_ian.classes.PersonaExistent;
 import ian.projecte_javafx_sql_ian.classes.Reserva;
+import ian.projecte_javafx_sql_ian.classes.Tasca;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -533,5 +534,210 @@ public class Model {
         dades_factura.setInt(6, factura.getId_reserva());
         
         dades_factura.executeUpdate();
+    }
+    
+    public ObservableList<String> llistarEmpleats() throws SQLException{
+        ObservableList<String> empleats = FXCollections.observableArrayList();
+        
+        String consulta = "SELECT nom, cognom, dni FROM persona INNER JOIN empleat ON persona.id_persona = empleat.id_empleat";
+        
+        Connection connexio = new Connexio().connecta();
+        PreparedStatement dades_clients = connexio.prepareStatement(consulta);
+        
+        ResultSet resultat = dades_clients.executeQuery();
+        
+        while (resultat.next()){
+            String nom_complet = resultat.getString("nom") + " " + resultat.getString("cognom") + " - " + resultat.getString("dni");
+            empleats.add(nom_complet);
+        }
+        return empleats;
+    }
+
+    public ObservableList<String> buscarTasquesPendents(boolean desplegable) throws SQLException{
+        ObservableList<String> empleats = FXCollections.observableArrayList();
+        
+        String consulta = 
+                "SELECT DISTINCT descripcio, data_execucio"
+                + " FROM tasca"
+                + " WHERE estat = ?";
+        
+        Connection connexio = new Connexio().connecta();
+        PreparedStatement dades_tasques = connexio.prepareStatement(consulta);
+        
+        dades_tasques.setString(1, "PENDENT");
+        
+        ResultSet resultat = dades_tasques.executeQuery();
+        
+        if (desplegable){
+            empleats.add("Nova tasca");
+        }
+        
+        while (resultat.next()){
+            empleats.add(resultat.getString("descripcio") + " - Previst terminat en " + resultat.getString("data_execucio"));
+        }
+        return empleats;
+    }
+
+    public void crearTasca(Tasca tasca, String empleat) throws SQLException {
+        String dni = "";
+        for (int i = 0;i < empleat.length();i++){
+           char buscador = empleat.charAt(i);
+           if (buscador == '-'){
+               dni = empleat.substring(i + 1).trim();
+               break;
+           }
+        }
+        
+        // Dues consultes per crear la tasca, i assignarla a l'empleat escullit.
+        String consulta_tasca = 
+            "INSERT INTO tasca (data_creacio, data_execucio, descripcio, estat) "
+            + " VALUES (?, ?, ?, ?);",
+        consulta_realitzar = 
+            "INSERT INTO realitzar (id_empleat, id_tasca) "
+            + " SELECT "
+            + "     (SELECT id_empleat "
+            + "      FROM empleat "
+            + "      INNER JOIN persona ON persona.id_persona = empleat.id_empleat "
+            + "      WHERE dni = ?), "
+            + " LAST_INSERT_ID();"; // "LAST_INSERT_ID" retorna l'ùltima clau primaria generada automaticament en la sessió.
+        
+        Connection connexio = new Connexio().connecta();
+        PreparedStatement dades_tasca = connexio.prepareStatement(consulta_tasca);
+        
+        dades_tasca.setDate(1, tasca.getData_creacio());
+        dades_tasca.setDate(2, tasca.getData_execucio());
+        dades_tasca.setString(3, tasca.getDescripcio());
+        dades_tasca.setString(4, tasca.getEstat());
+        
+        dades_tasca.executeUpdate();
+        
+        
+        PreparedStatement dades_realitzar = connexio.prepareStatement(consulta_realitzar);
+        
+        dades_realitzar.setString(1, dni);
+        
+        dades_realitzar.executeUpdate();
+    }
+
+    public void assignarTascaEmpleat(String tasca, String empleat) throws SQLException {
+        String dni = "";
+        for (int i = 0;i < empleat.length();i++){
+           char buscador = empleat.charAt(i);
+           if (buscador == '-'){
+               dni = empleat.substring(i + 1).trim();
+               break;
+           }
+        }
+        
+        String descripcio = "";
+        for (int i = 0;i < tasca.length();i++){
+           char buscador = tasca.charAt(i);
+           if (buscador == '-'){
+               descripcio = tasca.substring(i - 1).trim();
+               break;
+           }
+        }
+        
+        // Dues consultes per cercar la tasca, i assignarla a l'empleat escullit.
+        String consulta_tasca = 
+            "SELECT id_tasca"
+                + " FROM tasca"
+                + " WHERE descripcio = ?",
+        consulta_realitzar = 
+            "INSERT INTO realitzar (id_empleat, id_tasca) "
+            + " SELECT "
+            + "     (SELECT id_empleat "
+            + "      FROM empleat "
+            + "      INNER JOIN persona ON persona.id_persona = empleat.id_empleat "
+            + "      WHERE dni = ?), "
+            + " ?, ?;"; // "LAST_INSERT_ID" retorna l'ùltima clau primaria generada automaticament en la sessió.
+        
+        Connection connexio = new Connexio().connecta();
+        PreparedStatement dades_tasca = connexio.prepareStatement(consulta_tasca);
+        
+        dades_tasca.setString(1, descripcio);
+        
+        ResultSet resultat_tasca = dades_tasca.executeQuery();
+        
+        int id_tasca = 0;
+        while (resultat_tasca.next()){
+            id_tasca = resultat_tasca.getInt("id_tasca");
+        }
+        
+        
+        PreparedStatement dades_realitzar = connexio.prepareStatement(consulta_realitzar);
+        
+        dades_realitzar.setString(1, dni);
+        dades_realitzar.setInt(2, id_tasca);
+        dades_realitzar.setString(3, descripcio);
+        
+        dades_realitzar.executeUpdate();
+    }
+
+    public boolean tascaJaAssignada(String tasca, String empleat) throws SQLException {
+        String dni = "";
+        for (int i = 0;i < empleat.length();i++){
+           char buscador = empleat.charAt(i);
+           if (buscador == '-'){
+               dni = empleat.substring(i + 1).trim();
+               break;
+           }
+        }
+        
+        String descripcio = "";
+        for (int i = 0;i < tasca.length();i++){
+           char buscador = tasca.charAt(i);
+           if (buscador == '-'){
+               descripcio = tasca.substring(i - 1).trim();
+               break;
+           }
+        }
+        
+        String consulta =
+                "SELECT *"
+                + " FROM realitzar"
+                + " WHERE id_empleat ="
+                + "     (SELECT id_empleat "
+                + "     FROM empleat "
+                + "     INNER JOIN persona ON persona.id_persona = empleat.id_empleat "
+                + "     WHERE dni = ?)"
+                + " AND id_tasca ="
+                + "     (SELECT id_tasca "
+                + "     FROM tasca "
+                + "     WHERE descripcio = ?";
+        
+        Connection connexio = new Connexio().connecta();
+        PreparedStatement dades_realitzar = connexio.prepareStatement(consulta);
+        
+        dades_realitzar.setString(1, dni);
+        dades_realitzar.setString(2, descripcio);
+        
+        ResultSet resultat = dades_realitzar.executeQuery();
+        
+        return resultat.next();
+    }
+
+    public void completarTasca(String tasca, String estat) throws SQLException {
+        String descripcio = "";
+        for (int i = 0;i < tasca.length();i++){
+           char buscador = tasca.charAt(i);
+           if (buscador == '-'){
+               descripcio = tasca.substring(i - 1).trim();
+               break;
+           }
+        }
+        
+        String consulta = 
+                "UPDATE tasca"
+                + " SET estat = ?"
+                + " WHERE descripcio = ?";
+        
+        Connection connexio = new Connexio().connecta();
+        PreparedStatement dades_tasca = connexio.prepareStatement(consulta);
+        
+        dades_tasca.setString(1, estat);
+        dades_tasca.setString(2, descripcio);
+        
+        dades_tasca.executeUpdate();
     }
 }

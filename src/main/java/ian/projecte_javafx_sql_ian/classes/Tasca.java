@@ -5,7 +5,7 @@
 package ian.projecte_javafx_sql_ian.classes;
 
 import ian.projecte_javafx_sql_ian.enums.EstatTasca;
-import java.util.Date;
+import java.sql.Date;
 
 /**
  *
@@ -22,5 +22,21 @@ public class Tasca {
         this.data_creacio = data_creacio;
         this.data_execucio = data_execucio;
         this.estat = estat;
+    }
+
+    public String getDescripcio() {
+        return descripcio;
+    }
+
+    public Date getData_creacio() {
+        return data_creacio;
+    }
+
+    public Date getData_execucio() {
+        return data_execucio;
+    }
+
+    public String getEstat() {
+        return estat.name();
     }
 }
