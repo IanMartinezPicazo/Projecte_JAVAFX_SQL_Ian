@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -22,7 +23,7 @@ import javafx.scene.control.TextField;
  *
  * @author marti
  */
-public class Gestio_de_tasques{
+public class Gestio_de_tasques {
     // Inicialitza tots els objectes amb IDs.
     @FXML
     ComboBox
@@ -56,38 +57,41 @@ public class Gestio_de_tasques{
         Model model = new Model();
         
         // Llista totes les tasques pendents.
-        combo_tasca.setItems(model.buscarTasquesPendents(true));
+        combo_tasca.setItems(model.buscarTasquesPendents(true, combo_empleats.getValue().toString()));
         combo_tasca.setValue(combo_tasca.getItems().get(0));
         combo_tasca.setDisable(false);
         
         // Llista les tasques pendents de l'empleat seleccionat.
-        list_tasques_pendents.setItems(model.buscarTasquesPendents(false));
+        list_tasques_pendents.setItems(model.buscarTasquesPendents(false, combo_empleats.getValue().toString()));
     }
     
     @FXML
     private void controllerTascaSeleccionada() throws SQLException{
-        // Per cridar al model.
-        Model model = new Model();
-        
-        // Reinicia els camps.
-        field_descripcio.clear();
-        date_execucio.setValue(null);
-        
-        button_crear_assignar.setDisable(model.tascaJaAssignada(combo_tasca.getValue().toString(), combo_empleats.getValue().toString()));
-        if (button_crear_assignar.isDisabled()){
-            button_crear_assignar.setText("Ja assignada");
-        }else{
+        if (combo_tasca.getValue() != null){
+            // Per cridar al model.
+            Model model = new Model();
+
+            // Reinicia els camps.
+            field_descripcio.clear();
+            date_execucio.setValue(null);
+            button_crear_assignar.setDisable(false);
             button_crear_assignar.setText("Crear/Assignar Tasca");
-        }
-        // Comprova si la opció seleccionada és "Nova tasca".
-        if (combo_tasca.getValue().toString().equals("Nova tasca")){
-            field_descripcio.setDisable(false);
-            date_execucio.setDisable(false);
             button_completat.setDisable(true);
-        }else{
-            field_descripcio.setDisable(true);
-            date_execucio.setDisable(true);
-            button_completat.setDisable(false);
+
+            // Comprova si la opció seleccionada és "Nova tasca".
+            if (combo_tasca.getValue().toString().equals("Nova tasca")){
+                field_descripcio.setDisable(false);
+                date_execucio.setDisable(false);
+            }else{
+                field_descripcio.setDisable(true);
+                date_execucio.setDisable(true);
+
+                button_crear_assignar.setDisable(model.tascaJaAssignada(combo_tasca.getValue().toString(), combo_empleats.getValue().toString()));
+                if (button_crear_assignar.isDisabled()){
+                    button_crear_assignar.setText("Ja assignada");
+                    button_completat.setDisable(false);
+                }
+            }
         }
     }
     

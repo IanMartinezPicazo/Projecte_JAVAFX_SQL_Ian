@@ -7,5 +7,6 @@
    <children>
       <Button layoutX="96.0" layoutY="30.0" mnemonicParsing="false" onAction="#Lugar1" text="Lugar1" />
       <Button layoutX="96.0" layoutY="79.0" mnemonicParsing="false" onAction="#Lugar2" text="Lugar1" />
+      <Button layoutX="96.0" layoutY="128.0" mnemonicParsing="false" onAction="#Lugar3" text="Lugar8" />
    </children>
 </AnchorPane>

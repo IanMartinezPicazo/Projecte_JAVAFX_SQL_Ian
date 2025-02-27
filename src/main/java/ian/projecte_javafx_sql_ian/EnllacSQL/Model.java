@@ -553,29 +553,55 @@ public class Model {
         return empleats;
     }
 
-    public ObservableList<String> buscarTasquesPendents(boolean desplegable) throws SQLException{
-        ObservableList<String> empleats = FXCollections.observableArrayList();
+    public ObservableList<String> buscarTasquesPendents(boolean desplegable, String empleat) throws SQLException{
+        ObservableList<String> tasques = FXCollections.observableArrayList();
+        
+        String dni = "";
+        for (int i = 0;i < empleat.length();i++){
+           char buscador = empleat.charAt(i);
+           if (buscador == '-'){
+               dni = empleat.substring(i + 1).trim();
+               break;
+           }
+        }
         
         String consulta = 
                 "SELECT DISTINCT descripcio, data_execucio"
                 + " FROM tasca"
+                + " INNER JOIN realitzar"
+                + " ON tasca.id_tasca = realitzar.id_tasca"
                 + " WHERE estat = ?";
+        
+        // Per a mostrar a la llista solament les tasques de l'empleat seleccionat.
+        if (!desplegable){
+            consulta +=
+                " AND id_empleat ="
+                + "     (SELECT id_empleat "
+                + "     FROM empleat "
+                + "     INNER JOIN persona"
+                + "     ON persona.id_persona = empleat.id_empleat "
+                + "     WHERE dni = ?)";
+        }
         
         Connection connexio = new Connexio().connecta();
         PreparedStatement dades_tasques = connexio.prepareStatement(consulta);
         
         dades_tasques.setString(1, "PENDENT");
         
+        if (!desplegable){
+            dades_tasques.setString(2, dni);
+        }        
+        
         ResultSet resultat = dades_tasques.executeQuery();
         
         if (desplegable){
-            empleats.add("Nova tasca");
+            tasques.add("Nova tasca");
         }
         
         while (resultat.next()){
-            empleats.add(resultat.getString("descripcio") + " - Previst terminat en " + resultat.getString("data_execucio"));
+            tasques.add(resultat.getString("descripcio") + " - Previst terminat en " + resultat.getString("data_execucio"));
         }
-        return empleats;
+        return tasques;
     }
 
     public void crearTasca(Tasca tasca, String empleat) throws SQLException {
@@ -633,7 +659,7 @@ public class Model {
         for (int i = 0;i < tasca.length();i++){
            char buscador = tasca.charAt(i);
            if (buscador == '-'){
-               descripcio = tasca.substring(i - 1).trim();
+               descripcio = tasca.substring(0, i - 1).trim();
                break;
            }
         }
@@ -644,13 +670,13 @@ public class Model {
                 + " FROM tasca"
                 + " WHERE descripcio = ?",
         consulta_realitzar = 
-            "INSERT INTO realitzar (id_empleat, id_tasca) "
-            + " SELECT "
-            + "     (SELECT id_empleat "
-            + "      FROM empleat "
-            + "      INNER JOIN persona ON persona.id_persona = empleat.id_empleat "
-            + "      WHERE dni = ?), "
-            + " ?, ?;"; // "LAST_INSERT_ID" retorna l'ùltima clau primaria generada automaticament en la sessió.
+            "INSERT INTO realitzar (id_empleat, id_tasca)"
+            + " SELECT"
+            + "     (SELECT id_empleat"
+            + "      FROM empleat"
+            + "      INNER JOIN persona ON persona.id_persona = empleat.id_empleat"
+            + "      WHERE dni = ?),"
+            + " ?;";
         
         Connection connexio = new Connexio().connecta();
         PreparedStatement dades_tasca = connexio.prepareStatement(consulta_tasca);
@@ -664,14 +690,12 @@ public class Model {
             id_tasca = resultat_tasca.getInt("id_tasca");
         }
         
-        
         PreparedStatement dades_realitzar = connexio.prepareStatement(consulta_realitzar);
         
         dades_realitzar.setString(1, dni);
         dades_realitzar.setInt(2, id_tasca);
-        dades_realitzar.setString(3, descripcio);
         
-        dades_realitzar.executeUpdate();
+        dades_realitzar.executeUpdate(); // Cannot add or update a child row: a foreign key constraint fails (`db_projecte_ian`.`realitzar`, CONSTRAINT `realitzar_ibfk_2` FOREIGN KEY (`id_tasca`) REFERENCES `tasca` (`id_tasca`) ON DELETE CASCADE)
     }
 
     public boolean tascaJaAssignada(String tasca, String empleat) throws SQLException {
@@ -688,7 +712,7 @@ public class Model {
         for (int i = 0;i < tasca.length();i++){
            char buscador = tasca.charAt(i);
            if (buscador == '-'){
-               descripcio = tasca.substring(i - 1).trim();
+               descripcio = tasca.substring(0, i - 1).trim();
                break;
            }
         }
@@ -704,7 +728,7 @@ public class Model {
                 + " AND id_tasca ="
                 + "     (SELECT id_tasca "
                 + "     FROM tasca "
-                + "     WHERE descripcio = ?";
+                + "     WHERE descripcio = ?)";
         
         Connection connexio = new Connexio().connecta();
         PreparedStatement dades_realitzar = connexio.prepareStatement(consulta);
@@ -722,21 +746,22 @@ public class Model {
         for (int i = 0;i < tasca.length();i++){
            char buscador = tasca.charAt(i);
            if (buscador == '-'){
-               descripcio = tasca.substring(i - 1).trim();
+               descripcio = tasca.substring(0, i - 1).trim();
                break;
            }
         }
         
         String consulta = 
                 "UPDATE tasca"
-                + " SET estat = ?"
+                + " SET estat = ?, data_execucio = ?"
                 + " WHERE descripcio = ?";
         
         Connection connexio = new Connexio().connecta();
         PreparedStatement dades_tasca = connexio.prepareStatement(consulta);
         
         dades_tasca.setString(1, estat);
-        dades_tasca.setString(2, descripcio);
+        dades_tasca.setDate(2, new Date(System.currentTimeMillis()));
+        dades_tasca.setString(3, descripcio);
         
         dades_tasca.executeUpdate();
     }
