@@ -52,7 +52,7 @@ public class Gestio_de_tasques {
     }
     
     @FXML
-    private void controllerEmpleatSeleccionat() throws SQLException{
+    private void controllerEmpleatSeleccionat() {
         // Per cridar al model.
         Model model = new Model();
         
@@ -66,7 +66,7 @@ public class Gestio_de_tasques {
     }
     
     @FXML
-    private void controllerTascaSeleccionada() throws SQLException{
+    private void controllerTascaSeleccionada() {
         if (combo_tasca.getValue() != null){
             // Per cridar al model.
             Model model = new Model();
@@ -96,7 +96,7 @@ public class Gestio_de_tasques {
     }
     
     @FXML
-    private void controllerCrearAssignarTasca() throws SQLException{
+    private void controllerCrearAssignarTasca() {
         // Per cridar al model.
         Model model = new Model();
         
@@ -136,7 +136,7 @@ public class Gestio_de_tasques {
     }
     
     @FXML
-    private void controllerTascaCompletada() throws SQLException{
+    private void controllerTascaCompletada() {
         // Per cridar al model.
         Model model = new Model();
         

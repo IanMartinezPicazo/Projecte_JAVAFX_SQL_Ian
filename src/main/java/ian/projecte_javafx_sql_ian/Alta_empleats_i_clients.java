@@ -5,11 +5,13 @@
 package ian.projecte_javafx_sql_ian;
 
 import ian.projecte_javafx_sql_ian.EnllacSQL.Model;
+import ian.projecte_javafx_sql_ian.Enums.TipusPersona;
 import ian.projecte_javafx_sql_ian.classes.Client;
 import ian.projecte_javafx_sql_ian.classes.Empleat;
 import ian.projecte_javafx_sql_ian.classes.Persona;
 import ian.projecte_javafx_sql_ian.enums.Categoria;
 import ian.projecte_javafx_sql_ian.enums.EstatEmpleat;
+import ian.projecte_javafx_sql_ian.Utilitats.ManipularString;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -58,7 +60,7 @@ public class Alta_empleats_i_clients {
         date_naixement;
     @FXML
     ComboBox
-        combo_tipus_persona, // Habilitat.
+        combo_tipus_persona,
         combo_categoria,
         combo_estat,
         combo_persona_registrada;
@@ -67,7 +69,7 @@ public class Alta_empleats_i_clients {
         button_afegir_persona;
     
     // Funció que s'executa en iniciar el programa.
-    public void initialize(){
+    public void initialize() {
         // Inicialitza i aplica les dades dels desplegables.
         ObservableList<String> modes = FXCollections.observableArrayList(Arrays.asList(
                 "Empleat",
@@ -91,7 +93,7 @@ public class Alta_empleats_i_clients {
     }
     
     @FXML
-    private void controllerActualitzarTipusPersona() throws SQLException{
+    private void controllerActualitzarTipusPersona() {
         // Per cridar al model.
         Model model = new Model();
         
@@ -167,7 +169,12 @@ public class Alta_empleats_i_clients {
         }
         
         // Obté la llista de tipus de persona oposit al seleccionat.
-        Map<String, Persona> persones_registrades = model.obtenirPersonesOposites(tipus_persona);
+        Map<String, Persona> persones_registrades = null;
+        if (tipus_persona.equals(ManipularString.paraulaCapitalitzacioEstandard(TipusPersona.EMPLEAT.name()))) {
+            persones_registrades = model.obtenirPersonesOposites(ManipularString.paraulaCapitalitzacioEstandard(TipusPersona.CLIENT.name()));
+        }else{
+            persones_registrades = model.obtenirPersonesOposites(ManipularString.paraulaCapitalitzacioEstandard(TipusPersona.EMPLEAT.name()));
+        }
 
         // Desa els noms, cognoms, i els DNIs de les persones.
         ObservableList<String> llista_persones = FXCollections.observableArrayList();
@@ -179,7 +186,7 @@ public class Alta_empleats_i_clients {
     }
     
     @FXML
-    private void controllerAfegirPersona() throws SQLException{
+    private void controllerAfegirPersona() {
         // Per cridar al model.
         Model model = new Model();
         
@@ -297,7 +304,7 @@ public class Alta_empleats_i_clients {
                     (Categoria) combo_categoria.getValue(), // Converteix d'objecte a Categoria.
                     field_targeta.getText().trim()
                 );
-                model.altaClient(nou_client);
+                model.altaClient(nou_client, 0);
             }else{
                 return;
             }
@@ -306,7 +313,7 @@ public class Alta_empleats_i_clients {
     }
     
     @FXML
-    private void controllerPrepararDades() throws SQLException{
+    private void controllerPrepararDades() {
         if (combo_persona_registrada.getValue() != null){
             // Per cridar al model.
             Model model = new Model();

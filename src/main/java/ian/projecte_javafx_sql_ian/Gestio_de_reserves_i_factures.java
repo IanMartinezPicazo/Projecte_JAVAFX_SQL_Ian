@@ -59,7 +59,7 @@ public class Gestio_de_reserves_i_factures {
     ListView
         list_reservas_pendents;
     
-    public void initialize() throws SQLException{
+    public void initialize() {
         // Per cridar al model.
         Model model = new Model();
         
@@ -89,7 +89,7 @@ public class Gestio_de_reserves_i_factures {
     }
     
     @FXML
-    private void controllerClientSeleccionat() throws SQLException{
+    private void controllerClientSeleccionat() {
         // Per cridar al model.
         Model model = new Model();
         
@@ -126,7 +126,7 @@ public class Gestio_de_reserves_i_factures {
     }
     
     @FXML
-    private void controllerAfegirReserva() throws SQLException{
+    private void controllerAfegirReserva() {
         // Per cridar al model.
         Model model = new Model();
         
@@ -181,7 +181,7 @@ public class Gestio_de_reserves_i_factures {
     }
     
     @FXML
-    private void controllerLlistarHabitacions() throws SQLException{
+    private void controllerLlistarHabitacions() {
         // Per cridar al model.
         Model model = new Model();
         
@@ -211,7 +211,7 @@ public class Gestio_de_reserves_i_factures {
     }
     
     @FXML
-    private void controllerReservaSeleccionada(){
+    private void controllerReservaSeleccionada() {
         combo_pagament_factura.getSelectionModel().clearSelection();
         field_base_imposable_factura.clear();
         combo_iva_factura.getSelectionModel().clearSelection();
@@ -222,7 +222,7 @@ public class Gestio_de_reserves_i_factures {
     }
     
     @FXML
-    private void controllerGenerarFactura() throws SQLException{
+    private void controllerGenerarFactura() {
         // Per cridar al model.
         Model model = new Model();
         
