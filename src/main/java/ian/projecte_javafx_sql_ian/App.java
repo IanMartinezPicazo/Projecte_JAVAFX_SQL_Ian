@@ -24,7 +24,7 @@ public class App extends Application {
         scene = new Scene(loadFXML("Menu"), 640, 480);
         stage.setScene(scene);
         
-        // Troba els bordres de la pantalla, i adjusta la finestra al tamany, la finestra no es pot canviar de tamany.
+        // Troba els bordres de la pantalla, i adjusta la finestra al seu tamany. La finestra no pot canviar de tamany ni ser moguda.
         stage.setMaximized(false);
         Rectangle2D bordres = Screen.getPrimary().getVisualBounds();
         stage.setX(bordres.getMinX());
