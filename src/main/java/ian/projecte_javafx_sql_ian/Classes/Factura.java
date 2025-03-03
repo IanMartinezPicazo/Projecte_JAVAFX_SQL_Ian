@@ -4,8 +4,8 @@
  */
 package ian.projecte_javafx_sql_ian.classes;
 
-import ian.projecte_javafx_sql_ian.enums.IVA;
-import ian.projecte_javafx_sql_ian.enums.Pagament;
+import ian.projecte_javafx_sql_ian.Enums.IVA;
+import ian.projecte_javafx_sql_ian.Enums.Pagament;
 import java.sql.Date;
 
 /**

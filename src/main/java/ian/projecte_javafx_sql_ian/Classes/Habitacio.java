@@ -4,8 +4,8 @@
  */
 package ian.projecte_javafx_sql_ian.classes;
 
-import ian.projecte_javafx_sql_ian.enums.EstatHabitacio;
-import ian.projecte_javafx_sql_ian.enums.TipusHabitacio;
+import ian.projecte_javafx_sql_ian.Enums.EstatHabitacio;
+import ian.projecte_javafx_sql_ian.Enums.TipusHabitacio;
 
 /**
  *

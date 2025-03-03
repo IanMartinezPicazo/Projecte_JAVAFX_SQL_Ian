@@ -6,7 +6,7 @@ package ian.projecte_javafx_sql_ian;
 
 import ian.projecte_javafx_sql_ian.EnllacSQL.Model;
 import ian.projecte_javafx_sql_ian.classes.Tasca;
-import ian.projecte_javafx_sql_ian.enums.EstatTasca;
+import ian.projecte_javafx_sql_ian.Enums.EstatTasca;
 import java.io.IOException;
 import java.sql.Date;
 import java.sql.SQLException;

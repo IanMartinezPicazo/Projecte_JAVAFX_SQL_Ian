@@ -4,8 +4,8 @@
  */
 package ian.projecte_javafx_sql_ian.classes;
 
-import ian.projecte_javafx_sql_ian.enums.IVA;
-import ian.projecte_javafx_sql_ian.enums.TipusReserva;
+import ian.projecte_javafx_sql_ian.Enums.IVA;
+import ian.projecte_javafx_sql_ian.Enums.TipusReserva;
 import java.sql.Date;
 
 /**

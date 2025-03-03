@@ -12,7 +12,8 @@ import ian.projecte_javafx_sql_ian.classes.Persona;
 import ian.projecte_javafx_sql_ian.classes.PersonaExistent;
 import ian.projecte_javafx_sql_ian.classes.Reserva;
 import ian.projecte_javafx_sql_ian.classes.Tasca;
-import ian.projecte_javafx_sql_ian.enums.EstatHabitacio;
+import ian.projecte_javafx_sql_ian.Enums.EstatHabitacio;
+import ian.projecte_javafx_sql_ian.Enums.EstatTasca;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -107,7 +108,7 @@ public class Model {
             Connection connexio = new Connexio().connecta();    
             PreparedStatement valors_empleat = connexio.prepareStatement(
                 "INSERT INTO empleat (id_empleat, lloc_feina, data_contractacio, salari_brut, estat_laboral)"
-                + "VALUES (?, ?, ?, ?, ?)"
+                + " VALUES (?, ?, ?, ?, ?)"
             );
         ) {
             valors_empleat.setInt(1, id_empleat);
@@ -139,7 +140,7 @@ public class Model {
             Connection connexio = new Connexio().connecta();
             PreparedStatement valors_client = connexio.prepareStatement(
                 "INSERT INTO client (id_client, data_registre, tipus_client, targeta_credit)"
-                + "VALUES (?, ?, ?, ?)"
+                + " VALUES (?, ?, ?, ?)"
             );
         ) {
             valors_client.setInt(1, id_client);
@@ -222,9 +223,9 @@ public class Model {
                 Connection connexio = new Connexio().connecta();
                 PreparedStatement valors_persona = connexio.prepareStatement(
                     "SELECT nom, cognom, adreca, dni, data_naixement, telefon, email"
-                    + "FROM persona"
-                    + "INNER JOIN " + tipus_persona.toLowerCase()
-                    + "ON id_persona = id_" + tipus_persona.toLowerCase()
+                    + " FROM persona"
+                    + " INNER JOIN " + tipus_persona.toLowerCase()
+                    + " ON id_persona = id_" + tipus_persona.toLowerCase()
                 );
             ) {
                 ResultSet persones_existents = valors_persona.executeQuery();
@@ -256,18 +257,12 @@ public class Model {
             Connection connexio = new Connexio().connecta();
             PreparedStatement valors_persona = connexio.prepareStatement(
                 "SELECT nom, cognom, adreca, dni, data_naixement, telefon, email"
-                + "FROM persona"
-                + "WHERE dni = ?"
+                + " FROM persona"
+                + " WHERE dni = ?"
             );
         ) {
-            String dni = "";
-            for (int i = 0;i < identificacio.length();i++){
-               char buscador = identificacio.charAt(i);
-               if (buscador == '-'){
-                   dni = identificacio.substring(i + 1).trim();
-                   break;
-               }
-            }
+            String dni = trobarDniPersona(identificacio);
+            
             valors_persona.setString(1, dni);
         
             ResultSet dades_persona = valors_persona.executeQuery();
@@ -302,8 +297,8 @@ public class Model {
             Connection connexio = new Connexio().connecta();
             PreparedStatement dades_clients = connexio.prepareStatement(
                 "SELECT nom, cognom, dni"
-                + "FROM persona"
-                + "INNER JOIN client ON persona.id_persona = client.id_client"
+                + " FROM persona"
+                + " INNER JOIN client ON persona.id_persona = client.id_client"
             );
         ) {
             ResultSet resultat = dades_clients.executeQuery();
@@ -334,14 +329,8 @@ public class Model {
                 + " WHERE dni = ?"
             );
         ) {
-            String dni = "";
-            for (int i = 0;i < identificacio.length();i++) {
-               char buscador = identificacio.charAt(i);
-               if (buscador == '-'){
-                   dni = identificacio.substring(i + 1).trim();
-                   break;
-               }
-            }
+            String dni = trobarDniPersona(identificacio);
+            
             dades_reserves.setString(1, dni);
         
             ResultSet resultat = dades_reserves.executeQuery();
@@ -404,11 +393,12 @@ public class Model {
             PreparedStatement dades_habitacions = connexio.prepareStatement(
                 "SELECT numero_habitacio"
                 + " FROM habitacio"
-                + " WHERE id_habitacio NOT IN ("
-                + "      SELECT habitacio.id_habitacio FROM reserva"
-                + "      INNER JOIN habitacio"
-                + "      ON reserva.id_habitacio = habitacio.id_habitacio"
-                + "      WHERE NOT (data_fi < ? OR data_inici > ?)"
+                + " WHERE id_habitacio IN ("
+                + "     SELECT habitacio.id_habitacio"
+                + "     FROM reserva"
+                + "     INNER JOIN habitacio"
+                + "     ON reserva.id_habitacio = habitacio.id_habitacio"
+                + "     WHERE NOT (reserva.data_inici >= ? AND reserva.data_fi <= ?)"
                 + ") AND estat = ?"
             );
         ) {
@@ -441,14 +431,8 @@ public class Model {
                 + " WHERE dni = ?"
             );
         ) {
-            String dni = "";
-            for (int i = 0;i < identificacio.length();i++) {
-               char buscador = identificacio.charAt(i);
-               if (buscador == '-') {
-                   dni = identificacio.substring(i + 1).trim();
-                   break;
-               }
-            }
+            String dni = trobarDniPersona(identificacio);
+            
             dades_client.setString(1, dni);
         
             ResultSet resultat = dades_client.executeQuery();
@@ -571,15 +555,22 @@ public class Model {
         }
     }
     
+    
+    /*
+        =================
+        Gestió de tasques
+        =================
+    */
+    
     public ObservableList<String> llistarEmpleats() {
         ObservableList<String> empleats = FXCollections.observableArrayList();
         try (
             Connection connexio = new Connexio().connecta();
             PreparedStatement dades_empleats = connexio.prepareStatement(
                 "SELECT nom, cognom, dni"
-                + "FROM persona"
-                + "INNER JOIN empleat"
-                + "ON persona.id_persona = empleat.id_empleat"
+                + " FROM persona"
+                + " INNER JOIN empleat"
+                + " ON persona.id_persona = empleat.id_empleat"
             );
         ) {
             ResultSet resultat = dades_empleats.executeQuery();
@@ -598,15 +589,7 @@ public class Model {
         ObservableList<String> tasques = FXCollections.observableArrayList();
         try (
             Connection connexio = new Connexio().connecta();
-        ) {
-            String dni = "";
-            for (int i = 0;i < empleat.length();i++){
-               char buscador = empleat.charAt(i);
-               if (buscador == '-'){
-                   dni = empleat.substring(i + 1).trim();
-                   break;
-               }
-            }
+        ) {            
             String consulta =
             "SELECT DISTINCT descripcio, data_execucio"
             + " FROM tasca"
@@ -627,10 +610,10 @@ public class Model {
             
             PreparedStatement dades_tasques = connexio.prepareStatement(consulta);
             
-            dades_tasques.setString(1, EstatHabitacio.DISPONIBLE.name());
+            dades_tasques.setString(1, EstatTasca.PENDENT.name());
         
             if (!desplegable){
-                dades_tasques.setString(2, dni);
+                dades_tasques.setString(2, trobarDniPersona(empleat));
             }        
 
             ResultSet resultat = dades_tasques.executeQuery();
@@ -638,7 +621,7 @@ public class Model {
             if (desplegable){
                 tasques.add("Nova tasca");
             }
-
+            
             while (resultat.next()){
                 tasques.add(resultat.getString("descripcio") + " - Previst terminat en " + resultat.getString("data_execucio"));
             }
@@ -674,15 +657,8 @@ public class Model {
                     + " LAST_INSERT_ID();" // "LAST_INSERT_ID" retorna l'ùltima clau primaria generada automaticament en la sessió.
                 );
             ) {
-                String dni = "";
-                for (int i = 0;i < empleat.length();i++){
-                   char buscador = empleat.charAt(i);
-                   if (buscador == '-'){
-                       dni = empleat.substring(i + 1).trim();
-                       break;
-                   }
-                }
-                dades_realitzar.setString(1, dni);
+                System.out.println(trobarDniPersona(empleat));
+                dades_realitzar.setString(1, trobarDniPersona(empleat));
 
                 dades_realitzar.executeUpdate();
             } catch (SQLException e) {
@@ -730,14 +706,8 @@ public class Model {
                     + " ?;"
                 );
             ) {
-                String dni = "";
-                for (int i = 0;i < empleat.length();i++){
-                   char buscador = empleat.charAt(i);
-                   if (buscador == '-'){
-                       dni = empleat.substring(i + 1).trim();
-                       break;
-                   }
-                }
+                String dni = trobarDniPersona(empleat);
+                
                 dades_realitzar.setString(1, dni);
                 dades_realitzar.setInt(2, id_tasca);
 
@@ -767,14 +737,7 @@ public class Model {
                 + "     WHERE descripcio = ?)"
             );
         ) {
-            String dni = "";
-            for (int i = 0;i < empleat.length();i++){
-               char buscador = empleat.charAt(i);
-               if (buscador == '-'){
-                   dni = empleat.substring(i + 1).trim();
-                   break;
-               }
-            }
+            String dni = trobarDniPersona(empleat);
 
             String descripcio = "";
             for (int i = 0;i < tasca.length();i++){
@@ -822,5 +785,18 @@ public class Model {
         } catch (SQLException e) {
             System.err.println("Error: completarTasca \n\n" + e.getMessage());
         }
+    }
+    
+    // Per aillar el DNI de la persona seleccionada (Format: NOM COGNOM - DNI)
+    public String trobarDniPersona(String identificacio) {
+        String dni = "";
+        for (int i = 0;i < identificacio.length();i++){
+            char buscador = identificacio.charAt(i);
+            if (buscador == '-'){
+                dni = identificacio.substring(i + 1).trim();
+                break;
+            }
+         }
+        return dni;
     }
 }

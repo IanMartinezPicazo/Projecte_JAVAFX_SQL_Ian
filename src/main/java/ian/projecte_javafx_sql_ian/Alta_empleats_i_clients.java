@@ -9,16 +9,15 @@ import ian.projecte_javafx_sql_ian.Enums.TipusPersona;
 import ian.projecte_javafx_sql_ian.classes.Client;
 import ian.projecte_javafx_sql_ian.classes.Empleat;
 import ian.projecte_javafx_sql_ian.classes.Persona;
-import ian.projecte_javafx_sql_ian.enums.Categoria;
-import ian.projecte_javafx_sql_ian.enums.EstatEmpleat;
+import ian.projecte_javafx_sql_ian.Enums.Categoria;
+import ian.projecte_javafx_sql_ian.Enums.EstatEmpleat;
 import ian.projecte_javafx_sql_ian.Utilitats.ManipularString;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.time.LocalDate;
 import java.util.Arrays;
-import java.sql.Date; // Utilitza Date de SQL, NO de .util.
-import java.sql.SQLException;
+import java.sql.Date;
 import java.text.ParseException;
 import java.util.Locale;
 import java.util.Map;
@@ -72,9 +71,9 @@ public class Alta_empleats_i_clients {
     public void initialize() {
         // Inicialitza i aplica les dades dels desplegables.
         ObservableList<String> modes = FXCollections.observableArrayList(Arrays.asList(
-                "Empleat",
-                "Client",
-                "Empleat i client"
+                ManipularString.paraulaCapitalitzacioEstandard(TipusPersona.EMPLEAT.name()),
+                ManipularString.paraulaCapitalitzacioEstandard(TipusPersona.CLIENT.name()),
+                ManipularString.paraulaCapitalitzacioEstandard(TipusPersona.AMBDUES.name())
         ));
         combo_tipus_persona.setItems(modes);
         
@@ -132,47 +131,44 @@ public class Alta_empleats_i_clients {
         String tipus_persona = combo_tipus_persona.getValue().toString();
         
         // Habilita i deshabilita els camps adequats depenent del tipus de persona seleccionada.
-        switch (tipus_persona) {
-            case "Empleat":
-                label_tipus_persona_registrada.setText("Client");
-                label_extra1.setText("Feina");
-                field_feina.setDisable(false);
-                label_extra2.setText("Salari brut");
-                field_salari.setDisable(false);
-                label_extra3.setText("Estat d'empleat");
-                combo_estat.setDisable(false);
-                combo_categoria.setDisable(true);
-                field_targeta.setDisable(true);
-                break;
-            case "Client":
-                label_tipus_persona_registrada.setText("Empleat");
-                label_extra1.setText("Categoria");
-                combo_categoria.setDisable(false);
-                label_extra2.setText("Targeta");
-                field_targeta.setDisable(false);
-                field_feina.setDisable(true);
-                field_salari.setDisable(true);
-                combo_estat.setDisable(true);
-                break;
-            default:
-                label_tipus_persona_registrada.setText("Persona");
-                combo_persona_registrada.setDisable(true);
-                label_extra1.setText("Feina i categoria");
-                field_feina.setDisable(false);
-                combo_categoria.setDisable(false);
-                label_extra2.setText("Salari brut i targeta");
-                field_salari.setDisable(false);
-                field_targeta.setDisable(false);
-                label_extra3.setText("Estat d'empleat");
-                combo_estat.setDisable(false);
-                break;
+        if (tipus_persona.equals(ManipularString.paraulaCapitalitzacioEstandard(TipusPersona.EMPLEAT.name()))) {
+            label_tipus_persona_registrada.setText(ManipularString.paraulaCapitalitzacioEstandard(TipusPersona.CLIENT.name()));
+            label_extra1.setText("Feina");
+            field_feina.setDisable(false);
+            label_extra2.setText("Salari brut");
+            field_salari.setDisable(false);
+            label_extra3.setText("Estat d'empleat");
+            combo_estat.setDisable(false);
+            combo_categoria.setDisable(true);
+            field_targeta.setDisable(true);
+        } else if (tipus_persona.equals(ManipularString.paraulaCapitalitzacioEstandard(TipusPersona.CLIENT.name()))) {
+            label_tipus_persona_registrada.setText(ManipularString.paraulaCapitalitzacioEstandard(TipusPersona.EMPLEAT.name()));
+            label_extra1.setText("Categoria");
+            combo_categoria.setDisable(false);
+            label_extra2.setText("Targeta");
+            field_targeta.setDisable(false);
+            field_feina.setDisable(true);
+            field_salari.setDisable(true);
+            combo_estat.setDisable(true);
+        } else {
+            label_tipus_persona_registrada.setText("Persona");
+            combo_persona_registrada.setDisable(true);
+            label_extra1.setText("Feina i categoria");
+            field_feina.setDisable(false);
+            combo_categoria.setDisable(false);
+            label_extra2.setText("Salari brut i targeta");
+            field_salari.setDisable(false);
+            field_targeta.setDisable(false);
+            label_extra3.setText("Estat d'empleat");
+            combo_estat.setDisable(false);
         }
+
         
         // Obté la llista de tipus de persona oposit al seleccionat.
         Map<String, Persona> persones_registrades = null;
         if (tipus_persona.equals(ManipularString.paraulaCapitalitzacioEstandard(TipusPersona.EMPLEAT.name()))) {
             persones_registrades = model.obtenirPersonesOposites(ManipularString.paraulaCapitalitzacioEstandard(TipusPersona.CLIENT.name()));
-        }else{
+        } else {
             persones_registrades = model.obtenirPersonesOposites(ManipularString.paraulaCapitalitzacioEstandard(TipusPersona.EMPLEAT.name()));
         }
 
@@ -218,7 +214,10 @@ public class Alta_empleats_i_clients {
         valid = !(data_naixement_sql == null);
         
         // Control de selecció de persona.
-        if (combo_tipus_persona.getValue().equals("Empleat") || combo_tipus_persona.getValue().equals("Empleat i client")) {
+        if (
+            combo_tipus_persona.getValue().equals(ManipularString.paraulaCapitalitzacioEstandard(TipusPersona.CLIENT.name()))
+            || combo_tipus_persona.getValue().equals(ManipularString.paraulaCapitalitzacioEstandard(TipusPersona.AMBDUES.name()))
+        ) {
             // Comprova si el camp de text de feina esta omplit.
             valid = !(field_feina.getText().trim().isEmpty());
             
@@ -242,7 +241,7 @@ public class Alta_empleats_i_clients {
             // Comprova si un estat d'empleat ha sigut escollit.
             valid = !(combo_estat.getValue() == null);
             
-            if (combo_tipus_persona.getValue().equals("Empleat i client")){
+            if (combo_tipus_persona.getValue().equals(ManipularString.paraulaCapitalitzacioEstandard(TipusPersona.AMBDUES.name()))){
                 // Comprova si una categoria de client ha sigut escollida.
                 valid = !(combo_categoria.getValue() == null);
 
@@ -266,7 +265,7 @@ public class Alta_empleats_i_clients {
                 );
                 int id_persona = model.altaEmpleat(nou_empleat);
                 // Crea a la persona com a empleat i client a la mateixa vegada utilitzant el mateix ID.
-                if (combo_tipus_persona.getValue().equals("Empleat i client")){
+                if (combo_tipus_persona.getValue().equals(ManipularString.paraulaCapitalitzacioEstandard(TipusPersona.AMBDUES.name()))){
                     Client nou_client = new Client(
                         field_nom.getText().trim(),
                         field_cognom.getText().trim(),
@@ -284,7 +283,7 @@ public class Alta_empleats_i_clients {
             }else{
                 return;
             }
-        }else if (combo_tipus_persona.getValue().equals("Client")){
+        }else if (combo_tipus_persona.getValue().equals(ManipularString.paraulaCapitalitzacioEstandard(TipusPersona.CLIENT.name()))){
             // Comprova si una categoria de client ha sigut escollida.
             valid = !(combo_categoria.getValue() == null);
             

@@ -4,7 +4,7 @@
  */
 package ian.projecte_javafx_sql_ian.classes;
 
-import ian.projecte_javafx_sql_ian.enums.EstatEmpleat;
+import ian.projecte_javafx_sql_ian.Enums.EstatEmpleat;
 import java.sql.Date;
 
 /**

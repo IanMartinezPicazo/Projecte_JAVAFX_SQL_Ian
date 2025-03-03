@@ -4,7 +4,7 @@
  */
 package ian.projecte_javafx_sql_ian.classes;
 
-import ian.projecte_javafx_sql_ian.enums.EstatTasca;
+import ian.projecte_javafx_sql_ian.Enums.EstatTasca;
 import java.sql.Date;
 
 /**

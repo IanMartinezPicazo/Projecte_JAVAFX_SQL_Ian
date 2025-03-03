@@ -7,6 +7,9 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import javafx.geometry.Rectangle2D;
+import javafx.stage.Screen;
+import javafx.stage.StageStyle;
 
 /**
  * JavaFX App
@@ -20,6 +23,17 @@ public class App extends Application {
         // L'aplicació inicia executant un fitxer FXML.
         scene = new Scene(loadFXML("Menu"), 640, 480);
         stage.setScene(scene);
+        
+        // Troba els bordres de la pantalla, i adjusta la finestra al tamany, la finestra no es pot canviar de tamany.
+        stage.setMaximized(false);
+        Rectangle2D bordres = Screen.getPrimary().getVisualBounds();
+        stage.setX(bordres.getMinX());
+        stage.setY(bordres.getMinY());
+        stage.setWidth(bordres.getWidth());
+        stage.setHeight(bordres.getHeight());
+        stage.setResizable(false);
+        stage.initStyle(StageStyle.UNDECORATED);
+        
         stage.show();
     }
 

@@ -4,7 +4,7 @@
  */
 package ian.projecte_javafx_sql_ian.classes;
 
-import ian.projecte_javafx_sql_ian.enums.Categoria;
+import ian.projecte_javafx_sql_ian.Enums.Categoria;
 import java.sql.Date;
 
 /**
