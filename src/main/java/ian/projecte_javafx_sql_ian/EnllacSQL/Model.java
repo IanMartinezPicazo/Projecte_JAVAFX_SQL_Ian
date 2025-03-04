@@ -226,6 +226,14 @@ public class Model {
                     + " FROM persona"
                     + " INNER JOIN " + tipus_persona.toLowerCase()
                     + " ON id_persona = id_" + tipus_persona.toLowerCase()
+                    + " WHERE id_persona NOT IN ("
+                    + "     SELECT id_persona"
+                    + "     FROM persona"
+                    + "     INNER JOIN empleat"
+                    + "     ON id_persona = id_empleat"
+                    + "     INNER JOIN client"
+                    + "     ON id_persona = id_client"
+                    + ")"
                 );
             ) {
                 ResultSet persones_existents = valors_persona.executeQuery();

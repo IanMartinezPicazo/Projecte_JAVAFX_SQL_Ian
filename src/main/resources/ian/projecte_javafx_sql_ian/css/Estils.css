@@ -1,0 +1,126 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : 10 de febr. 2025, 8:57:12
+    Author     : alumne
+*/
+
+.text-field, .combo-box, .date-picker, .list-view {
+    -fx-background-color: #f4f4f4;
+    -fx-border-color: #cccccc;
+    -fx-border-radius: 5px;
+    -fx-font-size: 11px;
+}
+
+.text-field, .combo-box, .date-picker {
+    -fx-padding: 10px;
+}
+
+.combo-box {
+    -fx-padding: 5px;
+}
+
+.date-picker {
+    -fx-font-size: 11px;
+}
+
+.list-view {
+    -fx-padding: 5px;
+    -fx-font-size: 11px;
+}
+
+.list-cell {
+    -fx-background-color: transparent;
+    -fx-text-fill: #333333;
+    -fx-padding: 8px 12px;
+}
+
+.button {
+    -fx-background-color: #4CAF50;
+    -fx-text-fill: white;
+    -fx-border-radius: 5px;
+    -fx-padding: 10px 20px;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.2), 5, 0, 0, 2);
+}
+
+.button:hover {
+    -fx-background-color: #45a049;
+}
+
+.combo-box-principal {
+    -fx-background-color: #e3f2fd;
+    -fx-border-color: #2196F3;
+    -fx-border-width: 2px;
+    -fx-border-radius: 5px;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #0d47a1;
+}
+
+.combo-box .list-view {
+    -fx-background-color: white;
+    -fx-border-color: #cccccc;
+}
+
+.combo-box .list-cell {
+    -fx-background-color: white;
+    -fx-text-fill: black;
+}
+
+.combo-box .list-cell:selected {
+    -fx-background-color: #dedede;
+    -fx-text-fill: black;
+}
+
+.label {
+    -fx-font-size: 11px;
+    -fx-text-fill: #333333;
+    -fx-font-weight: bold;
+    -fx-padding: 5px;
+}
+
+.date-picker .arrow-button {
+    -fx-background-color: #4CAF50;
+    -fx-border-radius: 50%;
+    -fx-pref-width: 20px;
+    -fx-pref-height: 20px;
+    -fx-text-fill: white;
+}
+
+.date-picker .arrow-button:hover {
+    -fx-background-color: #45a049;
+}
+
+.invalid {
+    -fx-border-color: #e74c3c;
+    -fx-border-width: 2px;
+    -fx-border-radius: 5px;
+    -fx-background-color: #ffe6e6;
+    -fx-text-fill: #c0392b;
+}
+
+.titol {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+    -fx-padding: 10px 0;
+    -fx-alignment: center;
+}
+
+.list-cell:hover {
+    -fx-background-color: #e0e0e0;
+}
+
+.list-cell:selected {
+    -fx-background-color: #2196F3;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+.list-view:focused {
+    -fx-border-color: #2196F3;
+}

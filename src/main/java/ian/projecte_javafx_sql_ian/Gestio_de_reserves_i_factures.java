@@ -12,7 +12,6 @@ import ian.projecte_javafx_sql_ian.Enums.Pagament;
 import ian.projecte_javafx_sql_ian.Enums.TipusReserva;
 import java.io.IOException;
 import java.sql.Date;
-import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.ParseException;
@@ -58,6 +57,9 @@ public class Gestio_de_reserves_i_factures {
     @FXML
     ListView
         list_reservas_pendents;
+    
+    // Constant per aplicar l'estil de valor invalid.
+    final String estil = "invalid";
     
     public void initialize() {
         // Per cridar al model.
@@ -107,6 +109,17 @@ public class Gestio_de_reserves_i_factures {
         field_base_imposable_factura.clear();
         combo_iva_factura.getSelectionModel().clearSelection();
         
+        date_reserva_inici.getStyleClass().remove(estil);
+        date_reserva_final.getStyleClass().remove(estil);
+        field_preu_reserva.getStyleClass().remove(estil);
+        combo_tipus_reserva.getStyleClass().remove(estil);
+        combo_iva_reserva.getStyleClass().remove(estil);
+        combo_habitacio.getStyleClass().remove(estil);
+        combo_reserves_no_facturades.getStyleClass().remove(estil);
+        combo_pagament_factura.getStyleClass().remove(estil);
+        field_base_imposable_factura.getStyleClass().remove(estil);
+        combo_iva_factura.getStyleClass().remove(estil);
+        
         date_reserva_inici.setDisable(false);
         date_reserva_final.setDisable(false);
         field_preu_reserva.setDisable(false);
@@ -132,21 +145,51 @@ public class Gestio_de_reserves_i_factures {
         
         // Control de dades valides.        
         boolean valid = true;
-        
+
         // Retorna la data d'avui en ms.
         Date creacio_reserva = new Date(System.currentTimeMillis());
-        
+
         // Obté la data d'inici i final de la reserva, i la converteix a una data compatible amb SQL.
-        // Comprova si qualsevol dels camps de les dates son buida.
+        // Comprova si qualsevol dels camps de les dates són buits.
         LocalDate data_reserva_inici = date_reserva_inici.getValue();
         Date data_reserva_inici_sql = (data_reserva_inici != null) ? Date.valueOf(data_reserva_inici) : null;
         LocalDate data_reserva_final = date_reserva_final.getValue();
         Date data_reserva_final_sql = (data_reserva_final != null) ? Date.valueOf(data_reserva_final) : null;
-        valid = !(data_reserva_inici_sql == null || data_reserva_final_sql == null);
-        
-        // Comprova que s'hagui seleccionat una opció en tots els desplegables.
-        valid = !(combo_tipus_reserva.getValue() == null || combo_iva_reserva == null || combo_habitacio == null);
-        
+
+        if (data_reserva_inici_sql == null || data_reserva_final_sql == null) {
+            valid = false;
+            date_reserva_inici.getStyleClass().add(estil);
+            date_reserva_final.getStyleClass().add(estil);
+        } else {
+            date_reserva_inici.getStyleClass().remove(estil);
+            date_reserva_final.getStyleClass().remove(estil);
+        }
+
+        // Comprova que s'hagi seleccionat una opció en tots els desplegables.
+        boolean tipus_reserva_valid = combo_tipus_reserva.getValue() != null;
+        boolean iva_reserva_valid = combo_iva_reserva.getValue() != null; 
+        boolean habitacio_valid = combo_habitacio.getValue() != null;
+
+        if (!tipus_reserva_valid) {
+            combo_tipus_reserva.getStyleClass().add(estil);
+        } else {
+            combo_tipus_reserva.getStyleClass().remove(estil);
+        }
+
+        if (!iva_reserva_valid) {
+            combo_iva_reserva.getStyleClass().add(estil);
+        } else {
+            combo_iva_reserva.getStyleClass().remove(estil);
+        }
+
+        if (!habitacio_valid) {
+            combo_habitacio.getStyleClass().add(estil);
+        } else {
+            combo_habitacio.getStyleClass().remove(estil);
+        }
+
+        valid = valid && tipus_reserva_valid && iva_reserva_valid && habitacio_valid;
+
         // Obté el preu en text.
         String preu_text = field_preu_reserva.getText().trim();
 
@@ -156,16 +199,18 @@ public class Gestio_de_reserves_i_factures {
         DecimalFormat decimal_punt = new DecimalFormat();
         decimal_punt.setDecimalFormatSymbols(simbols);
 
-        // Converteix el salari en text a double amb control d'errada.
+        // Converteix el preu en text a double amb control d'errada.
         double preu = 0;
         try {
             preu = decimal_punt.parse(preu_text).doubleValue();
         } catch (ParseException e) {
             valid = false;
+            field_preu_reserva.getStyleClass().add(estil);
         }
         
         if (valid){
-            Reserva nova_reserva = new Reserva(
+            try {
+                Reserva nova_reserva = new Reserva(
                 creacio_reserva,
                 data_reserva_inici_sql,
                 data_reserva_final_sql,
@@ -174,9 +219,12 @@ public class Gestio_de_reserves_i_factures {
                 preu,
                 model.buscarClientSeleccionat(combo_clients.getValue().toString()),
                 model.buscarHabitacioSeleccionada(combo_habitacio.getValue().toString())
-            );
-            model.crearReserva(nova_reserva);
-            controllerClientSeleccionat();
+                );
+                model.crearReserva(nova_reserva);
+                controllerClientSeleccionat();
+            } catch (NullPointerException e) {
+                System.err.println("Error: controllerAfegirReserva \n\n" + e.getMessage());
+            }
         }
     }
     
@@ -185,27 +233,42 @@ public class Gestio_de_reserves_i_factures {
         // Per cridar al model.
         Model model = new Model();
         
+        // En cas que les dates siguin coherents, crida al model per llistar les habitacions disponibles.
+        boolean dates_valides = true;
+        
         combo_habitacio.setDisable(true);
         
         // Control d'errada.
-        if (date_reserva_inici.getValue() != null && date_reserva_final.getValue() != null){
-            // Obté la data d'inici i final de la reserva, i la converteix a una data compatible amb SQL.
-            LocalDate data_reserva_inici = date_reserva_inici.getValue();
-            Date data_reserva_inici_sql = (data_reserva_inici != null) ? Date.valueOf(data_reserva_inici) : null;
-            LocalDate data_reserva_final = date_reserva_final.getValue();
-            Date data_reserva_final_sql = (data_reserva_final != null) ? Date.valueOf(data_reserva_final) : null;
-            
-            // En cas que les dates siguin coherents, crida al model per llistar les habitacions disponibles.
-            Date creacio_reserva = new Date(System.currentTimeMillis());
-            if (data_reserva_inici_sql.before(data_reserva_final_sql) && 
-                (data_reserva_inici_sql.equals(creacio_reserva) || 
-                 data_reserva_inici_sql.after(creacio_reserva))){
-                combo_habitacio.setItems(model.buscarHabitacionsDisponibles(data_reserva_inici_sql, data_reserva_final_sql));
-                combo_habitacio.setDisable(false);
-            }else{
-                combo_habitacio.setItems(null);
-            }
-        }else{
+        date_reserva_inici.getStyleClass().remove(estil);
+        date_reserva_final.getStyleClass().remove(estil);
+
+        // Obté la data d'inici i final de la reserva, i la converteix a una data compatible amb SQL.
+        LocalDate data_reserva_inici = date_reserva_inici.getValue();
+        Date data_reserva_inici_sql = Date.valueOf(data_reserva_inici);
+        LocalDate data_reserva_final = date_reserva_final.getValue();
+        Date data_reserva_final_sql = Date.valueOf(data_reserva_final);
+        
+        Date creacio_reserva = new Date(System.currentTimeMillis());
+
+        if (data_reserva_inici_sql.before(creacio_reserva)) {
+            date_reserva_inici.getStyleClass().add(estil);
+            dates_valides = false;
+        }
+
+        if (data_reserva_inici_sql.after(data_reserva_final_sql)) {
+            date_reserva_inici.getStyleClass().add(estil);
+            dates_valides = false;
+        }
+
+        if (data_reserva_final_sql.before(data_reserva_inici_sql)) {
+            date_reserva_final.getStyleClass().add(estil);
+            dates_valides = false;
+        }
+
+        if (dates_valides) {
+            combo_habitacio.setItems(model.buscarHabitacionsDisponibles(data_reserva_inici_sql, data_reserva_final_sql));
+            combo_habitacio.setDisable(false);
+        } else {
             combo_habitacio.setItems(null);
         }
     }
@@ -225,22 +288,34 @@ public class Gestio_de_reserves_i_factures {
     private void controllerGenerarFactura() {
         // Per cridar al model.
         Model model = new Model();
-        
+
         // Control de dades valides.        
         boolean valid = true;
-        
+
         // Retorna la data d'avui en ms.
         Date creacio_factura = new Date(System.currentTimeMillis());
-        
-        valid = !(combo_pagament_factura.getValue() == null || combo_iva_factura.getValue() == null);
-        System.out.println(valid);
-        
+
+        // Validació de selecció de pagament i IVA.
+        if (combo_pagament_factura.getValue() == null) {
+            combo_pagament_factura.getStyleClass().add(estil);
+            valid = false;
+        } else {
+            combo_pagament_factura.getStyleClass().remove(estil);
+        }
+
+        if (combo_iva_factura.getValue() == null) {
+            combo_iva_factura.getStyleClass().add(estil);
+            valid = false;
+        } else {
+            combo_iva_factura.getStyleClass().remove(estil);
+        }
+
         // Obté el preu en text.
         String base_imposable_text = field_base_imposable_factura.getText().trim();
 
-        // Enforça l'ús de '.' per a decimals.
-        DecimalFormatSymbols simbols = new DecimalFormatSymbols(Locale.ENGLISH);
-        simbols.setDecimalSeparator('.');
+        // Enforça l'ús de ',' per a decimals.
+        DecimalFormatSymbols simbols = new DecimalFormatSymbols(Locale.GERMANY);
+        simbols.setDecimalSeparator(',');
         DecimalFormat decimal_punt = new DecimalFormat();
         decimal_punt.setDecimalFormatSymbols(simbols);
 
@@ -249,26 +324,27 @@ public class Gestio_de_reserves_i_factures {
         try {
             base_imposable = decimal_punt.parse(base_imposable_text).doubleValue();
         } catch (ParseException e) {
+            field_base_imposable_factura.getStyleClass().add(estil);
             valid = false;
         }
-        
+
+        // Validació de IVA seleccionat.
         String iva_text = combo_iva_factura.getValue().toString();
         String iva_number_text = "";
         int index = 1;
-        for (;index < iva_text.length();index++) {
+        for (; index < iva_text.length(); index++) {
             char buscador = iva_text.charAt(index);
-            if (buscador == '_'){
+            if (buscador == '_') {
                 iva_number_text = iva_text.substring(1, index);
                 break;
             }
         }
         int iva_number = Integer.parseInt(iva_number_text);
-        
+
         // Calcula el preu incluïnt l'IVA.
         double total = base_imposable * (1 + (iva_number / 100.0));
-        
-        if (valid){
-            System.out.println("Si");
+
+        if (valid) {
             Factura nova_factura = new Factura(
                 creacio_factura,
                 (Pagament) combo_pagament_factura.getValue(),
@@ -279,8 +355,6 @@ public class Gestio_de_reserves_i_factures {
             );
             model.crearFactura(nova_factura);
             controllerClientSeleccionat();
-        }else{
-            System.out.println("No");
         }
     }
     

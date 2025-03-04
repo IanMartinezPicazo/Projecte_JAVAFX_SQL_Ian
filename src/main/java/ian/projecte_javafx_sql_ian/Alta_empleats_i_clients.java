@@ -36,12 +36,8 @@ import javafx.scene.control.TextField;
  */
 public class Alta_empleats_i_clients {
     // Inicialitza tots els objectes amb IDs.
-    // La majoria dels objectes començen deshabilitats per evitar errades.
     @FXML
     Label
-        label_extra1,
-        label_extra2,
-        label_extra3,
         label_tipus_persona_registrada;
     @FXML
     TextField
@@ -66,6 +62,9 @@ public class Alta_empleats_i_clients {
     @FXML
     Button
         button_afegir_persona;
+    
+    // Constant per aplicar l'estil de valor invalid.
+    final String estil = "invalid";
     
     // Funció que s'executa en iniciar el programa.
     public void initialize() {
@@ -115,7 +114,27 @@ public class Alta_empleats_i_clients {
         combo_categoria.getSelectionModel().clearSelection();
         combo_estat.getSelectionModel().clearSelection();
         
-        // Habilita els camps de compartits per la classe Empleat i Client.
+        TextField[] camps_compartits_text = {
+            field_nom,
+            field_cognom,
+            field_adreça,
+            field_dni,
+            field_telefon,
+            field_email,
+        };
+        for (TextField camp_text : camps_compartits_text) {
+            camp_text.getStyleClass().remove(estil);
+        }
+        date_naixement.getStyleClass().remove(estil);
+        
+        field_feina.getStyleClass().remove(estil);
+        field_salari.getStyleClass().remove(estil);
+        combo_estat.getStyleClass().remove(estil);
+        
+        combo_categoria.getStyleClass().remove(estil);
+        field_targeta.getStyleClass().remove(estil);
+        
+        // Habilita els camps compartits per la classe Empleat i Client.
         field_nom.setDisable(false);
         field_cognom.setDisable(false);
         field_adreça.setDisable(false);
@@ -123,9 +142,6 @@ public class Alta_empleats_i_clients {
         date_naixement.setDisable(false);
         field_telefon.setDisable(false);
         field_email.setDisable(false);
-        label_extra1.setText("Extra1");
-        label_extra2.setText("Extra2");
-        label_extra3.setText("Extra3");
         
         // Desa el tipus de persona seleccionat en una variable.
         String tipus_persona = combo_tipus_persona.getValue().toString();
@@ -133,19 +149,14 @@ public class Alta_empleats_i_clients {
         // Habilita i deshabilita els camps adequats depenent del tipus de persona seleccionada.
         if (tipus_persona.equals(ManipularString.paraulaCapitalitzacioEstandard(TipusPersona.EMPLEAT.name()))) {
             label_tipus_persona_registrada.setText(ManipularString.paraulaCapitalitzacioEstandard(TipusPersona.CLIENT.name()));
-            label_extra1.setText("Feina");
             field_feina.setDisable(false);
-            label_extra2.setText("Salari brut");
             field_salari.setDisable(false);
-            label_extra3.setText("Estat d'empleat");
             combo_estat.setDisable(false);
             combo_categoria.setDisable(true);
             field_targeta.setDisable(true);
         } else if (tipus_persona.equals(ManipularString.paraulaCapitalitzacioEstandard(TipusPersona.CLIENT.name()))) {
             label_tipus_persona_registrada.setText(ManipularString.paraulaCapitalitzacioEstandard(TipusPersona.EMPLEAT.name()));
-            label_extra1.setText("Categoria");
             combo_categoria.setDisable(false);
-            label_extra2.setText("Targeta");
             field_targeta.setDisable(false);
             field_feina.setDisable(true);
             field_salari.setDisable(true);
@@ -153,13 +164,10 @@ public class Alta_empleats_i_clients {
         } else {
             label_tipus_persona_registrada.setText("Persona");
             combo_persona_registrada.setDisable(true);
-            label_extra1.setText("Feina i categoria");
             field_feina.setDisable(false);
             combo_categoria.setDisable(false);
-            label_extra2.setText("Salari brut i targeta");
             field_salari.setDisable(false);
             field_targeta.setDisable(false);
-            label_extra3.setText("Estat d'empleat");
             combo_estat.setDisable(false);
         }
 
@@ -198,58 +206,88 @@ public class Alta_empleats_i_clients {
             field_telefon,
             field_email,
         };
-        for (TextField camp_text : camps_compartits_text){
-            if (camp_text.getText().trim().isEmpty()){
+        for (TextField camp_text : camps_compartits_text) {
+            if (camp_text.getText().trim().isEmpty()) {
                 valid = false;
+                camp_text.getStyleClass().add(estil);
+            } else {
+                camp_text.getStyleClass().remove(estil);
             }
         }
-        
+
         // Retorna la data d'avui en ms.
         Date avui = new Date(System.currentTimeMillis());
-        
+
         // Obté la data de naixement, i la converteix a una data compatible amb SQL.
         // Comprova si el camp de la data de naixement es buida.
         LocalDate data_naixement = date_naixement.getValue();
         Date data_naixement_sql = (data_naixement != null) ? Date.valueOf(data_naixement) : null;
-        valid = !(data_naixement_sql == null);
-        
+        if (data_naixement_sql == null) {
+            valid = false;
+            date_naixement.getStyleClass().add(estil);
+        } else {
+            date_naixement.getStyleClass().remove(estil);
+        }
+
         // Control de selecció de persona.
         if (
-            combo_tipus_persona.getValue().equals(ManipularString.paraulaCapitalitzacioEstandard(TipusPersona.CLIENT.name()))
+            combo_tipus_persona.getValue().equals(ManipularString.paraulaCapitalitzacioEstandard(TipusPersona.EMPLEAT.name()))
             || combo_tipus_persona.getValue().equals(ManipularString.paraulaCapitalitzacioEstandard(TipusPersona.AMBDUES.name()))
         ) {
             // Comprova si el camp de text de feina esta omplit.
-            valid = !(field_feina.getText().trim().isEmpty());
-            
+            if (field_feina.getText().trim().isEmpty()) {
+                valid = false;
+                field_feina.getStyleClass().add(estil);
+            } else {
+                field_feina.getStyleClass().remove(estil);
+            }
+
             // Obté el salari en text.
             String salari_text = field_salari.getText().trim();
-            
-            // Enforça l'ús de '.' per a decimals.
-            DecimalFormatSymbols simbols = new DecimalFormatSymbols(Locale.ENGLISH);
-            simbols.setDecimalSeparator('.');
+
+            // Enforça l'ús de ',' per a decimals.
+            DecimalFormatSymbols simbols = new DecimalFormatSymbols(Locale.GERMANY);
+            simbols.setDecimalSeparator(',');
             DecimalFormat decimal_punt = new DecimalFormat();
             decimal_punt.setDecimalFormatSymbols(simbols);
-            
+
             // Converteix el salari en text a double amb control d'errada.
             double salari = 0;
             try {
                 salari = decimal_punt.parse(salari_text).doubleValue();
+                field_salari.getStyleClass().remove(estil);
             } catch (ParseException e) {
                 valid = false;
+                field_salari.getStyleClass().add(estil);
             }
-            
+
             // Comprova si un estat d'empleat ha sigut escollit.
-            valid = !(combo_estat.getValue() == null);
-            
-            if (combo_tipus_persona.getValue().equals(ManipularString.paraulaCapitalitzacioEstandard(TipusPersona.AMBDUES.name()))){
+            if (combo_estat.getValue() == null) {
+                valid = false;
+                combo_estat.getStyleClass().add(estil);
+            } else {
+                combo_estat.getStyleClass().remove(estil);
+            }
+
+            if (combo_tipus_persona.getValue().equals(ManipularString.paraulaCapitalitzacioEstandard(TipusPersona.AMBDUES.name()))) {
                 // Comprova si una categoria de client ha sigut escollida.
-                valid = !(combo_categoria.getValue() == null);
+                if (combo_categoria.getValue() == null) {
+                    valid = false;
+                    combo_categoria.getStyleClass().add(estil);
+                } else {
+                    combo_categoria.getStyleClass().remove(estil);
+                }
 
                 // Comprova si el camp de text de targeta esta omplit.
-                valid = !(field_targeta.getText().trim().isEmpty());
+                if (field_targeta.getText().trim().isEmpty()) {
+                    valid = false;
+                    field_targeta.getStyleClass().add(estil);
+                } else {
+                    field_targeta.getStyleClass().remove(estil);
+                }
             }
-            
-            if (valid){
+
+            if (valid) {
                 Empleat nou_empleat = new Empleat(
                     field_nom.getText().trim(),
                     field_cognom.getText().trim(),
@@ -265,7 +303,7 @@ public class Alta_empleats_i_clients {
                 );
                 int id_persona = model.altaEmpleat(nou_empleat);
                 // Crea a la persona com a empleat i client a la mateixa vegada utilitzant el mateix ID.
-                if (combo_tipus_persona.getValue().equals(ManipularString.paraulaCapitalitzacioEstandard(TipusPersona.AMBDUES.name()))){
+                if (combo_tipus_persona.getValue().equals(ManipularString.paraulaCapitalitzacioEstandard(TipusPersona.AMBDUES.name()))) {
                     Client nou_client = new Client(
                         field_nom.getText().trim(),
                         field_cognom.getText().trim(),
@@ -280,17 +318,27 @@ public class Alta_empleats_i_clients {
                     );
                     model.altaClient(nou_client, id_persona);
                 }
-            }else{
+            } else {
                 return;
             }
-        }else if (combo_tipus_persona.getValue().equals(ManipularString.paraulaCapitalitzacioEstandard(TipusPersona.CLIENT.name()))){
+        } else if (combo_tipus_persona.getValue().equals(ManipularString.paraulaCapitalitzacioEstandard(TipusPersona.CLIENT.name()))) {
             // Comprova si una categoria de client ha sigut escollida.
-            valid = !(combo_categoria.getValue() == null);
-            
+            if (combo_categoria.getValue() == null) {
+                valid = false;
+                combo_categoria.getStyleClass().add(estil);
+            } else {
+                combo_categoria.getStyleClass().remove(estil);
+            }
+
             // Comprova si el camp de text de targeta esta omplit.
-            valid = !(field_targeta.getText().trim().isEmpty());
-            
-            if (valid){
+            if (field_targeta.getText().trim().isEmpty()) {
+                valid = false;
+                field_targeta.getStyleClass().add(estil);
+            } else {
+                field_targeta.getStyleClass().remove(estil);
+            }
+
+            if (valid) {
                 Client nou_client = new Client(
                     field_nom.getText().trim(),
                     field_cognom.getText().trim(),
@@ -304,12 +352,14 @@ public class Alta_empleats_i_clients {
                     field_targeta.getText().trim()
                 );
                 model.altaClient(nou_client, 0);
-            }else{
+            } else {
                 return;
             }
         }
-        controllerActualitzarTipusPersona();
-    }
+        if (valid){
+            controllerActualitzarTipusPersona();
+        }
+}
     
     @FXML
     private void controllerPrepararDades() {

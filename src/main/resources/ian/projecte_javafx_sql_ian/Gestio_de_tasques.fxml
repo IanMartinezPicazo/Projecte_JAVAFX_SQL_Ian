@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="600.0" stylesheets="@css/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ian.projecte_javafx_sql_ian.Gestio_de_tasques">
+<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="600.0" stylesheets="@css/Estils.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ian.projecte_javafx_sql_ian.Gestio_de_tasques">
    <children>
       <GridPane maxHeight="1.7976931348623157E308">
          <columnConstraints>
@@ -37,7 +37,7 @@
                   <Label maxHeight="-Infinity" maxWidth="-Infinity" text="Menú" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
                </children>
             </GridPane>
-            <Label styleClass="title" text="Gestió de tasques" GridPane.halignment="CENTER" />
+            <Label styleClass="titol" text="Gestió de tasques" GridPane.halignment="CENTER" />
          </children>
       </GridPane>
       <GridPane maxHeight="-Infinity" maxWidth="-Infinity">

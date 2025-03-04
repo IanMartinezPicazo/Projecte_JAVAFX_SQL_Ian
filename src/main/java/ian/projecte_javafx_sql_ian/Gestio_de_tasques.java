@@ -10,8 +10,6 @@ import ian.projecte_javafx_sql_ian.Enums.EstatTasca;
 import java.io.IOException;
 import java.sql.Date;
 import java.sql.SQLException;
-import java.time.LocalDate;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -42,6 +40,9 @@ public class Gestio_de_tasques {
     @FXML
     ListView
         list_tasques_pendents;
+    
+    // Constant per aplicar l'estil de valor invalid.
+    final String estil = "invalid";
     
     public void initialize() throws SQLException{
         // Per cridar al model.
@@ -77,6 +78,9 @@ public class Gestio_de_tasques {
             button_crear_assignar.setDisable(false);
             button_crear_assignar.setText("Crear/Assignar Tasca");
             button_completat.setDisable(true);
+            
+            field_descripcio.getStyleClass().remove(estil);
+            date_execucio.getStyleClass().remove(estil);
 
             // Comprova si la opció seleccionada és "Nova tasca".
             if (combo_tasca.getValue().toString().equals("Nova tasca")){
@@ -108,14 +112,22 @@ public class Gestio_de_tasques {
         
         // Comprova si la opció seleccionada és "Nova tasca".
         if (combo_tasca.getValue().toString().equals("Nova tasca")){
-            valid = !field_descripcio.getText().trim().isEmpty();
+            // Si la descripció està buida, afegeix l'estil d'error
+            if (field_descripcio.getText().trim().isEmpty()) {
+                field_descripcio.getStyleClass().add(estil);
+                valid = false;
+            } else {
+                field_descripcio.getStyleClass().remove(estil);
+            }
             
             // Control d'errada.
             Date data_execucio = null;
-            if (date_execucio.getValue() != null){
+            if (date_execucio.getValue() != null) {
                 // Obté la data d'execució prevista i la converteix a una data compatible amb SQL.
                 data_execucio = Date.valueOf(date_execucio.getValue());
-            }else{
+            } else {
+                // Si la data no es valida, afegeix l'estil d'error
+                date_execucio.getStyleClass().add(estil);
                 valid = false;
             }
             
