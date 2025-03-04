@@ -1,80 +1,140 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="600.0" stylesheets="@css/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ian.projecte_javafx_sql_ian.Gestio_de_tasques">
    <children>
-      <Label text="Gestió de tasques" />
-      <GridPane>
+      <GridPane maxHeight="1.7976931348623157E308">
          <columnConstraints>
-            <ColumnConstraints />
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
          </columnConstraints>
          <rowConstraints>
             <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
          </rowConstraints>
          <children>
-            <Button mnemonicParsing="false" onAction="#controllerVolverMenu" prefHeight="31.0" prefWidth="29.0" text="&lt;" GridPane.columnIndex="1" GridPane.halignment="CENTER" />
-            <Label text="Menú" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <GridPane maxHeight="-Infinity" maxWidth="-Infinity" GridPane.halignment="RIGHT">
+               <columnConstraints>
+                  <ColumnConstraints />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+               </rowConstraints>
+               <children>
+                  <Button maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" onAction="#controllerVolverMenu" text="&lt;" GridPane.columnIndex="1" GridPane.halignment="CENTER" />
+                  <Label maxHeight="-Infinity" maxWidth="-Infinity" text="Menú" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+               </children>
+            </GridPane>
+            <Label styleClass="title" text="Gestió de tasques" GridPane.halignment="CENTER" />
          </children>
       </GridPane>
-      <GridPane prefHeight="26.0" prefWidth="77.0">
+      <GridPane maxHeight="-Infinity" maxWidth="-Infinity">
          <columnConstraints>
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="110.0" />
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="105.599951171875" minWidth="10.0" prefWidth="90.4" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="-Infinity" />
          </columnConstraints>
          <rowConstraints>
             <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
          </rowConstraints>
          <children>
             <Label text="Empleat" />
-            <ComboBox fx:id="combo_empleats" onAction="#controllerEmpleatSeleccionat" prefHeight="26.0" prefWidth="70.0" GridPane.columnIndex="1" />
+            <ComboBox fx:id="combo_empleats" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" onAction="#controllerEmpleatSeleccionat" styleClass="combo-box-principal" GridPane.columnIndex="1" />
          </children>
       </GridPane>
       <Label prefHeight="18.0" prefWidth="61.0" />
-      <GridPane prefHeight="26.0" prefWidth="62.0">
-         <columnConstraints>
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="110.0" />
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
-         </columnConstraints>
-         <rowConstraints>
-            <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-         </rowConstraints>
-         <children>
-            <Label prefHeight="18.0" prefWidth="115.0" text="Tasca" />
-            <ComboBox fx:id="combo_tasca" disable="true" onAction="#controllerTascaSeleccionada" prefHeight="26.0" prefWidth="41.0" GridPane.columnIndex="1" />
-         </children>
-      </GridPane>
-      <Button fx:id="button_completat" disable="true" mnemonicParsing="false" onAction="#controllerTascaCompletada" text="Declarar com a completat" />
-      <Button fx:id="button_crear_assignar" disable="true" mnemonicParsing="false" onAction="#controllerCrearAssignarTasca" text="Crear/Assignar tasca" />
-      <GridPane hgap="10.0" prefHeight="70.0" prefWidth="220.0">
-         <columnConstraints>
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="128.0" minWidth="10.0" prefWidth="101.60000610351562" />
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="166.39998779296874" minWidth="10.0" prefWidth="107.99999389648437" />
-         </columnConstraints>
-         <rowConstraints>
-            <RowConstraints maxHeight="34.200006103515626" minHeight="5.400018310546876" prefHeight="30.200006103515626" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="56.599981689453124" minHeight="10.0" prefHeight="31.799993896484374" vgrow="SOMETIMES" />
-         </rowConstraints>
-         <children>
-            <Label text="Descripció" />
-            <TextField fx:id="field_descripcio" disable="true" GridPane.columnIndex="1" />
-            <Label text="Data d'execució" GridPane.rowIndex="1" />
-            <DatePicker fx:id="date_execucio" disable="true" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-         </children>
-      </GridPane>
-      <ListView fx:id="list_tasques_pendents" prefHeight="200.0" prefWidth="200.0" />
-      <Label text="Tasques pendents" />
+      <BorderPane maxHeight="1.7976931348623157E308" maxWidth="-Infinity" VBox.vgrow="ALWAYS">
+         <right>
+            <GridPane maxHeight="-Infinity" maxWidth="-Infinity" BorderPane.alignment="TOP_CENTER">
+               <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints maxHeight="41.60001125335693" minHeight="10.0" prefHeight="24.60001220703125" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="1.7976931348623157E308" minHeight="10.0" prefHeight="228.59998779296876" vgrow="SOMETIMES" />
+               </rowConstraints>
+               <children>
+                  <ListView fx:id="list_tasques_pendents" maxHeight="-Infinity" maxWidth="-Infinity" GridPane.rowIndex="1" />
+                  <Label text="Tasques pendents" GridPane.halignment="CENTER" />
+               </children>
+               <BorderPane.margin>
+                  <Insets left="25.0" />
+               </BorderPane.margin>
+            </GridPane>
+         </right>
+         <left>
+            <GridPane maxHeight="1.7976931348623157E308" maxWidth="-Infinity" vgap="20.0" BorderPane.alignment="CENTER">
+               <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints maxHeight="46.400018310546876" minHeight="10.0" prefHeight="37.6" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="118.99999389648437" minHeight="10.0" prefHeight="100.80000000000001" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="75.20001220703125" minHeight="10.0" prefHeight="75.20001220703125" vgrow="SOMETIMES" />
+               </rowConstraints>
+               <children>
+                  <GridPane maxHeight="-Infinity" maxWidth="1.7976931348623157E308" GridPane.halignment="CENTER">
+                     <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="105.60001220703126" minWidth="10.0" prefWidth="79.19998016357422" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" />
+                     </columnConstraints>
+                     <rowConstraints>
+                        <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                     </rowConstraints>
+                     <children>
+                        <Label prefHeight="18.0" prefWidth="115.0" text="Tasca" />
+                        <ComboBox fx:id="combo_tasca" disable="true" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" onAction="#controllerTascaSeleccionada" styleClass="combo-box-principal" GridPane.columnIndex="1" />
+                     </children>
+                  </GridPane>
+                  <GridPane hgap="10.0" maxHeight="-Infinity" maxWidth="-Infinity" vgap="20.0" GridPane.halignment="CENTER" GridPane.rowIndex="1">
+                     <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="128.0" minWidth="10.0" prefWidth="101.60000610351562" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="166.39998779296874" minWidth="10.0" prefWidth="107.99999389648437" />
+                     </columnConstraints>
+                     <rowConstraints>
+                        <RowConstraints maxHeight="34.200006103515626" minHeight="5.400018310546876" prefHeight="30.200006103515626" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="56.599981689453124" minHeight="10.0" prefHeight="31.799993896484374" vgrow="SOMETIMES" />
+                     </rowConstraints>
+                     <children>
+                        <Label text="Descripció" />
+                        <TextField fx:id="field_descripcio" disable="true" GridPane.columnIndex="1" />
+                        <Label text="Data d'execució" GridPane.rowIndex="1" />
+                        <DatePicker fx:id="date_execucio" disable="true" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                     </children>
+                  </GridPane>
+                  <GridPane maxHeight="1.7976931348623157E308" vgap="25.0" GridPane.halignment="CENTER" GridPane.rowIndex="2">
+                     <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                     </columnConstraints>
+                     <rowConstraints>
+                        <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                     </rowConstraints>
+                     <children>
+                        <Button fx:id="button_completat" disable="true" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" onAction="#controllerTascaCompletada" text="Declarar com a completat" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+                        <Button fx:id="button_crear_assignar" disable="true" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" onAction="#controllerCrearAssignarTasca" text="Crear/Assignar tasca" GridPane.halignment="CENTER" />
+                     </children>
+                  </GridPane>
+               </children>
+               <BorderPane.margin>
+                  <Insets right="25.0" />
+               </BorderPane.margin>
+            </GridPane>
+         </left>
+      </BorderPane>
    </children>
+   <padding>
+      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+   </padding>
 </VBox>

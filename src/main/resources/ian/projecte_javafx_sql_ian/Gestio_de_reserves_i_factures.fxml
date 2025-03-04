@@ -14,7 +14,6 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-
 <HBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" stylesheets="@css/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ian.projecte_javafx_sql_ian.Gestio_de_reserves_i_factures">
    <children>
       <VBox alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS">
@@ -48,7 +47,7 @@
                         <RowConstraints maxHeight="57.79999389648435" minHeight="10.0" prefHeight="45.79999389648435" vgrow="SOMETIMES" />
                      </rowConstraints>
                      <children>
-                        <GridPane hgap="10.0" prefHeight="271.0" prefWidth="230.0" GridPane.rowIndex="1">
+                        <GridPane hgap="10.0" GridPane.rowIndex="1">
                            <columnConstraints>
                               <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
                               <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />

@@ -37,7 +37,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
     -fx-border-color: #cccccc; /* Light grey border */
     -fx-border-radius: 5px; /* Rounded corners */
     -fx-padding: 5px; /* Padding inside the ComboBox */
-    -fx-font-size: 14px; /* Font size for the text */
+    -fx-font-size: 11px; /* Font size for the text */
 }
 
 .combo-box-principal {
@@ -45,7 +45,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
     -fx-border-color: #2196F3; /* Blue border */
     -fx-border-width: 2px; /* Slightly thicker border */
     -fx-border-radius: 5px; /* Rounded corners */
-    -fx-font-size: 16px; /* Slightly larger font */
+    -fx-font-size: 14px; /* Slightly larger font */
     -fx-font-weight: bold; /* Bold text */
     -fx-text-fill: #0d47a1; /* Dark blue text */
 }
@@ -79,7 +79,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
     -fx-background-color: #f4f4f4; /* Light background color */
     -fx-border-color: #cccccc; /* Light grey border */
     -fx-border-radius: 5px; /* Rounded corners */
-    -fx-font-size: 14px; /* Font size for the text */
+    -fx-font-size: 11px; /* Font size for the text */
 }
 
 /* Styling for DatePicker popup button */
@@ -119,7 +119,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
     -fx-border-color: #cccccc;      /* Light gray border */
     -fx-border-radius: 5px;         /* Rounded corners */
     -fx-padding: 5px;               /* Inner spacing */
-    -fx-font-size: 14px;            /* Readable text */
+    -fx-font-size: 11px;            /* Readable text */
 }
 
 /* Styling for individual ListView cells */
@@ -144,8 +144,4 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
 /* Focus styling for the ListView */
 .list-view:focused {
     -fx-border-color: #2196F3; /* Blue border when focused */
-}
-
-.v-box {
-    -fx-border-color: #cccccc;
 }
