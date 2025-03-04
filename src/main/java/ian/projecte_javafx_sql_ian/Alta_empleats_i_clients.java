@@ -21,6 +21,7 @@ import java.sql.Date;
 import java.text.ParseException;
 import java.util.Locale;
 import java.util.Map;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -245,9 +246,9 @@ public class Alta_empleats_i_clients {
             // Obté el salari en text.
             String salari_text = field_salari.getText().trim();
 
-            // Enforça l'ús de ',' per a decimals.
-            DecimalFormatSymbols simbols = new DecimalFormatSymbols(Locale.GERMANY);
-            simbols.setDecimalSeparator(',');
+            // Enforça l'ús de '.' per a decimals.
+            DecimalFormatSymbols simbols = new DecimalFormatSymbols(Locale.ENGLISH);
+            simbols.setDecimalSeparator('.');
             DecimalFormat decimal_punt = new DecimalFormat();
             decimal_punt.setDecimalFormatSymbols(simbols);
 
@@ -393,5 +394,10 @@ public class Alta_empleats_i_clients {
     @FXML
     private void controllerVolverMenu() throws IOException {
         App.setRoot("Menu");
+    }
+    
+    @FXML
+    private void controllerTancarPrograma() {
+        Platform.exit();
     }
 }

@@ -10,6 +10,7 @@ import ian.projecte_javafx_sql_ian.Enums.EstatTasca;
 import java.io.IOException;
 import java.sql.Date;
 import java.sql.SQLException;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -159,5 +160,10 @@ public class Gestio_de_tasques {
     @FXML
     private void controllerVolverMenu() throws IOException {
         App.setRoot("Menu");
+    }
+    
+    @FXML
+    private void controllerTancarPrograma() {
+        Platform.exit();
     }
 }

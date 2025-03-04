@@ -18,6 +18,7 @@ import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Locale;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -313,9 +314,9 @@ public class Gestio_de_reserves_i_factures {
         // Obté el preu en text.
         String base_imposable_text = field_base_imposable_factura.getText().trim();
 
-        // Enforça l'ús de ',' per a decimals.
-        DecimalFormatSymbols simbols = new DecimalFormatSymbols(Locale.GERMANY);
-        simbols.setDecimalSeparator(',');
+        // Enforça l'ús de '.' per a decimals.
+        DecimalFormatSymbols simbols = new DecimalFormatSymbols(Locale.ENGLISH);
+        simbols.setDecimalSeparator('.');
         DecimalFormat decimal_punt = new DecimalFormat();
         decimal_punt.setDecimalFormatSymbols(simbols);
 
@@ -361,5 +362,10 @@ public class Gestio_de_reserves_i_factures {
     @FXML
     private void controllerVolverMenu() throws IOException {
         App.setRoot("Menu");
+    }
+    
+    @FXML
+    private void controllerTancarPrograma() {
+        Platform.exit();
     }
 }

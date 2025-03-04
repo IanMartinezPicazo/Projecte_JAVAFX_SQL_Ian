@@ -51,6 +51,25 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
     -fx-background-color: #45a049;
 }
 
+.tancar {
+    -fx-background-color: #d9534f;  /* Red color for exit */
+    -fx-text-fill: white;
+    -fx-border-radius: 5px;
+    -fx-padding: 10px 20px;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.2), 5, 0, 0, 2);
+}
+
+.tancar:hover {
+    -fx-background-color: #c9302c; /* Darker red on hover */
+}
+
+.tancar:pressed {
+    -fx-background-color: #a92824; /* Even darker red */
+}
+
+
 .combo-box-principal {
     -fx-background-color: #e3f2fd;
     -fx-border-color: #2196F3;

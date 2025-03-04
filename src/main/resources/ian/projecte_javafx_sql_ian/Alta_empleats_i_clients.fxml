@@ -28,18 +28,21 @@
                   <Font name="System Bold" size="14.0" />
                </font>
             </Label>
-            <GridPane maxHeight="-Infinity" maxWidth="-Infinity" vgap="20.0" GridPane.halignment="RIGHT">
+            <GridPane hgap="20.0" maxHeight="-Infinity" maxWidth="-Infinity" vgap="20.0" GridPane.halignment="RIGHT">
                <columnConstraints>
                   <ColumnConstraints />
+                  <ColumnConstraints hgrow="SOMETIMES" />
                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
                </columnConstraints>
                <rowConstraints>
-                  <RowConstraints maxHeight="35.2" minHeight="10.0" prefHeight="35.2" vgrow="SOMETIMES" />
+                  <RowConstraints vgrow="SOMETIMES" />
                   <RowConstraints maxHeight="28.000006103515616" minHeight="10.0" prefHeight="26.39999999999999" vgrow="SOMETIMES" />
                </rowConstraints>
                <children>
                   <Label text="Menú" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
                   <Button maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" onAction="#controllerVolverMenu" text="&lt;" GridPane.columnIndex="1" GridPane.halignment="CENTER" />
+                  <Button maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" onAction="#controllerTancarPrograma" styleClass="tancar" text="x" GridPane.columnIndex="2" GridPane.halignment="CENTER" />
+                  <Label text="Tancar finestra" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                </children>
             </GridPane>
          </children>
