@@ -231,46 +231,48 @@ public class Gestio_de_reserves_i_factures {
     
     @FXML
     private void controllerLlistarHabitacions() {
-        // Per cridar al model.
-        Model model = new Model();
-        
-        // En cas que les dates siguin coherents, crida al model per llistar les habitacions disponibles.
-        boolean dates_valides = true;
-        
-        combo_habitacio.setDisable(true);
-        
-        // Control d'errada.
-        date_reserva_inici.getStyleClass().remove(estil);
-        date_reserva_final.getStyleClass().remove(estil);
+        if (date_reserva_inici.getValue() != null && date_reserva_final.getValue() != null){
+            // Per cridar al model.
+            Model model = new Model();
 
-        // Obté la data d'inici i final de la reserva, i la converteix a una data compatible amb SQL.
-        LocalDate data_reserva_inici = date_reserva_inici.getValue();
-        Date data_reserva_inici_sql = Date.valueOf(data_reserva_inici);
-        LocalDate data_reserva_final = date_reserva_final.getValue();
-        Date data_reserva_final_sql = Date.valueOf(data_reserva_final);
-        
-        Date creacio_reserva = new Date(System.currentTimeMillis());
+            // En cas que les dates siguin coherents, crida al model per llistar les habitacions disponibles.
+            boolean dates_valides = true;
 
-        if (data_reserva_inici_sql.before(creacio_reserva)) {
-            date_reserva_inici.getStyleClass().add(estil);
-            dates_valides = false;
-        }
+            combo_habitacio.setDisable(true);
 
-        if (data_reserva_inici_sql.after(data_reserva_final_sql)) {
-            date_reserva_inici.getStyleClass().add(estil);
-            dates_valides = false;
-        }
+            // Control d'errada.
+            date_reserva_inici.getStyleClass().remove(estil);
+            date_reserva_final.getStyleClass().remove(estil);
 
-        if (data_reserva_final_sql.before(data_reserva_inici_sql)) {
-            date_reserva_final.getStyleClass().add(estil);
-            dates_valides = false;
-        }
+            // Obté la data d'inici i final de la reserva, i la converteix a una data compatible amb SQL.
+            LocalDate data_reserva_inici = date_reserva_inici.getValue();
+            Date data_reserva_inici_sql = Date.valueOf(data_reserva_inici);
+            LocalDate data_reserva_final = date_reserva_final.getValue();
+            Date data_reserva_final_sql = Date.valueOf(data_reserva_final);
 
-        if (dates_valides) {
-            combo_habitacio.setItems(model.buscarHabitacionsDisponibles(data_reserva_inici_sql, data_reserva_final_sql));
-            combo_habitacio.setDisable(false);
-        } else {
-            combo_habitacio.setItems(null);
+            Date creacio_reserva = new Date(System.currentTimeMillis());
+
+            if (data_reserva_inici_sql.before(creacio_reserva)) {
+                date_reserva_inici.getStyleClass().add(estil);
+                dates_valides = false;
+            }
+
+            if (data_reserva_inici_sql.after(data_reserva_final_sql)) {
+                date_reserva_inici.getStyleClass().add(estil);
+                dates_valides = false;
+            }
+
+            if (data_reserva_final_sql.before(data_reserva_inici_sql)) {
+                date_reserva_final.getStyleClass().add(estil);
+                dates_valides = false;
+            }
+
+            if (dates_valides) {
+                combo_habitacio.setItems(model.buscarHabitacionsDisponibles(data_reserva_inici_sql, data_reserva_final_sql));
+                combo_habitacio.setDisable(false);
+            } else {
+                combo_habitacio.setItems(null);
+            }
         }
     }
     

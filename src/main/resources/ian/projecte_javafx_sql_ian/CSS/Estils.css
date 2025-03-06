@@ -30,7 +30,6 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
     -fx-padding: 5px;
     -fx-font-size: 11px;
 }
-
 .list-cell {
     -fx-background-color: transparent;
     -fx-text-fill: #333333;
@@ -46,13 +45,13 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
     -fx-font-weight: bold;
     -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.2), 5, 0, 0, 2);
 }
-
 .button:hover {
     -fx-background-color: #45a049;
 }
 
+/* Estil del botó per tancar l'aplicacio. */
 .tancar {
-    -fx-background-color: #d9534f;  /* Red color for exit */
+    -fx-background-color: #d9534f;
     -fx-text-fill: white;
     -fx-border-radius: 5px;
     -fx-padding: 10px 20px;
@@ -60,15 +59,12 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
     -fx-font-weight: bold;
     -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.2), 5, 0, 0, 2);
 }
-
 .tancar:hover {
-    -fx-background-color: #c9302c; /* Darker red on hover */
+    -fx-background-color: #c9302c;
 }
-
 .tancar:pressed {
-    -fx-background-color: #a92824; /* Even darker red */
+    -fx-background-color: #a92824;
 }
-
 
 .combo-box-principal {
     -fx-background-color: #e3f2fd;
@@ -79,17 +75,14 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
     -fx-font-weight: bold;
     -fx-text-fill: #0d47a1;
 }
-
 .combo-box .list-view {
     -fx-background-color: white;
     -fx-border-color: #cccccc;
 }
-
 .combo-box .list-cell {
     -fx-background-color: white;
     -fx-text-fill: black;
 }
-
 .combo-box .list-cell:selected {
     -fx-background-color: #dedede;
     -fx-text-fill: black;
@@ -109,11 +102,11 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
     -fx-pref-height: 20px;
     -fx-text-fill: white;
 }
-
 .date-picker .arrow-button:hover {
     -fx-background-color: #45a049;
 }
 
+/* Estil dels camps per quan les dades son invalides. */
 .invalid {
     -fx-border-color: #e74c3c;
     -fx-border-width: 2px;
@@ -133,13 +126,11 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
 .list-cell:hover {
     -fx-background-color: #e0e0e0;
 }
-
 .list-cell:selected {
     -fx-background-color: #2196F3;
     -fx-text-fill: white;
     -fx-font-weight: bold;
 }
-
 .list-view:focused {
     -fx-border-color: #2196F3;
 }

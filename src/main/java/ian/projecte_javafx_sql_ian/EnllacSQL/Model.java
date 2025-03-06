@@ -14,12 +14,15 @@ import ian.projecte_javafx_sql_ian.classes.Reserva;
 import ian.projecte_javafx_sql_ian.classes.Tasca;
 import ian.projecte_javafx_sql_ian.Enums.EstatHabitacio;
 import ian.projecte_javafx_sql_ian.Enums.EstatTasca;
+import ian.projecte_javafx_sql_ian.Enums.IVA;
+import ian.projecte_javafx_sql_ian.Enums.TipusReserva;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import javafx.collections.FXCollections;
@@ -399,30 +402,92 @@ public class Model {
         try (
             Connection connexio = new Connexio().connecta();
             PreparedStatement dades_habitacions = connexio.prepareStatement(
-                "SELECT numero_habitacio"
+                "SELECT DISTINCT id_habitacio, numero_habitacio"
                 + " FROM habitacio"
-                + " WHERE id_habitacio IN ("
-                + "     SELECT habitacio.id_habitacio"
-                + "     FROM reserva"
-                + "     INNER JOIN habitacio"
-                + "     ON reserva.id_habitacio = habitacio.id_habitacio"
-                + "     WHERE NOT (reserva.data_inici >= ? AND reserva.data_fi <= ?)"
-                + ") AND estat = ?"
+                + " WHERE estat = ?"
             );
         ) {
-            dades_habitacions.setDate(1, data_inici_reserva);
-            dades_habitacions.setDate(2, data_final_reserva);
-            dades_habitacions.setString(3, EstatHabitacio.DISPONIBLE.name());
+            dades_habitacions.setString(1, EstatHabitacio.DISPONIBLE.name());
 
-            ResultSet resultat = dades_habitacions.executeQuery();
+            ResultSet resultat_habitacions = dades_habitacions.executeQuery();
 
-            while (resultat.next()) {
-                int numero_habitacio = resultat.getInt("numero_habitacio");
-                String numero_habitacio_text = String.valueOf(numero_habitacio);
-                habitacions.add(numero_habitacio_text);
+            try (
+                PreparedStatement dades_reserves = connexio.prepareStatement(
+                    "SELECT data_reserva, data_inici, data_fi, tipus_reserva, tipus_iva, preu_total_reserva, id_client, id_habitacio"
+                    + " FROM reserva"
+                    + " GROUP BY id_habitacio"
+                );
+            ) {
+                ResultSet resultat_reserves = dades_reserves.executeQuery();
+                
+                // Itera sobre les reserves retornades i crea instancies per a cadascuna.
+                ArrayList<Reserva> reserves = new ArrayList<>();
+                while (resultat_reserves.next()) {
+                    // Converteix els valors enumeradors als tipus de dades corresponents.
+                    TipusReserva tipus_reserva = null;
+                    IVA tipus_iva = null;
+                    for (TipusReserva tipus : TipusReserva.values()) {
+                        if (tipus.name().equals(resultat_reserves.getString("tipus_reserva"))) {
+                            tipus_reserva = tipus;
+                        }
+                    }
+                    for (IVA tipus : IVA.values()) {
+                        if (tipus.name().equals(resultat_reserves.getString("tipus_iva"))) {
+                            tipus_iva = tipus;
+                        }
+                    }
+                    
+                    Reserva nova_reserva = new Reserva(
+                        resultat_reserves.getDate("data_reserva"),
+                        resultat_reserves.getDate("data_inici"),
+                        resultat_reserves.getDate("data_fi"),
+                        tipus_reserva,
+                        tipus_iva,
+                        resultat_reserves.getDouble("preu_total_reserva"),
+                        resultat_reserves.getInt("id_client"),
+                        resultat_reserves.getInt("id_habitacio")
+                    );
+                    reserves.add(nova_reserva);
+                }
+                
+                // Itera totes les habitacions i les seves reserves, ja que replicar-ho directament a una consulta SQL resulta complicat.
+                while (resultat_habitacions.next()){
+                    String numero_habitacio_text = "";
+                    try {
+                        numero_habitacio_text = String.valueOf(resultat_habitacions.getInt("numero_habitacio"));
+                    } catch (SQLException e) {
+                        System.err.println("Error: buscarHabitacionsDisponibles (Reserva, conversió a String) \n\n" + e.getMessage());
+                    }
+                    
+                    // Afegeix l'habitació a la llista, si resulta que les dates no son valides, es eliminat.
+                    habitacions.add(numero_habitacio_text);
+                    
+                    // Itera sobre totes les reserves relacionades amb l'habitació.
+                    for (Reserva reserva : reserves) {
+                        if (reserva.getId_habitacio() == resultat_habitacions.getInt("id_habitacio")) {
+                            Date data_inici = reserva.getData_inici();
+                            Date data_fi = reserva.getData_fi();
+                            // Cerca de dates invalides forçada. (No soc capaç de fer-ho d'una forma optimitzada.)
+                            if (
+                                (data_inici_reserva.before(data_fi) && data_final_reserva.after(data_inici)) ||
+                                (data_inici_reserva.before(data_inici) && data_final_reserva.after(data_fi)) ||
+                                (data_inici_reserva.after(data_inici) && data_final_reserva.before(data_fi)) ||
+                                (data_inici_reserva.equals(data_inici) && data_final_reserva.equals(data_fi))
+                            ) {
+                                System.out.println("This is not stupid: " + numero_habitacio_text);
+                                habitacions.remove(numero_habitacio_text);
+                                break;
+                            } else {
+                                System.out.println("This is stupid: " + numero_habitacio_text);
+                            }
+                        }
+                    }
+                }
+            } catch (SQLException e) {
+                System.err.println("Error: buscarHabitacionsDisponibles (Reserva) \n\n" + e.getMessage());
             }
         } catch (SQLException e) {
-            System.err.println("Error: buscarHabitacionsDisponibles \n\n" + e.getMessage());
+            System.err.println("Error: buscarHabitacionsDisponibles (Habitació) \n\n" + e.getMessage());
         }
         return habitacions == null ? null : habitacions;
     }
