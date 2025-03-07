@@ -303,6 +303,7 @@ public class Alta_empleats_i_clients {
                     (EstatEmpleat) combo_estat.getValue() // Converteix d'objecte a EstatEmpleat.
                 );
                 int id_persona = model.altaEmpleat(nou_empleat);
+                
                 // Crea a la persona com a empleat i client a la mateixa vegada utilitzant el mateix ID.
                 if (combo_tipus_persona.getValue().equals(ManipularString.paraulaCapitalitzacioEstandard(TipusPersona.AMBDUES.name()))) {
                     Client nou_client = new Client(
@@ -367,6 +368,7 @@ public class Alta_empleats_i_clients {
         if (combo_persona_registrada.getValue() != null){
             // Per cridar al model.
             Model model = new Model();
+            
             // Omple els camps de text amb les dades de la persona seleccionada.
             TextField[] camps_compartits_text = {
                 field_nom,
@@ -378,7 +380,7 @@ public class Alta_empleats_i_clients {
             };
 
             // Itera sobre les dades de la persona seleccionada per a omplir els camps compartits per ambdues tipus de persona.
-            String[] dades_persona = model.buscarPersonaSeleccionada(combo_persona_registrada.getValue().toString());
+            String[] dades_persona = model.cercarPersonaSeleccionada(combo_persona_registrada.getValue().toString());
             for (int i = 0, j = 0; i < dades_persona.length; i++) {
                 // Comprova si el següent camp per omplir és la data de naixement.
                 if (i == 4) {

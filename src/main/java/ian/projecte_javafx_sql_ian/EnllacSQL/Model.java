@@ -262,7 +262,7 @@ public class Model {
         return persones;
     }
 
-    public String[] buscarPersonaSeleccionada(String identificacio) {
+    public String[] cercarPersonaSeleccionada(String identificacio) {
         String dades_encadenades = "";
         try (
             Connection connexio = new Connexio().connecta();
@@ -324,7 +324,7 @@ public class Model {
         return clients;
     }
 
-    public ObservableList<String> buscarReservesClientSeleccionat(String identificacio, boolean buscant_factures) {
+    public ObservableList<String> cercarReservesClientSeleccionat(String identificacio, boolean buscant_factures) {
         ObservableList<String> reserves = FXCollections.observableArrayList();        
         try (
             Connection connexio = new Connexio().connecta();
@@ -360,7 +360,7 @@ public class Model {
                 }
             } else {
                 while (resultat.next()) {
-                    if (resultat.getDate("data_fi").before(avui) && buscarFacturaReserva(resultat.getInt("id_reserva"))) {
+                    if (resultat.getDate("data_fi").before(avui) && cercarFacturaReserva(resultat.getInt("id_reserva"))) {
                         String reserva = resultat.getString("data_inici") + 
                                     " fins a " + resultat.getString("data_fi") + 
                                     " a l'habitació " + resultat.getString("numero_habitacio");
@@ -374,7 +374,7 @@ public class Model {
         return reserves == null ? null : reserves;
     }
     
-    public boolean buscarFacturaReserva(int id_reserva) {
+    public boolean cercarFacturaReserva(int id_reserva) {
         try (
             Connection connexio = new Connexio().connecta();
             PreparedStatement dades_factura = connexio.prepareStatement(
@@ -397,7 +397,7 @@ public class Model {
     }
 
     // Retorna una llista amb habitacions d'estat disponible, i que no tinguin una reserva al rang de dates que ha seleccionat l'usuari.
-    public ObservableList<String> buscarHabitacionsDisponibles(Date data_inici_reserva, Date data_final_reserva) {
+    public ObservableList<String> cercarHabitacionsDisponibles(Date data_inici_reserva, Date data_final_reserva) {
         ObservableList<String> habitacions = FXCollections.observableArrayList();
         try (
             Connection connexio = new Connexio().connecta();
@@ -492,7 +492,7 @@ public class Model {
         return habitacions == null ? null : habitacions;
     }
     
-    public int buscarClientSeleccionat(String identificacio) {
+    public int cercarClientSeleccionat(String identificacio) {
         int id_client = 0;
         try (
             Connection connexio = new Connexio().connecta();
@@ -520,7 +520,7 @@ public class Model {
         return id_client;
     }
 
-    public int buscarHabitacioSeleccionada(String habitacio) {
+    public int cercarHabitacioSeleccionada(String habitacio) {
         int id_habitacio = 0;
         try (
             Connection connexio = new Connexio().connecta();
@@ -569,7 +569,7 @@ public class Model {
         }
     }
     
-    public int buscarReservaSeleccionada(String reserva) {
+    public int cercarReservaSeleccionada(String reserva) {
         int id_reserva = 0;
         try (
             Connection connexio = new Connexio().connecta();
@@ -658,7 +658,7 @@ public class Model {
         return empleats;
     }
 
-    public ObservableList<String> buscarTasquesPendents(boolean desplegable, String empleat) {
+    public ObservableList<String> cercarTasquesPendents(boolean desplegable, String empleat) {
         ObservableList<String> tasques = FXCollections.observableArrayList();
         try (
             Connection connexio = new Connexio().connecta();
@@ -860,7 +860,7 @@ public class Model {
         }
     }
     
-    // Per aillar el DNI de la persona seleccionada (Format: NOM COGNOM - DNI)
+    // Per aillar el DNI d'una persona seleccionada. (Format: NOM COGNOM - DNI)
     public String trobarDniPersona(String identificacio) {
         String dni = "";
         for (int i = 0;i < identificacio.length();i++){

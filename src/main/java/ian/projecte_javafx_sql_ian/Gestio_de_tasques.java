@@ -59,12 +59,12 @@ public class Gestio_de_tasques {
         Model model = new Model();
         
         // Llista totes les tasques pendents.
-        combo_tasca.setItems(model.buscarTasquesPendents(true, combo_empleats.getValue().toString()));
+        combo_tasca.setItems(model.cercarTasquesPendents(true, combo_empleats.getValue().toString()));
         combo_tasca.setValue(combo_tasca.getItems().get(0));
         combo_tasca.setDisable(false);
         
         // Llista les tasques pendents de l'empleat seleccionat.
-        list_tasques_pendents.setItems(model.buscarTasquesPendents(false, combo_empleats.getValue().toString()));
+        list_tasques_pendents.setItems(model.cercarTasquesPendents(false, combo_empleats.getValue().toString()));
     }
     
     @FXML

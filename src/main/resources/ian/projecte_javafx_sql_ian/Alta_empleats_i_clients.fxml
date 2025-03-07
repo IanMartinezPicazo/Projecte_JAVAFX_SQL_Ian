@@ -90,9 +90,8 @@
                   <Label text="Cognoms" GridPane.rowIndex="1" />
                   <Label text="Adreça" GridPane.rowIndex="2" />
                   <Label text="DNI" GridPane.rowIndex="3" />
-                  <Label text="Telefon" GridPane.rowIndex="5" />
+                  <Label text="Telèfon" GridPane.rowIndex="5" />
                   <Label text="E-mail" GridPane.rowIndex="6" />
-                  <TextField fx:id="field_nom" disable="true" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" stylesheets="@css/style.css" GridPane.columnIndex="1" />
                   <TextField fx:id="field_cognom" disable="true" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                   <TextField fx:id="field_adreça" disable="true" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                   <TextField fx:id="field_dni" disable="true" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="3" />
@@ -100,6 +99,7 @@
                   <TextField fx:id="field_telefon" disable="true" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="5" />
                   <Label text="Data de naixement" GridPane.rowIndex="4" />
                   <DatePicker fx:id="date_naixement" disable="true" editable="false" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                  <TextField fx:id="field_nom" disable="true" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" />
                </children>
                <BorderPane.margin>
                   <Insets right="25.0" />
