@@ -157,7 +157,7 @@
                         <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
                      </rowConstraints>
                      <children>
-                        <Label text="Metode de pagament" />
+                        <Label text="Mètode de pagament" />
                         <Label text="Base imposable" GridPane.rowIndex="1" />
                         <Label text="IVA" GridPane.rowIndex="2" />
                         <ComboBox fx:id="combo_iva_factura" disable="true" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="2" />

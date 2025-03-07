@@ -134,8 +134,8 @@ public class Gestio_de_reserves_i_factures {
         button_generar_factura.setDisable(true);
         
         // Llista les reserves del client.
-        list_reservas_pendents.setItems(model.buscarReservesClientSeleccionat(combo_clients.getValue().toString(), false));
-        combo_reserves_no_facturades.setItems(model.buscarReservesClientSeleccionat(combo_clients.getValue().toString(), true));
+        list_reservas_pendents.setItems(model.cercarReservesClientSeleccionat(combo_clients.getValue().toString(), false));
+        combo_reserves_no_facturades.setItems(model.cercarReservesClientSeleccionat(combo_clients.getValue().toString(), true));
         combo_reserves_no_facturades.setDisable(combo_reserves_no_facturades.getItems() == null);
     }
     
@@ -218,8 +218,8 @@ public class Gestio_de_reserves_i_factures {
                 (TipusReserva) combo_tipus_reserva.getValue(),
                 (IVA) combo_iva_reserva.getValue(),
                 preu,
-                model.buscarClientSeleccionat(combo_clients.getValue().toString()),
-                model.buscarHabitacioSeleccionada(combo_habitacio.getValue().toString())
+                model.cercarClientSeleccionat(combo_clients.getValue().toString()),
+                model.cercarHabitacioSeleccionada(combo_habitacio.getValue().toString())
                 );
                 model.crearReserva(nova_reserva);
                 controllerClientSeleccionat();
@@ -269,7 +269,7 @@ public class Gestio_de_reserves_i_factures {
             }
 
             if (dates_valides) {
-                combo_habitacio.setItems(model.buscarHabitacionsDisponibles(data_reserva_inici_sql, data_reserva_final_sql));
+                combo_habitacio.setItems(model.cercarHabitacionsDisponibles(data_reserva_inici_sql, data_reserva_final_sql));
                 combo_habitacio.setDisable(false);
             } else {
                 combo_habitacio.setItems(null);
@@ -355,7 +355,7 @@ public class Gestio_de_reserves_i_factures {
                 base_imposable,
                 (IVA) combo_iva_factura.getValue(),
                 total,
-                model.buscarReservaSeleccionada(combo_reserves_no_facturades.getValue().toString())
+                model.cercarReservaSeleccionada(combo_reserves_no_facturades.getValue().toString())
             );
             model.crearFactura(nova_factura);
             controllerClientSeleccionat();
