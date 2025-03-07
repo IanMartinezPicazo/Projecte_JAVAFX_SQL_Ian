@@ -166,7 +166,7 @@
                      </children>
                   </GridPane>
                   <Label text="Gestió de factures" GridPane.halignment="CENTER" />
-                  <Button fx:id="button_generar_factura" disable="true" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" onAction="#controllerGenerarFactura" text="Afegir reserva" GridPane.halignment="CENTER" GridPane.rowIndex="2">
+                  <Button fx:id="button_generar_factura" disable="true" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" onAction="#controllerGenerarFactura" text="Generar factura" GridPane.halignment="CENTER" GridPane.rowIndex="2">
                      <GridPane.margin>
                         <Insets />
                      </GridPane.margin>

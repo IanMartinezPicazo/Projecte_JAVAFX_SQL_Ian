@@ -235,9 +235,6 @@ public class Gestio_de_reserves_i_factures {
             // Per cridar al model.
             Model model = new Model();
 
-            // En cas que les dates siguin coherents, crida al model per llistar les habitacions disponibles.
-            boolean dates_valides = true;
-
             combo_habitacio.setDisable(true);
 
             // Control d'errada.
@@ -250,8 +247,11 @@ public class Gestio_de_reserves_i_factures {
             LocalDate data_reserva_final = date_reserva_final.getValue();
             Date data_reserva_final_sql = Date.valueOf(data_reserva_final);
 
+            // En cas que les dates siguin coherents, crida al model per llistar les habitacions disponibles.
+            boolean dates_valides = true;
+            
             Date creacio_reserva = new Date(System.currentTimeMillis());
-
+            
             if (data_reserva_inici_sql.before(creacio_reserva)) {
                 date_reserva_inici.getStyleClass().add(estil);
                 dates_valides = false;
@@ -259,10 +259,11 @@ public class Gestio_de_reserves_i_factures {
 
             if (data_reserva_inici_sql.after(data_reserva_final_sql)) {
                 date_reserva_inici.getStyleClass().add(estil);
+                date_reserva_final.getStyleClass().add(estil);
                 dates_valides = false;
             }
 
-            if (data_reserva_final_sql.before(data_reserva_inici_sql)) {
+            if (data_reserva_final_sql.equals(data_reserva_inici_sql)) {
                 date_reserva_final.getStyleClass().add(estil);
                 dates_valides = false;
             }

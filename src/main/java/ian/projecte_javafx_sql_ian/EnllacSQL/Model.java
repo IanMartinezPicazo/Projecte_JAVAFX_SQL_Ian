@@ -402,7 +402,7 @@ public class Model {
         try (
             Connection connexio = new Connexio().connecta();
             PreparedStatement dades_habitacions = connexio.prepareStatement(
-                "SELECT DISTINCT id_habitacio, numero_habitacio"
+                "SELECT id_habitacio, numero_habitacio"
                 + " FROM habitacio"
                 + " WHERE estat = ?"
             );
@@ -415,7 +415,6 @@ public class Model {
                 PreparedStatement dades_reserves = connexio.prepareStatement(
                     "SELECT data_reserva, data_inici, data_fi, tipus_reserva, tipus_iva, preu_total_reserva, id_client, id_habitacio"
                     + " FROM reserva"
-                    + " GROUP BY id_habitacio"
                 );
             ) {
                 ResultSet resultat_reserves = dades_reserves.executeQuery();
@@ -459,7 +458,7 @@ public class Model {
                         System.err.println("Error: buscarHabitacionsDisponibles (Reserva, conversió a String) \n\n" + e.getMessage());
                     }
                     
-                    // Afegeix l'habitació a la llista, si resulta que les dates no son valides, es eliminat.
+                    // Afegeix l'habitació a la llista, si resulta que les dates solapan, és eliminat.
                     habitacions.add(numero_habitacio_text);
                     
                     // Itera sobre totes les reserves relacionades amb l'habitació.
@@ -467,18 +466,24 @@ public class Model {
                         if (reserva.getId_habitacio() == resultat_habitacions.getInt("id_habitacio")) {
                             Date data_inici = reserva.getData_inici();
                             Date data_fi = reserva.getData_fi();
-                            // Cerca de dates invalides forçada. (No soc capaç de fer-ho d'una forma optimitzada.)
+                            // Cerca de solapació de dates.
                             if (
-                                (data_inici_reserva.before(data_fi) && data_final_reserva.after(data_inici)) ||
-                                (data_inici_reserva.before(data_inici) && data_final_reserva.after(data_fi)) ||
-                                (data_inici_reserva.after(data_inici) && data_final_reserva.before(data_fi)) ||
-                                (data_inici_reserva.equals(data_inici) && data_final_reserva.equals(data_fi))
+                                /*
+                                    Per simplificar:
+                                    Reserva nova -> RN, Reserva existent -> RE.
+                                    Data d'inici -> DI, Data final -> DF.
+                                */
+                                
+                                // Cas 1: RN.DI <= RE.DI && RN.DF > RE.DI
+                                data_inici_reserva.before(data_inici) && data_final_reserva.after(data_inici)
+                                || data_inici_reserva.equals(data_inici) && data_final_reserva.after(data_inici)
+                                
+                                // Cas 2: RN.DI >= RE.DI && RN.DI < RE.DF    
+                                || data_inici_reserva.after(data_inici) && data_inici_reserva.before(data_fi)
+                                || data_inici_reserva.equals(data_inici) && data_inici_reserva.before(data_fi)
                             ) {
-                                System.out.println("This is not stupid: " + numero_habitacio_text);
                                 habitacions.remove(numero_habitacio_text);
                                 break;
-                            } else {
-                                System.out.println("This is stupid: " + numero_habitacio_text);
                             }
                         }
                     }

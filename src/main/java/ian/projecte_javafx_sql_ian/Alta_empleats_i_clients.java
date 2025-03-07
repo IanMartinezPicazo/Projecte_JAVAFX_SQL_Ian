@@ -220,10 +220,10 @@ public class Alta_empleats_i_clients {
         Date avui = new Date(System.currentTimeMillis());
 
         // Obté la data de naixement, i la converteix a una data compatible amb SQL.
-        // Comprova si el camp de la data de naixement es buida.
+        // Comprova si el camp de la data de naixement es buida o inchoerent.
         LocalDate data_naixement = date_naixement.getValue();
         Date data_naixement_sql = (data_naixement != null) ? Date.valueOf(data_naixement) : null;
-        if (data_naixement_sql == null) {
+        if (data_naixement_sql == null || data_naixement_sql.before(avui)) {
             valid = false;
             date_naixement.getStyleClass().add(estil);
         } else {
