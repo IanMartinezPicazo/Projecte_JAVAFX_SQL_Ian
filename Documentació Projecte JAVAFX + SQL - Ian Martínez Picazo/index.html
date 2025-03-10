@@ -6,31 +6,54 @@
     <link rel="icon" href="./favicon.svg">
     <link rel="stylesheet" href="./CSS/General.css">
     <title>Menú de la documentació</title>
+
+    <!-- Referéncia al script de navegació, carrega després que la página. -->
+    <script src="./JS/navegacio.js" defer></script>
 </head>
 <style>
-    div {
+    main {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 25px;
+    }
+
+    main div {
         display: flex;
         justify-content: space-between;
         align-items: center;
         border: 1px solid black;
         border-radius: 5px;
         width: 300px;
-        padding: 5px;
+        padding: 10px;
+        transition: width 0.2s, transform 0.2s;
+    }
+    main div:hover {
+        width: 350px;
+        cursor: pointer;
+    }
+    main div:active {
+        transform: scale(0.9);
     }
 
-    main {
-        display: flex;
-        flex-direction: column;
-        gap: 25px;
+    h2 {
+        font-size: clamp(1rem, 125%, 2rem);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        flex-grow: 1;
+        text-align: left;
     }
 </style>
-<body>
+
+<!-- Executa la funció corresponent del script de navegació de pàgines. -->
+<body onload="navegacioMenu()">
     <header>
         
     </header>
     <h1>Menú de la documentació</h1>
     <main>
-        <div id="bd">
+        <div id="base_dades">
             <h2>Base de dades</h2>
             <img src="./Imatges/Menú/Logo1.png" alt="Logo base de dades">
         </div>
@@ -42,7 +65,7 @@
             <h2>Manual d'ús de l'aplicació</h2>
             <img src="./Imatges/Menú/Logo3.png" alt="Logo manual">
         </div>
-        <div id="troubleshoot">
+        <div id="problemes_solucions">
             <h2>Problemes i solucions</h2>
             <img src="./Imatges/Menú/Logo4.png" alt="Logo troubleshoot">
         </div>

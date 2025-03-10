@@ -3,8 +3,41 @@ body {
     justify-content: center;
     flex-direction: column;
     align-items: center;
+    padding: 10px;
 }
 
 img {
     max-width: 20%;
+}
+#conceptual{
+    max-width: 100%;
+    border-radius: 25px;
+}
+
+code {
+    width: 50%;
+    background-color: cornsilk;
+    color: grey;
+}
+code p {
+    margin-bottom: 10px;
+}
+code .referencia {
+    padding-left: 10%;
+    margin-bottom: 10px;
+}
+
+table {
+    margin-bottom: 30px;
+}
+th, td {
+    border: 1px solid black;
+    padding: 5px;
+}
+
+hr {
+    border: none;
+    width: 100%;
+    height: 1px;
+    background-color: burlywood;
 }
