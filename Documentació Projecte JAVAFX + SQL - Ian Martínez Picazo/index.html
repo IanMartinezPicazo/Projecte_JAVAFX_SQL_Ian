@@ -3,12 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="favicon.svg">
-    <title>Menú</title>
+    <link rel="icon" href="./favicon.svg">
+    <link rel="stylesheet" href="./CSS/General.css">
+    <title>Menú de la documentació</title>
 </head>
+<style>
+    div {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border: 1px solid black;
+        border-radius: 5px;
+        width: 300px;
+        padding: 5px;
+    }
+
+    main {
+        display: flex;
+        flex-direction: column;
+        gap: 25px;
+    }
+</style>
 <body>
     <header>
         
     </header>
+    <h1>Menú de la documentació</h1>
+    <main>
+        <div id="bd">
+            <h2>Base de dades</h2>
+            <img src="./Imatges/Menú/Logo1.png" alt="Logo base de dades">
+        </div>
+        <div id="uml">
+            <h2>UML</h2>
+            <img src="./Imatges/Menú/Logo2.png" alt="Logo UML">
+        </div>
+        <div id="manual">
+            <h2>Manual d'ús de l'aplicació</h2>
+            <img src="./Imatges/Menú/Logo3.png" alt="Logo manual">
+        </div>
+        <div id="troubleshoot">
+            <h2>Problemes i solucions</h2>
+            <img src="./Imatges/Menú/Logo4.png" alt="Logo troubleshoot">
+        </div>
+    </main>
 </body>
 </html>
