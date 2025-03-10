@@ -18,21 +18,32 @@ code {
     width: 50%;
     background-color: cornsilk;
     color: grey;
+    padding: 10px;
 }
-code p {
-    margin-bottom: 10px;
-}
-code .referencia {
-    padding-left: 10%;
-    margin-bottom: 10px;
+code pre {
+    white-space: pre-wrap;
 }
 
-table {
+/*
+    Si una taula es més grán horitzontalment que la finestra, s'adapta
+    per a mostrar el seu contingut correctament.
+*/
+.deslitzar_horitzontal {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
     margin-bottom: 30px;
+}
+table {
+    width: auto;
+    border-collapse: collapse;
 }
 th, td {
     border: 1px solid black;
     padding: 5px;
+    max-width: 200px;
 }
 
 hr {

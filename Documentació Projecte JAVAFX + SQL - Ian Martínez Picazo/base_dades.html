@@ -7,9 +7,12 @@
     <link rel="stylesheet" href="./CSS/General.css">
     <title>Base de dades</title>
 
-    <!-- Referéncia al script de navegació, carrega després que la página. -->
+    <!-- Referéncia a scripts, carregen després que la página. -->
     <script src="./JS/navegacio.js" defer></script>
+    <script src="./JS/taules_adaptatives.js" defer></script>
 </head>
+
+<!-- Executa la funció corresponent del script de navegació de pàgines. -->
 <body onload="navegacioBaseDades()">
     <h1>Base de dades</h1>
 
@@ -32,21 +35,30 @@
     <h3>Transformació</h3>
 
     <code>
-        <p>PERSONA (id_persona, nom, cognom, adreça, dni, date, telefon, email)</p>
-        <p>EMPLEAT (id_empleat, lloc_feina, data_contractacio, salari_brut, estat_laboral)</p>
-            <p class="referencia">On (id_empleat) és clau forana que fa referència a la taula PERSONA (id_persona)</p>
-        <p>TASCA (id_tasca, data_ejecucio, data_creacio, descripcio, estat)</p>
-        <p>CLIENT (id_client, data_registre, tipus_client, targeta_credit)</p>
-            <p class="referencia">On (id_client) és clau forana que fa referència a la taula PERSONA (id_persona)</p>
-        <p>HABITACIO (id_habitacio, numero_habitacio, tipus, capacitat, preu_nit_AD, preu_nit_MP, estat, descripcio)</p>
-        <p>RESERVA (id_reserva, data_reserva, data_inici, data_fi, tipus_reserva, tipus_IVA, preu_total_reserva, id_client, id_habitacio)</p>
-            <p class="referencia">On (id_client) és clau forana que fa referència a la taula CLIENT (id_client)</p>
-            <p class="referencia">On (id_habitacio) és clau forana que fa referència a la taula HABITACIO (id_habitacio)</p>
-        <p>FACTURA (id_factura, data_emissio, metode_pagament, base_imposable, tipus_IVA, total, id_reserva)</p>
-            <p class="referencia">On (id_reserva) és clau forana que fa referència a la taula RESERVA (id_reserva)</p>
-        <p>REALITZAR (id_empleat, id_tasca)</p>
-            <p class="referencia">On (id_empleat) és clau forana que fa referència a la taula EMPLEAT (id_empleat)</p>
-            <p class="referencia">On (id_tasca) és clau forana que fa referència a la taula TASCA (id_tasca)</p>
+        <pre>
+PERSONA (id_persona, nom, cognom, adreça, dni, date, telefon, email)
+
+EMPLEAT (id_empleat, lloc_feina, data_contractacio, salari_brut, estat_laboral)
+    On (id_empleat) és clau forana que fa referència a la taula PERSONA (id_persona)
+
+TASCA (id_tasca, data_ejecucio, data_creacio, descripcio, estat)
+
+CLIENT (id_client, data_registre, tipus_client, targeta_credit)
+    On (id_client) és clau forana que fa referència a la taula PERSONA (id_persona)
+
+HABITACIO (id_habitacio, numero_habitacio, tipus, capacitat, preu_nit_AD, preu_nit_MP, estat, descripcio)
+
+RESERVA (id_reserva, data_reserva, data_inici, data_fi, tipus_reserva, tipus_IVA, preu_total_reserva, id_client, id_habitacio)
+    On (id_client) és clau forana que fa referència a la taula CLIENT (id_client)
+    On (id_habitacio) és clau forana que fa referència a la taula HABITACIO (id_habitacio)
+
+FACTURA (id_factura, data_emissio, metode_pagament, base_imposable, tipus_IVA, total, id_reserva)
+    On (id_reserva) és clau forana que fa referència a la taula RESERVA (id_reserva)
+
+REALITZAR (id_empleat, id_tasca)
+    On (id_empleat) és clau forana que fa referència a la taula EMPLEAT (id_empleat)
+    On (id_tasca) és clau forana que fa referència a la taula TASCA (id_tasca)
+        </pre>            
     </code>
     <br>
 
@@ -54,363 +66,543 @@
     <h3>Dades demostratives</h3>
 
     <p><strong>PERSONA</strong></p>
-    <table>
-        <thead>
-            <tr>
-                <th>id_persona</th>
-                <th>nom</th>
-                <th>cognom</th>
-                <th>adreça</th>
-                <th>dni</th>
-                <th>telefon</th>
-                <th>email</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>1</td>
-                <td>Joan</td>
-                <td>Pérez</td>
-                <td>Carrer del Sol, 12</td>
-                <td>12345678A</td>
-                <td>600123456</td>
-                <td>joan@exemple.com</td>
-            </tr>
-            <tr>
-                <td>2</td>
-                <td>Maria</td>
-                <td>Gonzalez</td>
-                <td>Carrer de la Lluna, 34</td>
-                <td>87654321B</td>
-                <td>600987654</td>
-                <td>maria@exemple.com</td>
-            </tr>
-            <tr>
-                <td>3</td>
-                <td>Marc</td>
-                <td>Fernández</td>
-                <td>Carrer de l'Oceà, 56</td>
-                <td>11223344C</td>
-                <td>600456789</td>
-                <td>marc@exemple.com</td>
-            </tr>
-        </tbody>
-    </table>
+        <table>
+            <thead>
+                <tr>
+                    <th>id_persona</th>
+                    <th>nom</th>
+                    <th>cognom</th>
+                    <th>adreça</th>
+                    <th>dni</th>
+                    <th>telefon</th>
+                    <th>email</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>Joan</td>
+                    <td>Pérez</td>
+                    <td>Carrer del Sol, 12</td>
+                    <td>12345678A</td>
+                    <td>600123456</td>
+                    <td>joan@exemple.com</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>Maria</td>
+                    <td>Gonzalez</td>
+                    <td>Carrer de la Lluna, 34</td>
+                    <td>87654321B</td>
+                    <td>600987654</td>
+                    <td>maria@exemple.com</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>Marc</td>
+                    <td>Fernández</td>
+                    <td>Carrer de l'Oceà, 56</td>
+                    <td>11223344C</td>
+                    <td>600456789</td>
+                    <td>marc@exemple.com</td>
+                </tr>
+            </tbody>
+        </table>
 
     <p><strong>EMPLEAT</strong></p>
-    <table>
-        <thead>
-            <tr>
-                <th>id_empleat</th>
-                <th>lloc_feina</th>
-                <th>data_contractacio</th>
-                <th>salari_brut</th>
-                <th>estat_laboral</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>1</td>
-                <td>Desenvolupador</td>
-                <td>2022-01-15</td>
-                <td>2500</td>
-                <td>Actiu</td>
-            </tr>
-            <tr>
-                <td>2</td>
-                <td>Admin</td>
-                <td>2021-03-10</td>
-                <td>2000</td>
-                <td>Actiu</td>
-            </tr>
-            <tr>
-                <td>3</td>
-                <td>Atenció al client</td>
-                <td>2022-07-23</td>
-                <td>1800</td>
-                <td>Actiu</td>
-            </tr>
-        </tbody>
-    </table>
+        <table>
+            <thead>
+                <tr>
+                    <th>id_empleat</th>
+                    <th>lloc_feina</th>
+                    <th>data_contractacio</th>
+                    <th>salari_brut</th>
+                    <th>estat_laboral</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>Desenvolupador</td>
+                    <td>2022-01-15</td>
+                    <td>2500</td>
+                    <td>Actiu</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>Admin</td>
+                    <td>2021-03-10</td>
+                    <td>2000</td>
+                    <td>Actiu</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>Atenció al client</td>
+                    <td>2022-07-23</td>
+                    <td>1800</td>
+                    <td>Actiu</td>
+                </tr>
+            </tbody>
+        </table>
 
     <p><strong>CLIENT</strong></p>
-    <table>
-        <thead>
-            <tr>
-                <th>id_client</th>
-                <th>data_registre</th>
-                <th>tipus_client</th>
-                <th>targeta_credit</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>1</td>
-                <td>2023-02-01</td>
-                <td>Regular</td>
-                <td>4567-1234-5678-9876</td>
-            </tr>
-            <tr>
-                <td>2</td>
-                <td>2022-11-20</td>
-                <td>Premium</td>
-                <td>1234-8765-4321-5678</td>
-            </tr>
-            <tr>
-                <td>3</td>
-                <td>2024-01-05</td>
-                <td>Regular</td>
-                <td>1111-2222-3333-4444</td>
-            </tr>
-        </tbody>
-    </table>
+        <table>
+            <thead>
+                <tr>
+                    <th>id_client</th>
+                    <th>data_registre</th>
+                    <th>tipus_client</th>
+                    <th>targeta_credit</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>2023-02-01</td>
+                    <td>Regular</td>
+                    <td>4567-1234-5678-9876</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>2022-11-20</td>
+                    <td>Premium</td>
+                    <td>1234-8765-4321-5678</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>2024-01-05</td>
+                    <td>Regular</td>
+                    <td>1111-2222-3333-4444</td>
+                </tr>
+            </tbody>
+        </table>
 
     <p><strong>HABITACIO</strong></p>
-    <table>
-        <thead>
-            <tr>
-                <th>id_habitacio</th>
-                <th>numero_habitacio</th>
-                <th>tipus</th>
-                <th>capacitat</th>
-                <th>preu_nit_AD</th>
-                <th>preu_nit_MP</th>
-                <th>estat</th>
-                <th>descripcio</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>1</td>
-                <td>101</td>
-                <td>Individual</td>
-                <td>1</td>
-                <td>50</td>
-                <td>70</td>
-                <td>Disponible</td>
-                <td>Habitació per a una persona</td>
-            </tr>
-            <tr>
-                <td>2</td>
-                <td>102</td>
-                <td>Double</td>
-                <td>2</td>
-                <td>90</td>
-                <td>120</td>
-                <td>Ocupada</td>
-                <td>Habitació doble amb vista al mar</td>
-            </tr>
-            <tr>
-                <td>3</td>
-                <td>103</td>
-                <td>Triple</td>
-                <td>3</td>
-                <td>120</td>
-                <td>150</td>
-                <td>Disponible</td>
-                <td>Habitació triple amb llits separats</td>
-            </tr>
-        </tbody>
-    </table>
+        <table>
+            <thead>
+                <tr>
+                    <th>id_habitacio</th>
+                    <th>numero_habitacio</th>
+                    <th>tipus</th>
+                    <th>capacitat</th>
+                    <th>preu_nit_AD</th>
+                    <th>preu_nit_MP</th>
+                    <th>estat</th>
+                    <th>descripcio</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>101</td>
+                    <td>Individual</td>
+                    <td>1</td>
+                    <td>50</td>
+                    <td>70</td>
+                    <td>Disponible</td>
+                    <td>Habitació per a una persona</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>102</td>
+                    <td>Double</td>
+                    <td>2</td>
+                    <td>90</td>
+                    <td>120</td>
+                    <td>Ocupada</td>
+                    <td>Habitació doble amb vista al mar</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>103</td>
+                    <td>Triple</td>
+                    <td>3</td>
+                    <td>120</td>
+                    <td>150</td>
+                    <td>Disponible</td>
+                    <td>Habitació triple amb llits separats</td>
+                </tr>
+            </tbody>
+        </table>
 
     <p><strong>RESERVA</strong></p>
-    <table>
-        <thead>
-            <tr>
-                <th>id_reserva</th>
-                <th>data_reserva</th>
-                <th>data_inici</th>
-                <th>data_fi</th>
-                <th>tipus_reserva</th>
-                <th>tipus_IVA</th>
-                <th>preu_total_reserva</th>
-                <th>id_client</th>
-                <th>id_habitacio</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>1</td>
-                <td>2023-01-15</td>
-                <td>2023-02-01</td>
-                <td>2023-02-05</td>
-                <td>Estàndard</td>
-                <td>21%</td>
-                <td>200</td>
-                <td>1</td>
-                <td>1</td>
-            </tr>
-            <tr>
-                <td>2</td>
-                <td>2023-02-20</td>
-                <td>2023-03-01</td>
-                <td>2023-03-05</td>
-                <td>VIP</td>
-                <td>21%</td>
-                <td>400</td>
-                <td>2</td>
-                <td>2</td>
-            </tr>
-            <tr>
-                <td>3</td>
-                <td>2023-03-25</td>
-                <td>2023-04-01</td>
-                <td>2023-04-05</td>
-                <td>Estàndard</td>
-                <td>21%</td>
-                <td>350</td>
-                <td>3</td>
-                <td>3</td>
-            </tr>
-        </tbody>
-    </table>
+        <table>
+            <thead>
+                <tr>
+                    <th>id_reserva</th>
+                    <th>data_reserva</th>
+                    <th>data_inici</th>
+                    <th>data_fi</th>
+                    <th>tipus_reserva</th>
+                    <th>tipus_IVA</th>
+                    <th>preu_total_reserva</th>
+                    <th>id_client</th>
+                    <th>id_habitacio</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>2023-01-15</td>
+                    <td>2023-02-01</td>
+                    <td>2023-02-05</td>
+                    <td>Estàndard</td>
+                    <td>21%</td>
+                    <td>200</td>
+                    <td>1</td>
+                    <td>1</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>2023-02-20</td>
+                    <td>2023-03-01</td>
+                    <td>2023-03-05</td>
+                    <td>VIP</td>
+                    <td>21%</td>
+                    <td>400</td>
+                    <td>2</td>
+                    <td>2</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>2023-03-25</td>
+                    <td>2023-04-01</td>
+                    <td>2023-04-05</td>
+                    <td>Estàndard</td>
+                    <td>21%</td>
+                    <td>350</td>
+                    <td>3</td>
+                    <td>3</td>
+                </tr>
+            </tbody>
+        </table>
 
     <p><strong>FACTURA</strong></p>
-    <table>
-        <thead>
-            <tr>
-                <th>id_factura</th>
-                <th>data_emissio</th>
-                <th>metode_pagament</th>
-                <th>base_imposable</th>
-                <th>tipus_IVA</th>
-                <th>total</th>
-                <th>id_reserva</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>1</td>
-                <td>2023-02-05</td>
-                <td>Targeta</td>
-                <td>165</td>
-                <td>21%</td>
-                <td>200</td>
-                <td>1</td>
-            </tr>
-            <tr>
-                <td>2</td>
-                <td>2023-03-05</td>
-                <td>Transferència</td>
-                <td>330</td>
-                <td>21%</td>
-                <td>400</td>
-                <td>2</td>
-            </tr>
-            <tr>
-                <td>3</td>
-                <td>2023-04-05</td>
-                <td>Targeta</td>
-                <td>290</td>
-                <td>21%</td>
-                <td>350</td>
-                <td>3</td>
-            </tr>
-        </tbody>
-    </table>
+        <table>
+            <thead>
+                <tr>
+                    <th>id_factura</th>
+                    <th>data_emissio</th>
+                    <th>metode_pagament</th>
+                    <th>base_imposable</th>
+                    <th>tipus_IVA</th>
+                    <th>total</th>
+                    <th>id_reserva</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>2023-02-05</td>
+                    <td>Targeta</td>
+                    <td>165</td>
+                    <td>21%</td>
+                    <td>200</td>
+                    <td>1</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>2023-03-05</td>
+                    <td>Transferència</td>
+                    <td>330</td>
+                    <td>21%</td>
+                    <td>400</td>
+                    <td>2</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>2023-04-05</td>
+                    <td>Targeta</td>
+                    <td>290</td>
+                    <td>21%</td>
+                    <td>350</td>
+                    <td>3</td>
+                </tr>
+            </tbody>
+        </table>
 
     <p><strong>REALITZAR</strong></p>
-    <table>
-        <thead>
-            <tr>
-                <th>id_empleat</th>
-                <th>id_tasca</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>1</td>
-                <td>1</td>
-            </tr>
-            <tr>
-                <td>2</td>
-                <td>2</td>
-            </tr>
-            <tr>
-                <td>3</td>
-                <td>3</td>
-            </tr>
-        </tbody>
-    </table>
+        <table>
+            <thead>
+                <tr>
+                    <th>id_empleat</th>
+                    <th>id_tasca</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>1</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>2</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>3</td>
+                </tr>
+            </tbody>
+        </table>
 
 
     <h3>Restriccions de claus foranes</h3>
 
-    <table>
-        <thead>
-            <tr>
-                <th>Taula</th>
-                <th>Clau Forana</th>
-                <th>Nuls</th>
-                <th>Esborrat</th>
-                <th>Modificació</th>
-                <th>Justificació</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>EMPLEAT</td>
-                <td>id_persona</td>
-                <td>No</td>
-                <td>Restringit</td>
-                <td>Restringit</td>
-                <td>Una persona no pot ser eliminada si és un empleat actiu. No es pot modificar la relació perquè un empleat no pot canviar d'identitat.</td>
-            </tr>
-            <tr>
-                <td>CLIENT</td>
-                <td>id_persona</td>
-                <td>No</td>
-                <td>Restringit</td>
-                <td>Restringit</td>
-                <td>Una persona no pot ser eliminada si té reserves associades com a client. La seva informació no pot ser canviada si ja ha fet reserves.</td>
-            </tr>
-            <tr>
-                <td>RESERVA</td>
-                <td>id_client</td>
-                <td>No</td>
-                <td>Restringit</td>
-                <td>Restringit</td>
-                <td>Un client no es pot eliminar si té reserves actives. Tampoc es pot modificar perquè les reserves han de mantenir el client original.</td>
-            </tr>
-            <tr>
-                <td>RESERVA</td>
-                <td>id_habitacio</td>
-                <td>No</td>
-                <td>Restringit</td>
-                <td>Restringit</td>
-                <td>Una habitació no es pot eliminar si té reserves associades. No es pot modificar perquè la reserva ha de mantenir l'habitació assignada.</td>
-            </tr>
-            <tr>
-                <td>FACTURA</td>
-                <td>id_reserva</td>
-                <td>No</td>
-                <td>Restringit</td>
-                <td>Restringit</td>
-                <td>Una reserva no es pot eliminar si té una factura associada. Les factures han de mantenir la reserva original sense modificacions.</td>
-            </tr>
-            <tr>
-                <td>REALITZAR</td>
-                <td>id_empleat</td>
-                <td>No</td>
-                <td>Propagar</td>
-                <td>Restringit</td>
-                <td>Si un empleat s'elimina, les tasques realitzades han de ser eliminades també. No es poden modificar perquè han de reflectir l'empleat original.</td>
-            </tr>
-            <tr>
-                <td>REALITZAR</td>
-                <td>id_tasca</td>
-                <td>No</td>
-                <td>Propagar</td>
-                <td>Restringit</td>
-                <td>Si una tasca s'elimina, les seves assignacions desapareixen. No es poden modificar per mantenir la coherència de l'historial de treball.</td>
-            </tr>
-        </tbody>
-    </table>
+        <table>
+            <thead>
+                <tr>
+                    <th>Taula</th>
+                    <th>Clau Forana</th>
+                    <th>Nuls</th>
+                    <th>Esborrat</th>
+                    <th>Modificació</th>
+                    <th>Justificació</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>EMPLEAT</td>
+                    <td>id_persona</td>
+                    <td>No</td>
+                    <td>Restringit</td>
+                    <td>Restringit</td>
+                    <td>Una persona no pot ser eliminada si és un empleat actiu. No es pot modificar la relació perquè un empleat no pot canviar d'identitat.</td>
+                </tr>
+                <tr>
+                    <td>CLIENT</td>
+                    <td>id_persona</td>
+                    <td>No</td>
+                    <td>Restringit</td>
+                    <td>Restringit</td>
+                    <td>Una persona no pot ser eliminada si té reserves associades com a client. La seva informació no pot ser canviada si ja ha fet reserves.</td>
+                </tr>
+                <tr>
+                    <td>RESERVA</td>
+                    <td>id_client</td>
+                    <td>No</td>
+                    <td>Restringit</td>
+                    <td>Restringit</td>
+                    <td>Un client no es pot eliminar si té reserves actives. Tampoc es pot modificar perquè les reserves han de mantenir el client original.</td>
+                </tr>
+                <tr>
+                    <td>RESERVA</td>
+                    <td>id_habitacio</td>
+                    <td>No</td>
+                    <td>Restringit</td>
+                    <td>Restringit</td>
+                    <td>Una habitació no es pot eliminar si té reserves associades. No es pot modificar perquè la reserva ha de mantenir l'habitació assignada.</td>
+                </tr>
+                <tr>
+                    <td>FACTURA</td>
+                    <td>id_reserva</td>
+                    <td>No</td>
+                    <td>Restringit</td>
+                    <td>Restringit</td>
+                    <td>Una reserva no es pot eliminar si té una factura associada. Les factures han de mantenir la reserva original sense modificacions.</td>
+                </tr>
+                <tr>
+                    <td>REALITZAR</td>
+                    <td>id_empleat</td>
+                    <td>No</td>
+                    <td>Propagar</td>
+                    <td>Restringit</td>
+                    <td>Si un empleat s'elimina, les tasques realitzades han de ser eliminades també. No es poden modificar perquè han de reflectir l'empleat original.</td>
+                </tr>
+                <tr>
+                    <td>REALITZAR</td>
+                    <td>id_tasca</td>
+                    <td>No</td>
+                    <td>Propagar</td>
+                    <td>Restringit</td>
+                    <td>Si una tasca s'elimina, les seves assignacions desapareixen. No es poden modificar per mantenir la coherència de l'historial de treball.</td>
+                </tr>
+            </tbody>
+        </table>
 
     <hr>
 
 
     <h2>Disseny físic</h2>
+    <a href="./db_projecte_ian.sql">Descarregar</a>
+    <br>
 
+    <h3>Creació de taules</h3>
+    <code>
+        <pre>
+CREATE TABLE persona (
+    id_persona INT AUTO_INCREMENT PRIMARY KEY,
+    nom VARCHAR(255) NOT NULL,
+    cognom VARCHAR(255) NOT NULL,
+    adreca VARCHAR(255) NOT NULL,
+    dni VARCHAR(20) UNIQUE NOT NULL,
+    data_naixement DATE NOT NULL,
+    telefon VARCHAR(20) NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL
+);
+
+CREATE TABLE empleat (
+    id_empleat INT PRIMARY KEY,
+    lloc_feina VARCHAR(255) NOT NULL,
+    data_contractacio DATE NOT NULL,
+    salari_brut DOUBLE NOT NULL,
+    estat_laboral VARCHAR(50) NOT NULL,
+    FOREIGN KEY (id_empleat) REFERENCES PERSONA(id_persona)
+        ON DELETE RESTRICT
+        ON UPDATE RESTRICT
+);
+
+CREATE TABLE tasca (
+    id_tasca INT AUTO_INCREMENT PRIMARY KEY,
+    data_execucio DATE NOT NULL,
+    data_creacio DATE NOT NULL,
+    descripcio TEXT UNIQUE NOT NULL,
+    estat VARCHAR(16) NOT NULL
+);
+
+CREATE TABLE client (
+    id_client INT PRIMARY KEY,
+    data_registre DATE NOT NULL,
+    tipus_client VARCHAR(50) NOT NULL,
+    targeta_credit VARCHAR(50) NOT NULL,
+    FOREIGN KEY (id_client) REFERENCES PERSONA(id_persona)
+        ON DELETE RESTRICT
+        ON UPDATE RESTRICT
+);
+
+CREATE TABLE habitacio (
+    id_habitacio INT AUTO_INCREMENT PRIMARY KEY,
+    numero_habitacio INT UNIQUE NOT NULL,
+    tipus VARCHAR(50) NOT NULL,
+    capacitat INT NOT NULL,
+    preu_nit_AD DOUBLE NOT NULL,
+    preu_nit_MP DOUBLE NOT NULL,
+    estat VARCHAR(50) NOT NULL,
+    descripcio TEXT
+);
+
+CREATE TABLE reserva (
+    id_reserva INT AUTO_INCREMENT PRIMARY KEY,
+    data_reserva DATE NOT NULL,
+    data_inici DATE NOT NULL,
+    data_fi DATE NOT NULL,
+    tipus_reserva VARCHAR(50) NOT NULL,
+    tipus_IVA VARCHAR(15) NOT NULL,
+    preu_total_reserva DOUBLE NOT NULL,
+    id_client INT NOT NULL,
+    id_habitacio INT NOT NULL,
+    FOREIGN KEY (id_client) REFERENCES CLIENT(id_client)
+        ON DELETE RESTRICT
+        ON UPDATE RESTRICT,
+    FOREIGN KEY (id_habitacio) REFERENCES HABITACIO(id_habitacio)
+        ON DELETE RESTRICT
+        ON UPDATE RESTRICT
+);
+
+CREATE TABLE factura (
+    id_factura INT AUTO_INCREMENT PRIMARY KEY,
+    data_emissio DATE NOT NULL,
+    metode_pagament VARCHAR(50) NOT NULL,
+    base_imposable DOUBLE NOT NULL,
+    tipus_IVA VARCHAR(16) NOT NULL,
+    total DOUBLE NOT NULL,
+    id_reserva INT NOT NULL,
+    FOREIGN KEY (id_reserva) REFERENCES RESERVA(id_reserva)
+        ON DELETE RESTRICT
+        ON UPDATE RESTRICT
+);
+
+CREATE TABLE realitzar (
+    id_empleat INT NOT NULL,
+    id_tasca INT NOT NULL,
+    PRIMARY KEY (id_empleat, id_tasca),
+    FOREIGN KEY (id_empleat) REFERENCES EMPLEAT(id_empleat)
+        ON DELETE CASCADE
+        ON UPDATE RESTRICT,
+    FOREIGN KEY (id_tasca) REFERENCES TASCA(id_tasca)
+        ON DELETE CASCADE
+        ON UPDATE RESTRICT
+);
+        </pre>
+    </code>
+    <br>
+
+    <h3>Inserció de dades</h3>
+    <code>
+        <pre>
+INSERT INTO client (id_client, data_registre, tipus_client, targeta_credit) VALUES
+    (1, '2025-02-25', 'NORMAL', 'ugyogyigyugy'),
+    (2, '2025-02-25', 'VIP', 'y'),
+    (3, '2025-02-25', 'VIP', 'ds'),
+    (4, '2025-03-02', 'VIP', 'sff'),
+    (8, '2025-03-02', 'NORMAL', 'xsa'),
+    (9, '2025-03-02', 'NORMAL', 'ñjo'),
+    (11, '2025-03-07', 'NORMAL', 'No');
+
+INSERT INTO empleat (id_empleat, lloc_feina, data_contractacio, salari_brut, estat_laboral) VALUES
+    (2, 'kj', '2025-02-27', 546, 'ACTIU'),
+    (4, '', '2025-02-27', 1, 'BAIXA'),
+    (5, 'yuhjklñ', '2025-02-27', 455, 'ACTIU'),
+    (8, 'df', '2025-03-02', 23, 'ACTIU'),
+    (9, 'fdfs', '2025-03-02', 3434, 'ACTIU'),
+    (10, 'dewre', '2025-03-04', 4567, 'ACTIU'),
+    (11, 'Tot', '2025-03-07', 99999999, 'ACTIU');
+
+INSERT INTO factura (id_factura, data_emissio, metode_pagament, base_imposable, tipus_iva, total, id_reserva) VALUES
+    (4, '2025-02-26', 'EFECTIU', 3456, '_20_PERCENT', 4147.2, 2),
+    (5, '2025-02-26', 'TARGETA', 57.76, '_20_PERCENT', 69.312, 1);
+
+INSERT INTO habitacio (id_habitacio, numero_habitacio, tipus, capacitat, preu_nit_AD, preu_nit_MP, estat, descripcio) VALUES
+    (1, 101, 'AD', 2, 100.5, 130.75, 'DISPONIBLE', 'Vista al mar'),
+    (2, 102, 'MP', 3, 120, 150.25, 'OCUPADA', 'Balcó privat'),
+    (3, 103, 'AD', 1, 80, 110, 'NETEJA', 'Interior'),
+    (4, 104, 'MP', 4, 200, 250, 'DISPONIBLE', 'Suite de luxe'),
+    (5, 105, 'AD', 2, 90, 120.5, 'OCUPADA', 'Econòmica'),
+    (6, 106, 'MP', 3, 140.75, 180, 'NETEJA', 'Amb terrassa'),
+    (7, 107, 'AD', 2, 95, 125, 'DISPONIBLE', 'Standard'),
+    (8, 108, 'MP', 1, 70.5, 100, 'OCUPADA', 'Habitació petita'),
+    (9, 109, 'AD', 4, 160, 210, 'NETEJA', 'Familiar'),
+    (10, 110, 'MP', 3, 130, 170, 'DISPONIBLE', 'Amb vistes al jardí');
+
+INSERT INTO persona (id_persona, nom, cognom, adreca, dni, data_naixement, telefon, email) VALUES
+    (1, 'yucc', 'uycucy', 'uycuyc', 'uycuctuct', '2025-02-14', '9086686', 'dfcgvhbjnkml,'),
+    (2, 'iygiy', 'iuuig', 'trxrt', 'gñougo', '2025-02-25', 'iullkjbkbjkbjkbjkbj', 'lkbmhjh'),
+    (3, 'wqqrewtrytykul', 'loikjuhgfd', 'sdfghj', 'iuytrd', '2025-02-24', 'wtrjykl', 'iohjgfv'),
+    (4, 'poyih', 'pojh', 'dxfgbmlp', 'o', '2025-03-08', '7909783', 'xdfcgvhbjn'),
+    (5, 'oligholg', 'ezxdcg', 'phu', 'qrew', '2025-01-29', '09876tr', 'rdyugy'),
+    (6, 'jnkm', 'jnkm,', 'hbjnkm,', 'hbjn m,', '2025-03-09', 'dfghjklñ', 'gjyjgjgy'),
+    (8, 'iuhjk', 'wefr', 'efdsx', 'defrgr4edrfg', '2025-03-15', 'ijfpji', 'wdcd'),
+    (9, 'fdgdd', 'fdg', 'egfdsa', 'dfgfh', '2025-02-24', 'fdg', 'fwsddf'),
+    (10, 'sd', 'asasdsa', 'sdad', 'edfgjyi', '2025-03-13', 'rytyu', 'gthryukiljk'),
+    (11, 'Ian', 'Martínez', 'Picazo', '12345678X', '2006-01-21', '324789432', 'iama249@vidalibarraquer.net');
+
+INSERT INTO realitzar (id_empleat, id_tasca) VALUES
+    (2, 1),
+    (2, 2),
+    (2, 4),
+    (2, 5),
+    (2, 6),
+    (2, 8),
+    (4, 1),
+    (4, 9),
+    (5, 1),
+    (5, 3),
+    (5, 7),
+    (5, 12),
+    (8, 6),
+    (8, 9),
+    (8, 10),
+    (11, 9),
+    (11, 11),
+    (11, 12);
+
+INSERT INTO reserva (id_reserva, data_reserva, data_inici, data_fi, tipus_reserva, tipus_iva, preu_total_reserva, id_client, id_habitacio) VALUES
+    (1, '2025-02-25', '2025-02-14', '2025-02-17', 'MP', '_20_PERCENT', 435, 2, 10),
+    (2, '2025-02-26', '2025-02-01', '2025-02-03', 'AD', '_20_PERCENT', 456, 2, 4),
+    (3, '2025-02-26', '2025-02-27', '2025-02-28', 'AD', '_19_PERCENT', 6123, 2, 7),
+    (4, '2025-03-02', '2025-03-14', '2025-03-21', 'AD', '_16_PERCENT', 2434, 2, 4),
+    (5, '2025-03-07', '2025-02-26', '2025-02-27', 'MP', '_19_PERCENT', 6745, 3, 9),
+    (6, '2025-03-07', '2025-02-25', '2025-02-28', 'AD', '_22_PERCENT', 12634, 4, 3);
+        </pre>
+    </code>      
 </body>
 </html>
