@@ -6,10 +6,53 @@ body {
     padding: 10px;
 }
 
+/* Estil per el botó per a regresar al menú*/
+#contenidor_boto_menu {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    width: 50px;
+    height: auto;
+    text-align: center;
+    background-color: white;
+    border-radius: 10px;
+}
+#boto_menu {
+    width: 100%;
+    height: auto;
+    padding-top: 25%;
+    padding-bottom: 25%;
+    margin-bottom: 5px;
+    text-align: center;
+    border: 1px solid black;
+    border-radius: 10px;
+    background-color: rgb(190, 189, 189);
+    transition: transform 0.3s, background-color 0.3s, box-shadow 0.3s;
+}
+#boto_menu:hover {
+    background-color: darkgray;
+    cursor: pointer;
+    transform: scale(1.05);
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+nav {
+    background-color: papayawhip;
+    width: 50%;
+}
+nav a {
+    display: block;
+    width: 90%;
+    padding: 5px;
+}
+nav a:hover {
+    background-color: rgb(238, 222, 198);
+}
+
 img {
     max-width: 20%;
 }
-#conceptual{
+#demostracio{
     max-width: 100%;
     border-radius: 25px;
 }

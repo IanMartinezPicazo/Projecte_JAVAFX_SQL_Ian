@@ -1,3 +1,7 @@
+/*
+    En carregar el script, troba totes les taules a la página.
+    i crea un contenidor amb una classe per a cadascun.
+*/
 window.onload = function() {
     const tables = document.querySelectorAll('table');
     tables.forEach(table => {
@@ -9,6 +13,7 @@ window.onload = function() {
     adjustTableAlignment();
 };
 
+// Si una taula es més gran que la finestra, canvia alguns dels seus estils.
 function adjustTableAlignment() {
     const tableContainers = document.querySelectorAll('.deslitzar_horitzontal');
     tableContainers.forEach(tableContainer => {
@@ -23,4 +28,5 @@ function adjustTableAlignment() {
     });
 }
 
+// Executa una funció cada vegada que la finestra canvia de tamany.
 window.addEventListener('resize', adjustTableAlignment);

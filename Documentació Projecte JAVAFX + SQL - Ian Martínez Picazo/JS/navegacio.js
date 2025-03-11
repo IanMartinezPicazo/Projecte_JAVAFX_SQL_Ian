@@ -15,8 +15,11 @@ function navegacioMenu() {
             }
         });
     });
-}
+};
 
-function navegacioBaseDades() {
-    const botó = document.getElementById("menu");
-}
+function navegacioAltres() {
+    const boto_menu = document.getElementById("boto_menu");
+    boto_menu.addEventListener("click", () => {
+        window.location.href = "./index.html";
+    });
+};

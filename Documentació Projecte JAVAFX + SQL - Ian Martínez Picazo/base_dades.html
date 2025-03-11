@@ -10,29 +10,56 @@
     <!-- Referéncia a scripts, carregen després que la página. -->
     <script src="./JS/navegacio.js" defer></script>
     <script src="./JS/taules_adaptatives.js" defer></script>
+
+    <!-- Executa la funció corresponent del script de navegació de pàgines. -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            navegacioAltres();
+        });
+    </script>
 </head>
 
-<!-- Executa la funció corresponent del script de navegació de pàgines. -->
-<body onload="navegacioBaseDades()">
+<body>
+    <div id="contenidor_boto_menu">
+        <div id="boto_menu"><strong>&lt;</strong></div>
+        <div>Menú</div>
+    </div>
     <h1>Base de dades</h1>
 
     <hr>
 
 
     <h2>Taula de continguts</h2>
-
-    <hr>
-
-
-    <h2>Disseny conceptual</h2>
-    <img src="./Imatges/Base de dades/conceptual.png" alt="Disseny conceptual" id="conceptual">
+    <nav>
+        <ol>
+            <li><a href="#1">Disseny conceptual</a></li>
+            <li><a href="#2">Disseny lògic-relacional</a></li>
+            <ol>
+                <li><a href="#2_1">Transformació</a></li>
+                <li><a href="#2_2">Dades demostratives</a></li>
+                <li><a href="#2_3">Restriccions de claus foranes</a></li>
+            </ol>
+            <li><a href="#3">Disseny físic</a></li>
+            <ol>
+                <li><a href="#3_1">Creació de taules</a></li>
+                <li><a href="#3_2">Inserció de dades</a></li>
+            </ol>
+        </ol>
+    </nav>
     <br>
 
     <hr>
 
 
-    <h2>Disseny lògic-relacional</h2>
-    <h3>Transformació</h3>
+    <h2 id="1">Disseny conceptual</h2>
+    <img src="./Imatges/Base de dades/conceptual.png" alt="Disseny conceptual" id="demostracio">
+    <br>
+
+    <hr>
+
+
+    <h2 id="2">Disseny lògic-relacional</h2>
+    <h3 id="2_1">Transformació</h3>
 
     <code>
         <pre>
@@ -63,9 +90,9 @@ REALITZAR (id_empleat, id_tasca)
     <br>
 
 
-    <h3>Dades demostratives</h3>
+    <h3 id="2_2">Dades demostratives</h3>
 
-    <p><strong>PERSONA</strong></p>
+    <h4>PERSONA</h4>
         <table>
             <thead>
                 <tr>
@@ -109,7 +136,7 @@ REALITZAR (id_empleat, id_tasca)
             </tbody>
         </table>
 
-    <p><strong>EMPLEAT</strong></p>
+    <h4>EMPLEAT</h4>
         <table>
             <thead>
                 <tr>
@@ -145,7 +172,7 @@ REALITZAR (id_empleat, id_tasca)
             </tbody>
         </table>
 
-    <p><strong>CLIENT</strong></p>
+    <h4>CLIENT</h4>
         <table>
             <thead>
                 <tr>
@@ -177,7 +204,7 @@ REALITZAR (id_empleat, id_tasca)
             </tbody>
         </table>
 
-    <p><strong>HABITACIO</strong></p>
+    <h4>HABITACIO</h4>
         <table>
             <thead>
                 <tr>
@@ -225,7 +252,7 @@ REALITZAR (id_empleat, id_tasca)
             </tbody>
         </table>
 
-    <p><strong>RESERVA</strong></p>
+    <h4>RESERVA</h4>
         <table>
             <thead>
                 <tr>
@@ -277,7 +304,7 @@ REALITZAR (id_empleat, id_tasca)
             </tbody>
         </table>
 
-    <p><strong>FACTURA</strong></p>
+    <h4>FACTURA</h4>
         <table>
             <thead>
                 <tr>
@@ -321,7 +348,7 @@ REALITZAR (id_empleat, id_tasca)
             </tbody>
         </table>
 
-    <p><strong>REALITZAR</strong></p>
+    <h4>REALITZAR</h4>
         <table>
             <thead>
                 <tr>
@@ -346,7 +373,7 @@ REALITZAR (id_empleat, id_tasca)
         </table>
 
 
-    <h3>Restriccions de claus foranes</h3>
+    <h3 id="2_3">Restriccions de claus foranes</h3>
 
         <table>
             <thead>
@@ -422,11 +449,11 @@ REALITZAR (id_empleat, id_tasca)
     <hr>
 
 
-    <h2>Disseny físic</h2>
+    <h2 id="3">Disseny físic</h2>
     <a href="./db_projecte_ian.sql">Descarregar</a>
     <br>
 
-    <h3>Creació de taules</h3>
+    <h3 id="3_1">Creació de taules</h3>
     <code>
         <pre>
 CREATE TABLE persona (
@@ -526,7 +553,7 @@ CREATE TABLE realitzar (
     </code>
     <br>
 
-    <h3>Inserció de dades</h3>
+    <h3 id="3_2">Inserció de dades</h3>
     <code>
         <pre>
 INSERT INTO client (id_client, data_registre, tipus_client, targeta_credit) VALUES

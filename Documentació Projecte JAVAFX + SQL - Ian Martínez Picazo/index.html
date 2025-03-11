@@ -9,6 +9,13 @@
 
     <!-- Referéncia al script de navegació, carrega després que la página. -->
     <script src="./JS/navegacio.js" defer></script>
+
+    <!-- Executa la funció corresponent del script de navegació de pàgines. -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            navegacioMenu();
+        });
+    </script>
 </head>
 <style>
     main {
@@ -26,11 +33,12 @@
         border-radius: 5px;
         width: 300px;
         padding: 10px;
-        transition: width 0.2s, transform 0.2s;
+        transition: width 0.2s, transform 0.2s, box-shadow 0.2s;
     }
     main div:hover {
         width: 350px;
         cursor: pointer;
+        box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
     }
     main div:active {
         transform: scale(0.9);
@@ -47,7 +55,7 @@
 </style>
 
 <!-- Executa la funció corresponent del script de navegació de pàgines. -->
-<body onload="navegacioMenu()">
+<body>
     <header>
         
     </header>
