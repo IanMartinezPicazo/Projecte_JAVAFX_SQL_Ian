@@ -3,7 +3,9 @@ body {
     justify-content: center;
     flex-direction: column;
     align-items: center;
-    padding: 10px;
+    padding-top: 10px;
+    padding-left: 5%;
+    padding-right: 5%;
 }
 
 /* Estil per el botó per a regresar al menú*/
@@ -35,6 +37,9 @@ body {
     transform: scale(1.05);
     box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
 }
+#boto_menu:active {
+    transform: scale(0.9);
+}
 
 nav {
     background-color: papayawhip;
@@ -63,8 +68,12 @@ code {
     color: grey;
     padding: 10px;
 }
+.java {
+    width: 80%;
+}
 code pre {
     white-space: pre-wrap;
+    overflow-wrap: break-word;
 }
 
 /*

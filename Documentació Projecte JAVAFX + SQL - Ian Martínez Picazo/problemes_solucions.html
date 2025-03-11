@@ -30,11 +30,162 @@
     <h2>Taula de continguts</h2>
     <nav>
         <ol>
-            
+            <li><a href="#1">Cerca d'habitacions disponibles</a></li>
         </ol>
     </nav>
     <br>
 
     <hr>
+
+
+    <h2 id="1">Cerca d'habitacions disponibles</h2>
+    <p>
+        Aquesta acció en concret va generar molts problemes, fins al punt de ser inclosa en aquesta llista.
+        L'objectiu és filtrar les habitacions que no tenen reserves a les dates seleccionades per l'usuari.
+        Això implica comprovar totes les reserves associades a una habitació i descartar-les si hi ha conflictes
+        de dates.
+    </p>
+    <p>
+        Inicialment, vaig intentar fer-ho directament amb SQL, però no vaig aconseguir una solució eficient.
+        Per tant, vaig optar per una solució alternativa: obtenir totes les habitacions i totes les reserves
+        per separat, i després filtrar les habitacions en Java, que permet iterar sobre les dades amb més flexibilitat.
+    </p>
+    
+    <h3>Implementació en Java</h3>
+    <p>
+        Aquesta funció retorna una llista d'habitacions disponibles, assegurant que no tinguin cap reserva
+        que es solapi amb les dates seleccionades per l'usuari.
+    </p>
+    <code class="java">
+        <pre>
+// Retorna una llista amb habitacions d'estat disponible, i que no tinguin una reserva al rang de dates que ha seleccionat l'usuari.
+public ObservableList&lt;String&gt; cercarHabitacionsDisponibles(Date data_inici_reserva, Date data_final_reserva) {
+    ObservableList&lt;String&gt; habitacions = FXCollections.observableArrayList();
+    try (
+        Connection connexio = new Connexio().connecta();
+        PreparedStatement dades_habitacions = connexio.prepareStatement(
+            "SELECT id_habitacio, numero_habitacio"
+            + " FROM habitacio"
+            + " WHERE estat = ?"
+        );
+    ) {
+        dades_habitacions.setString(1, EstatHabitacio.DISPONIBLE.name());
+
+        ResultSet resultat_habitacions = dades_habitacions.executeQuery();
+
+        try (
+            PreparedStatement dades_reserves = connexio.prepareStatement(
+                "SELECT data_reserva, data_inici, data_fi, tipus_reserva, tipus_iva, preu_total_reserva, id_client, id_habitacio"
+                + " FROM reserva"
+            );
+        ) {
+            ResultSet resultat_reserves = dades_reserves.executeQuery();
+            
+            // Itera sobre les reserves retornades i crea instancies per a cadascuna.
+            ArrayList&lt;Reserva&gt; reserves = new ArrayList&lt;&gt;();
+            while (resultat_reserves.next()) {
+                // Converteix els valors enumeradors als tipus de dades corresponents.
+                TipusReserva tipus_reserva = null;
+                IVA tipus_iva = null;
+                for (TipusReserva tipus : TipusReserva.values()) {
+                    if (tipus.name().equals(resultat_reserves.getString("tipus_reserva"))) {
+                        tipus_reserva = tipus;
+                    }
+                }
+                for (IVA tipus : IVA.values()) {
+                    if (tipus.name().equals(resultat_reserves.getString("tipus_iva"))) {
+                        tipus_iva = tipus;
+                    }
+                }
+                
+                Reserva nova_reserva = new Reserva(
+                    resultat_reserves.getDate("data_reserva"),
+                    resultat_reserves.getDate("data_inici"),
+                    resultat_reserves.getDate("data_fi"),
+                    tipus_reserva,
+                    tipus_iva,
+                    resultat_reserves.getDouble("preu_total_reserva"),
+                    resultat_reserves.getInt("id_client"),
+                    resultat_reserves.getInt("id_habitacio")
+                );
+                reserves.add(nova_reserva);
+            }
+            
+            // Itera totes les habitacions i les seves reserves, ja que replicar-ho directament a una consulta SQL resulta complicat.
+            while (resultat_habitacions.next()){
+                String numero_habitacio_text = "";
+                try {
+                    numero_habitacio_text = String.valueOf(resultat_habitacions.getInt("numero_habitacio"));
+                } catch (SQLException e) {
+                    System.err.println("Error: buscarHabitacionsDisponibles (Reserva, conversió a String) \n\n" + e.getMessage());
+                }
+                
+                // Afegeix l'habitació a la llista, si resulta que les dates solapan, és eliminat.
+                habitacions.add(numero_habitacio_text);
+                
+                // Itera sobre totes les reserves relacionades amb l'habitació.
+                for (Reserva reserva : reserves) {
+                    if (reserva.getId_habitacio() == resultat_habitacions.getInt("id_habitacio")) {
+                        Date data_inici = reserva.getData_inici();
+                        Date data_fi = reserva.getData_fi();
+                        // Cerca de solapació de dates.
+                        if (
+                            /*
+                                Per simplificar:
+                                Reserva nova -&gt; RN, Reserva existent -&gt; RE.
+                                Data d'inici -&gt; DI, Data final -&gt; DF.
+                            */
+                            
+                            // Cas 1: RN.DI &lt;= RE.DI && RN.DF &gt; RE.DI
+                            data_inici_reserva.before(data_inici) && data_final_reserva.after(data_inici)
+                            || data_inici_reserva.equals(data_inici) && data_final_reserva.after(data_inici)
+                            
+                            // Cas 2: RN.DI &gt;= RE.DI && RN.DI &lt; RE.DF    
+                            || data_inici_reserva.after(data_inici) && data_inici_reserva.before(data_fi)
+                            || data_inici_reserva.equals(data_inici) && data_inici_reserva.before(data_fi)
+                        ) {
+                            habitacions.remove(numero_habitacio_text);
+                            break;
+                        }
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error: buscarHabitacionsDisponibles (Reserva) \n\n" + e.getMessage());
+        }
+    } catch (SQLException e) {
+        System.err.println("Error: buscarHabitacionsDisponibles (Habitació) \n\n" + e.getMessage());
+    }
+    return habitacions == null ? null : habitacions;
+}            
+        </pre>
+    </code>
+
+    <h3>Explicació detallada</h3>
+    <p>
+        Aquest mètode segueix els passos següents:
+    </p>
+    <ol>
+        <li>
+            <strong>Obtenció de les habitacions disponibles:</strong> Es fa una consulta SQL per obtenir
+            totes les habitacions que tenen l'estat "DISPONIBLE".
+        </li>
+        <li>
+            <strong>Obtenció de totes les reserves:</strong> Es fa una segona consulta SQL per recuperar
+            totes les reserves registrades, independentment de les dates.
+        </li>
+        <li>
+            <strong>Iteració sobre les habitacions:</strong> Per cada habitació disponible, es comprova si
+            hi ha una reserva que coincideixi amb l'interval de dates seleccionat per l'usuari.
+        </li>
+        <li>
+            <strong>Comprovació de solapaments:</strong> Es revisa si l'habitació ja està reservada en les
+            dates seleccionades. Si es troba una solapació, es descarta l'habitació de la llista.
+        </li>
+    </ol>
+    <p>
+        Aquesta implementació evita fer una consulta SQL complexa i permet gestionar les dades de manera més clara
+        en Java, fent ús de col·leccions per comparar fàcilment les reserves amb les habitacions.
+    </p>
 </body>
 </html>
