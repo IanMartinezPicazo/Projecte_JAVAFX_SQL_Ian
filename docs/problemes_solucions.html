@@ -56,8 +56,8 @@
         Aquesta funció retorna una llista d'habitacions disponibles, assegurant que no tinguin cap reserva
         que es solapi amb les dates seleccionades per l'usuari.
     </p>
-    <code class="java">
-        <pre>
+    <pre class="java">
+        <code>
 // Retorna una llista amb habitacions d'estat disponible, i que no tinguin una reserva al rang de dates que ha seleccionat l'usuari.
 public ObservableList&lt;String&gt; cercarHabitacionsDisponibles(Date data_inici_reserva, Date data_final_reserva) {
     ObservableList&lt;String&gt; habitacions = FXCollections.observableArrayList();
@@ -158,8 +158,8 @@ public ObservableList&lt;String&gt; cercarHabitacionsDisponibles(Date data_inici
     }
     return habitacions == null ? null : habitacions;
 }            
-        </pre>
-    </code>
+        </code>
+    </pre>
 
     <h3>Explicació detallada</h3>
     <p>

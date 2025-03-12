@@ -16,48 +16,45 @@
             navegacioMenu();
         });
     </script>
+
+    <style>
+        main {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 25px;
+        }
+
+        main div {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid black;
+            border-radius: 5px;
+            width: 300px;
+            padding: 10px;
+            transition: width 0.2s, transform 0.2s, box-shadow 0.2s;
+        }
+        main div:hover {
+            width: 350px;
+            cursor: pointer;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+        }
+        main div:active {
+            transform: scale(0.9);
+        }
+        h2 {
+            font-size: clamp(1rem, 125%, 2rem);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            flex-grow: 1;
+            text-align: left;
+        }
+    </style>
 </head>
-<style>
-    main {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 25px;
-    }
 
-    main div {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        border: 1px solid black;
-        border-radius: 5px;
-        width: 300px;
-        padding: 10px;
-        transition: width 0.2s, transform 0.2s, box-shadow 0.2s;
-    }
-    main div:hover {
-        width: 350px;
-        cursor: pointer;
-        box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
-    }
-    main div:active {
-        transform: scale(0.9);
-    }
-    h2 {
-        font-size: clamp(1rem, 125%, 2rem);
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        flex-grow: 1;
-        text-align: left;
-    }
-</style>
-
-<!-- Executa la funció corresponent del script de navegació de pàgines. -->
 <body>
-    <header>
-        
-    </header>
     <h1>Menú de la documentació</h1>
     <main>
         <div id="base_dades">

@@ -33,17 +33,21 @@
     <nav>
         <ol>
             <li><a href="#1">Disseny conceptual</a></li>
-            <li><a href="#2">Disseny lògic-relacional</a></li>
-            <ol>
-                <li><a href="#2_1">Transformació</a></li>
-                <li><a href="#2_2">Dades demostratives</a></li>
-                <li><a href="#2_3">Restriccions de claus foranes</a></li>
-            </ol>
-            <li><a href="#3">Disseny físic</a></li>
-            <ol>
-                <li><a href="#3_1">Creació de taules</a></li>
-                <li><a href="#3_2">Inserció de dades</a></li>
-            </ol>
+            <li>
+                <a href="#2">Disseny lògic-relacional</a>
+                <ol>
+                    <li><a href="#2_1">Transformació</a></li>
+                    <li><a href="#2_2">Dades demostratives</a></li>
+                    <li><a href="#2_3">Restriccions de claus foranes</a></li>
+                </ol>
+            </li>
+            <li>
+                <a href="#3">Disseny físic</a>
+                <ol>
+                    <li><a href="#3_1">Creació de taules</a></li>
+                    <li><a href="#3_2">Inserció de dades</a></li>
+                </ol>
+            </li>
         </ol>
     </nav>
     <br>
@@ -52,7 +56,7 @@
 
 
     <h2 id="1">Disseny conceptual</h2>
-    <img src="./Imatges/Base de dades/conceptual.png" alt="Disseny conceptual" id="demostracio">
+    <img src="./Imatges/BaseDades/conceptual.png" alt="Disseny conceptual" id="demostracio">
     <br>
 
     <hr>
@@ -61,8 +65,8 @@
     <h2 id="2">Disseny lògic-relacional</h2>
     <h3 id="2_1">Transformació</h3>
 
-    <code>
-        <pre>
+    <pre>
+        <code>
 PERSONA (id_persona, nom, cognom, adreça, dni, date, telefon, email)
 
 EMPLEAT (id_empleat, lloc_feina, data_contractacio, salari_brut, estat_laboral)
@@ -85,8 +89,8 @@ FACTURA (id_factura, data_emissio, metode_pagament, base_imposable, tipus_IVA, t
 REALITZAR (id_empleat, id_tasca)
     On (id_empleat) és clau forana que fa referència a la taula EMPLEAT (id_empleat)
     On (id_tasca) és clau forana que fa referència a la taula TASCA (id_tasca)
-        </pre>            
-    </code>
+        </code>            
+    </pre>
     <br>
 
 
@@ -454,8 +458,8 @@ REALITZAR (id_empleat, id_tasca)
     <br>
 
     <h3 id="3_1">Creació de taules</h3>
-    <code>
-        <pre>
+    <pre>
+        <code>
 CREATE TABLE persona (
     id_persona INT AUTO_INCREMENT PRIMARY KEY,
     nom VARCHAR(255) NOT NULL,
@@ -549,13 +553,13 @@ CREATE TABLE realitzar (
         ON DELETE CASCADE
         ON UPDATE RESTRICT
 );
-        </pre>
-    </code>
+        </code>
+    </pre>
     <br>
 
     <h3 id="3_2">Inserció de dades</h3>
-    <code>
-        <pre>
+    <pre>
+        <code>
 INSERT INTO client (id_client, data_registre, tipus_client, targeta_credit) VALUES
     (1, '2025-02-25', 'NORMAL', 'ugyogyigyugy'),
     (2, '2025-02-25', 'VIP', 'y'),
@@ -629,7 +633,7 @@ INSERT INTO reserva (id_reserva, data_reserva, data_inici, data_fi, tipus_reserv
     (4, '2025-03-02', '2025-03-14', '2025-03-21', 'AD', '_16_PERCENT', 2434, 2, 4),
     (5, '2025-03-07', '2025-02-26', '2025-02-27', 'MP', '_19_PERCENT', 6745, 3, 9),
     (6, '2025-03-07', '2025-02-25', '2025-02-28', 'AD', '_22_PERCENT', 12634, 4, 3);
-        </pre>
-    </code>      
+        </code>
+    </pre>      
 </body>
 </html>

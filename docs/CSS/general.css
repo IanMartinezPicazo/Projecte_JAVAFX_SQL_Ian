@@ -62,18 +62,19 @@ img {
     border-radius: 25px;
 }
 
-code {
+pre {
     width: 50%;
     background-color: cornsilk;
     color: grey;
     padding: 10px;
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
 }
 .java {
     width: 80%;
 }
-code pre {
-    white-space: pre-wrap;
-    overflow-wrap: break-word;
+code {
+    font-family: monospace;
 }
 
 /*
