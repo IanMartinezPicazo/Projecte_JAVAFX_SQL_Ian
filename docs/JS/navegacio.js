@@ -11,7 +11,7 @@ function navegacioMenu() {
             if (index != 2){
                 window.location.href = `./${pagina.id}.html`;
             }else{
-                window.open("./Manual d'ús de l'aplicació.pdf", '_blank');
+                window.open("./manual.pdf", '_blank');
             }
         });
     });
