@@ -95,6 +95,11 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
     -fx-padding: 5px;
 }
 
+/* Estil per als labels que mostran el cost d'una reserva. */
+.preu {
+    -fx-font-size: 8px;
+}
+
 .date-picker .arrow-button {
     -fx-background-color: #4CAF50;
     -fx-border-radius: 50%;

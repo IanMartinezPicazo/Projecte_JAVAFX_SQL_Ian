@@ -22,6 +22,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -550,6 +551,30 @@ public class Model {
         }
         return id_habitacio;
     }
+    
+    // Obté el preu per nit del tipus corresponent de l'habitació seleccionada, i ho multiplica per els dies resevats.
+    public double calcularPreuTotalReserva(int habitacio, String tipus_reserva, long dies) {
+        double preu_nit = 0;
+        try (
+            Connection connexio = new Connexio().connecta();
+            PreparedStatement dades_habitacio = connexio.prepareStatement(
+                "SELECT preu_nit_" + tipus_reserva
+                + " FROM habitacio"
+                + " WHERE numero_habitacio = ?"
+            );
+        ) {
+            dades_habitacio.setInt(1, habitacio);
+            
+            ResultSet resultat = dades_habitacio.executeQuery();
+            
+            while (resultat.next()) {
+                preu_nit = resultat.getInt("preu_nit_" + tipus_reserva);
+            }
+        } catch (SQLException e) {
+            System.err.println("Error: obtenirPreuTotalReserva \n\n" + e.getMessage());
+        }
+        return (preu_nit * dies);
+    }
 
     public void crearReserva(Reserva reserva) {
         try (
@@ -603,13 +628,61 @@ public class Model {
             ResultSet resultat = dades_reserva.executeQuery();
 
 
-            while (resultat.next()){
+            while (resultat.next()) {
                 id_reserva = resultat.getInt("id_reserva");
             }
         } catch (SQLException e) {
             System.err.println("Error: buscarReservaSeleccionada \n\n" + e.getMessage());
         }
         return id_reserva;
+    }
+    
+    public String obtenirIVAReservaSeleccionada(int id_reserva) {
+        // IVA per defecte.
+        String iva = IVA._21_PERCENT.name();
+        try (
+            Connection connexio = new Connexio().connecta();
+            PreparedStatement dades_reserva = connexio.prepareStatement(
+                "SELECT tipus_iva"
+                + " FROM reserva"
+                + " WHERE id_reserva = ?"
+            );
+        ) {
+            dades_reserva.setInt(1, id_reserva);
+            
+            ResultSet resultat = dades_reserva.executeQuery();
+            
+            while (resultat.next()) {
+                iva = resultat.getString("tipus_iva");
+            }
+        } catch (SQLException e) {
+            System.err.println("Error: obtenirIVAReservaSeleccionada \n\n" + e.getMessage());
+        }        
+        return iva;
+    }
+    
+    public double obtenirPreuTotalReservaSeleccionada(int id_reserva) {
+        // Preu total per defecte.
+        double preu_total = 100;
+        try (
+            Connection connexio = new Connexio().connecta();
+            PreparedStatement dades_reserva = connexio.prepareStatement(
+                "SELECT preu_total_reserva"
+                + " FROM reserva"
+                + " WHERE id_reserva = ?"
+            );
+        ) {
+            dades_reserva.setInt(1, id_reserva);
+            
+            ResultSet resultat = dades_reserva.executeQuery();
+            
+            while (resultat.next()) {
+                preu_total = resultat.getDouble("preu_total_reserva");
+            }
+        } catch (SQLException e) {
+            System.err.println("Error: obtenirPreuTotalReservaSeleccionada \n\n" + e.getMessage());
+        }
+        return preu_total;
     }
 
     public void crearFactura(Factura factura) {
