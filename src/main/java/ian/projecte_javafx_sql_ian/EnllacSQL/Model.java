@@ -568,7 +568,7 @@ public class Model {
             ResultSet resultat = dades_habitacio.executeQuery();
             
             while (resultat.next()) {
-                preu_nit = resultat.getInt("preu_nit_" + tipus_reserva);
+                preu_nit = resultat.getDouble("preu_nit_" + tipus_reserva);
             }
         } catch (SQLException e) {
             System.err.println("Error: obtenirPreuTotalReserva \n\n" + e.getMessage());
@@ -746,7 +746,7 @@ public class Model {
             + " FROM tasca"
             + " INNER JOIN realitzar"
             + " ON tasca.id_tasca = realitzar.id_tasca"
-            + " WHERE estat = ?";
+            + " WHERE tasca.estat = ?";
             
             // Per a mostrar a la llista solament les tasques de l'empleat seleccionat.
             if (!desplegable){
@@ -799,17 +799,19 @@ public class Model {
             
             try (
                 PreparedStatement dades_realitzar = connexio.prepareStatement(
-                    "INSERT INTO realitzar (id_empleat, id_tasca) "
+                    "INSERT INTO realitzar (id_empleat, id_tasca, estat) "
                     + " SELECT "
                     + "     (SELECT id_empleat "
                     + "      FROM empleat "
                     + "      INNER JOIN persona ON persona.id_persona = empleat.id_empleat "
                     + "      WHERE dni = ?), "
-                    + " LAST_INSERT_ID();" // "LAST_INSERT_ID" retorna l'ùltima clau primaria generada automaticament en la sessió.
+                    + " LAST_INSERT_ID(), " // "LAST_INSERT_ID" retorna l'ùltima clau primaria generada automaticament en la sessió.
+                    + "?;" 
                 );
             ) {
                 System.out.println(trobarDniPersona(empleat));
                 dades_realitzar.setString(1, trobarDniPersona(empleat));
+                dades_realitzar.setString(2, EstatTasca.PENDENT.name());
 
                 dades_realitzar.executeUpdate();
             } catch (SQLException e) {
@@ -848,19 +850,21 @@ public class Model {
             
             try (
                 PreparedStatement dades_realitzar = connexio.prepareStatement(
-                    "INSERT INTO realitzar (id_empleat, id_tasca)"
+                    "INSERT INTO realitzar (id_empleat, id_tasca,  estat)"
                     + " SELECT"
                     + "     (SELECT id_empleat"
                     + "      FROM empleat"
                     + "      INNER JOIN persona ON persona.id_persona = empleat.id_empleat"
-                    + "      WHERE dni = ?),"
-                    + " ?;"
+                    + "      WHERE dni = ?), "
+                    + "?, "
+                    + "?;"
                 );
             ) {
                 String dni = trobarDniPersona(empleat);
                 
                 dades_realitzar.setString(1, dni);
                 dades_realitzar.setInt(2, id_tasca);
+                dades_realitzar.setString(3, EstatTasca.PENDENT.name());
 
                 dades_realitzar.executeUpdate();
             } catch (SQLException e) {
@@ -910,29 +914,60 @@ public class Model {
         return false;
     }
 
-    public void completarTasca(String tasca, String estat) {
+    public void completarTasca(String tasca, String estat, String identitat) {
         try (
             Connection connexio = new Connexio().connecta();
-            PreparedStatement dades_tasca = connexio.prepareStatement(
-                "UPDATE tasca"
-                + " SET estat = ?, data_execucio = ?"
-                + " WHERE descripcio = ?"
+            PreparedStatement updateRealitzar = connexio.prepareStatement(
+                "UPDATE realitzar " +
+                "INNER JOIN tasca ON realitzar.id_tasca = tasca.id_tasca " +
+                "INNER JOIN empleat ON realitzar.id_empleat = empleat.id_empleat " +
+                "INNER JOIN persona ON empleat.id_empleat = persona.id_persona " +
+                "SET realitzar.estat = ? " +
+                "WHERE tasca.descripcio = ? AND persona.dni = ?"
+            );
+            PreparedStatement empleatsCompletat = connexio.prepareStatement(
+                "SELECT COUNT(*) AS incompletats " +
+                "FROM realitzar " +
+                "INNER JOIN tasca ON realitzar.id_tasca = tasca.id_tasca " +
+                "WHERE tasca.descripcio = ? " +
+                "AND realitzar.estat != ?"
+            );
+            PreparedStatement actualitzarTasca = connexio.prepareStatement(
+                "UPDATE tasca " +
+                "SET estat = ? " +
+                "WHERE descripcio = ?"
             );
         ) {
             String descripcio = "";
-            for (int i = 0;i < tasca.length();i++){
-               char buscador = tasca.charAt(i);
-               if (buscador == '-'){
-                   descripcio = tasca.substring(0, i - 1).trim();
-                   break;
-               }
+            for (int i = 0; i < tasca.length(); i++) {
+                if (tasca.charAt(i) == '-') {
+                    descripcio = tasca.substring(0, i - 1).trim();
+                    break;
+                }
             }
 
-            dades_tasca.setString(1, estat);
-            dades_tasca.setDate(2, new Date(System.currentTimeMillis()));
-            dades_tasca.setString(3, descripcio);
+            String dni = trobarDniPersona(identitat);
 
-            dades_tasca.executeUpdate();
+            // 1. Actualitza l'estat de la tasca assignada a l'empleat en la taula Realitzar.
+            updateRealitzar.setString(1, estat);
+            updateRealitzar.setString(2, descripcio);
+            updateRealitzar.setString(3, dni);
+            updateRealitzar.executeUpdate();
+
+            // 2. Comprova si tots els empleats que tinguin la tasca assignada ja han completat.
+            empleatsCompletat.setString(1, descripcio);
+            empleatsCompletat.setString(2, EstatTasca.COMPLETADA.name());
+            ResultSet rs = empleatsCompletat.executeQuery();
+            if (rs.next()) {
+                int incompletes = rs.getInt("incompletats");
+
+                if (incompletes == 0) {
+                    actualitzarTasca.setString(1, EstatTasca.COMPLETADA.name());
+                    actualitzarTasca.setString(2, descripcio);
+                    actualitzarTasca.executeUpdate();
+                }
+            }
+
         } catch (SQLException e) {
             System.err.println("Error: completarTasca \n\n" + e.getMessage());
         }

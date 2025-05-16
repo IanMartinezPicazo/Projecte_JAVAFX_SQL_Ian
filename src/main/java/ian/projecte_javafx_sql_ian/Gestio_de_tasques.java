@@ -153,7 +153,7 @@ public class Gestio_de_tasques {
         // Per cridar al model.
         Model model = new Model();
         
-        model.completarTasca(combo_tasca.getValue().toString(), EstatTasca.COMPLETADA.name());
+        model.completarTasca(combo_tasca.getValue().toString(), EstatTasca.COMPLETADA.name(), combo_empleats.getValue().toString());
         controllerEmpleatSeleccionat();
     }
     
